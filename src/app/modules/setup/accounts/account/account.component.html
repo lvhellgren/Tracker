@@ -1,0 +1,84 @@
+<div class="account" fxLayoutAlign="center">
+  <form #accountForm="ngForm"
+        fxFlex.gt-xs="400px"
+        fxFlex.lt-xs="100%"
+        fxLayout="column"
+        [formGroup]="accountFormGroup"
+        (ngSubmit)="onSubmit()">
+    <div class="control-row" fxLayout="row"
+         fxLayoutAlign="end center">
+      <mat-checkbox [formControl]="active" disabled="">Active</mat-checkbox>
+    </div>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Name"
+             required
+             formControlName="id">
+      <mat-error>Missing Account ID.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Address 1"
+             formControlName="address1">
+      <mat-error>Missing Address.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Address 2"
+             formControlName="address2">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="City"
+             formControlName="city">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="State"
+             formControlName="state">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Postal Code"
+             formControlName="postalCode">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Modified"
+             [readonly]="true"
+             formControlName="modifiedAt">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Created"
+             [readonly]="true"
+             formControlName="createdAt">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   matInput
+                   placeholder="Description"
+                   formControlName="description">
+         </textarea>
+    </mat-form-field>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around start">
+      <button type="button" mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
+      <button type="button" mat-raised-button color="primary" (click)="onClear(accountForm)">Clear</button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="accountFormGroup.invalid || (accountFormGroup.pristine && active.pristine)">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

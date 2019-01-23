@@ -1,0 +1,36 @@
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 220px) !important;
+  height: calc(100vh - 220px) !important;
+}
+
+.table-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-row {
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  background-color: lightsteelblue;
+}
+
+.mat-table {
+  overflow: auto;
+}
+
+.new-user-btn {
+  margin-left: 20px;
+  color: grey;
+}
+

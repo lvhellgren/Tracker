@@ -1,0 +1,11 @@
+<div fxFlex="100%" class="messages-frame" *ngIf="(errors$ | async)?.length > 0">
+  <div fxFlex="100%"
+       fxLayout="row"
+       fxLayoutAlign="space-between center"
+       class="messages messages-error">
+    <div class="messages-container">
+      <div *ngFor="let error of (errors$ | async)">{{error}}</div>
+    </div>
+    <mat-icon class="close-icon" (click)="close()">close</mat-icon>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="pages">
+  <div class="navbar-label">
+    Views
+  </div>
+  <a href="#"></a>
+  <div>
+    <a href="#" mat-button
+       [routerLink]="['page1']"
+       [routerLinkActive]="['activeUser-page']"
+       (click)="appdrawer.close()">
+      PAGE 1
+    </a>
+  </div>
+  <div>
+    <a href="#" mat-button
+       [routerLink]="['page2']"
+       [routerLinkActive]="['activeUser-page']"
+       (click)="appdrawer.close()">
+      PAGE 2
+    </a>
+  </div>
+  <div>
+    <a href="#" mat-button
+       [routerLink]="['page3']"
+       [routerLinkActive]="['activeUser-page']"
+       (click)="appdrawer.close()">
+      PAGE 3
+    </a>
+  </div>
+  <div>
+    <a href="#" mat-button
+       [routerLink]="['setup']"
+       [routerLinkActive]="['activeUser-page']"
+       (click)="appdrawer.close()">
+      SETUP
+    </a>
+  </div>
+  <div class="navbar-label">
+    Account
+  </div>
+  <div class="account"
+       fxLayout="row"
+       matTooltip="Current account">
+    <mat-select [(ngModel)]="authService.currentUserAccountId"
+                (ngModelChange)="selectedUserAccountId = $event"
+                name="accountId">
+      <mat-option *ngFor="let accountId of authService?.userAccountIds" [value]="accountId">
+        {{accountId}}
+      </mat-option>
+    </mat-select>
+  </div>
+  <div class="navbar-label">
+    User
+  </div>
+  <div matTooltip="Currently signed in user">
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      {{authService?.getUserId()}}
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item class="menu-item" (click)="onPreferencesClick()">Preferences</button>
+      <hr style="margin: 2px 0"/>
+      <button mat-menu-item class="menu-item" (click)="onSignOutClick()">Sign Out</button>
+    </mat-menu>
+  </div>
+</div>
+

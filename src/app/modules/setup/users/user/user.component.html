@@ -1,0 +1,108 @@
+<div class="user" fxLayoutAlign="center">
+  <form #userForm="ngForm"
+        fxFlex.gt-xs="400px"
+        fxFlex.lt-xs="100%"
+        fxLayout="column"
+        [formGroup]="userFormGroup"
+        (ngSubmit)="onSubmit()">
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Email (User ID)"
+             required
+             formControlName="email">
+      <mat-error>Missing Email.</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="returnPath === 'account-users-list'"
+                    floatLabel="always">
+      <mat-select placeholder="Account Roles"
+                  required
+                  [formControl]="roles"
+                  multiple>
+        <mat-option *ngFor="let role of allRoles" [value]="role[0]">
+          {{role[1]}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Missing Role.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             required
+             matInput
+             placeholder="Name"
+             formControlName="name">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="phone"
+             matInput
+             placeholder="Phone"
+             formControlName="phone">
+      <mat-error>Missing Phone.</mat-error>
+    </mat-form-field>
+    <div fxLayout="column" *ngIf="!createUser">
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Last Signin"
+               [readonly]="true"
+               formControlName="signedInAt">
+      </mat-form-field>
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Modified"
+               [readonly]="true"
+               formControlName="modifiedAt">
+      </mat-form-field>
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Created"
+               [readonly]="true"
+               formControlName="createdAt">
+      </mat-form-field>
+    </div>
+    <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   rows="1"
+                   matInput
+                   placeholder="Comment"
+                   formControlName="comment">
+         </textarea>
+    </mat-form-field>
+    <div class="control-row" fxLayout="row center"
+         fxLayoutAlign="space-between start">
+      <mat-checkbox [formControl]="activeUser" disabled="">User can log in</mat-checkbox>
+      <mat-checkbox *ngIf="returnPath === 'account-users-list'"
+                    [formControl]="activeAccountUser" disabled="">User can access current account
+      </mat-checkbox>
+    </div>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around start">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button class="clear-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onClear(userForm)">
+        Clear
+      </button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="userFormGroup.invalid || (
+              userFormGroup.pristine &&
+              activeUser.pristine &&
+              activeAccountUser.pristine &&
+              roles.pristine)">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

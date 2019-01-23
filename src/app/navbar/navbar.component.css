@@ -1,0 +1,83 @@
+#navbar-container {
+  padding: 10px 0 11px 0;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.5);
+}
+
+a:hover {
+  color: white;
+  font-weight: bold;
+  background-color: #3f51b5;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+}
+
+.app-name {
+  font-size: x-small;
+  line-height: 100%;
+  padding: 5px;
+  margin: 0 10px;
+}
+
+.txt-logo {
+  font-family: Arial, sans-serif;
+  font-size: 25px;
+  padding: 5px;
+  font-stretch: ultra-condensed;
+  color: white;
+}
+
+.logo {
+  height: 40px;
+  margin-bottom: 0px;
+}
+
+.active-page {
+  font-weight: bold;
+  border-bottom: 2px solid currentColor;
+}
+
+.account-name {
+  font-size: medium;
+  color: white;
+  margin: 3px 0 0 30px;
+}
+
+.navbar-btn {
+  min-width: 8rem;
+  font-size: medium;
+  border: 0;
+  color: white;
+}
+
+.page-row{
+  padding-bottom: 6px;
+}
+
+.account {
+  padding-right: 10px;
+  width: 40%;
+  font-size: small;
+}
+
+.dropdown-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background-color: #3f51b5;
+  padding: 0 0 0 8px;
+}
+
+::ng-deep .mat-menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 0 0 8px;
+}
+
+::ng-deep .mat-form-field-infix {
+  padding-bottom: 0px !important;
+}
+
+.current-page {
+  font-size: medium;
+  padding-top: 7px;
+}

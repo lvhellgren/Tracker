@@ -1,27 +1,48 @@
-# Leapfire
+### Leapfire - Angular and Firebase App Development Leapstart
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
+Leapfire is a running application base for building responsive, serverless enterprise applications requiring
+user and account management capabilities. Leapfire can be extended with domain-specific functionality and out of
+the box comes with the following features:
 
-## Development server
+#####Serverless Application
+The base application is serverless in that it uses the Google Firebase/Firestore cloud database for access
+to user and account information.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+#####Single Page Application
+Leapfire is a single page Angular application written in TypeScript taking advantage of Angular features
+such as routing, reactive processing, templating, Material Design, etc.
 
-## Code scaffolding
+#####Responsive Design
+Leapfire employs Angular Flex-Layout to automatically format UI layouts to fit various screen sizes.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+#####Modular Development
+Leapfire is designed for modular development. The Core module provides sign-in capability and basic features
+for use by other modules. The Structure module manages users and accounts as well as the relationships
+between these entities. Application-specific functionality may be implemented by creating new modules 
+(or by extending existing placeholder modules).
 
-## Build
+#####Authentication
+User authentication is provided through the Firebase Java Web Token implementation. Users can sign in using
+email and password authentication and also through Auth0 identity providers, such as Google.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+#####Users and Accounts
+Users and accounts have a many-to-many relationship, so that a given user may have access to one or more
+accounts and an account may have one or more users.
 
-## Running unit tests
+#####User Roles
+User permissions are governed through rules defined in the Firestore database, so that a given user may,
+for example, be assigned create, update, or read roles for accessing data collections in the database. Users
+having access to multiple accounts may be given different permissions depending on the account.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+#####The Hub Account
+Only users in the special Hub account and with create permission can create new accounts. These users will
+also create the initial user for a new account. An account user with create permission can then create
+additional users for that account but for that account only.
 
-## Running end-to-end tests
+A user ID created from Leapfire must be a valid email address available to the intended user. Initially, a
+randomly generated, unknown password is created. The user signing in for the first time will then need to use 
+the Create or Reset Password option to create a known password.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+#####Demo Application Sign In with Google
+First-time users signing in to the demo Leapfire application with Google will be assigned a new account named the
+same as their user ID (email address). They will also have a CREATOR role on that account.

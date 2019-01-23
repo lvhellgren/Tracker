@@ -1,0 +1,74 @@
+
+h2 {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid gray;
+  line-height: 0.35em;
+  margin: 20px 0 20px;
+}
+
+h2 span {
+  background: #fafafa;
+  color: grey;
+  font-weight: lighter;
+  font-size: medium;
+  padding: 0 10px;
+}
+
+.logo {
+  height: 40px;
+  width: 40px;
+  margin-bottom: 0px;
+}
+
+.description {
+  margin: 20px 0 40px 0;
+  font-size: smaller;
+  color: gray;
+}
+
+.g-btn {
+  padding-left: 1px;
+  min-height: 37px;
+}
+
+.g-icon {
+  margin-top: 1px;
+  height: 35px;
+  width: 35px;
+  float: left;
+}
+
+.sign-in {
+  height: calc(100vh - 100px);
+  padding-top: 60px;
+}
+
+.title {
+  font-size: large;
+  horiz-align: center;
+  color: gray;
+  margin-bottom: 40px;
+}
+
+form {
+  width: 300px;
+}
+
+.form-ctl {
+  width: 100%;
+  border-radius: .25rem;
+  min-height: 37px;
+}
+
+.msg {
+  color: red;
+  font-size: small;
+  margin-bottom: 10px !important;
+}
+
+.mat-button {
+  padding: 0 !important;
+  font-size: small;
+  color: #3f51b5;
+}

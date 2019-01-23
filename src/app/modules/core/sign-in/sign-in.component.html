@@ -1,0 +1,58 @@
+<div class="sign-in"
+     fxLayout="column"
+     fxLayoutAlign="start center">
+  <img class="logo" src="/assets/leapfire_blue.png">
+  <span class="description">Angular with Firebase Development Leapstart</span>
+  <form fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="20px"
+        [formGroup]="signInForm">
+    <button class="form-ctl g-btn"
+            type="button"
+            fxFlex="100%"
+            mat-raised-button color="primary"
+            (click)="onGoogleSignInClick()">
+      <mat-icon class="g-icon" svgIcon="google_sign_in"></mat-icon>
+      <span class="g-txt">
+        Sign In with Google
+      </span>
+    </button>
+    <div style="width: 100%">
+      <h2><span>or</span></h2>
+    </div>
+    <mat-form-field class="form-ctl"
+                    fxFlex="100%">
+      <input class="form-ctl"
+             type="text"
+             matInput
+             placeholder="Email"
+             formControlName="userId">
+      <mat-error>Invalid or missing user email address.</mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-ctl"
+                    fxFlex="100%">
+      <input type="password"
+             matInput
+             placeholder="Password"
+             formControlName="password">
+      <mat-error>Password must consist of letters and numbers and contain 6 to 25 characters.</mat-error>
+    </mat-form-field>
+    <div class="msg">{{msg}}</div>
+    <button class="form-ctl"
+            type="submit"
+            fxFlex="100%"
+            mat-raised-button color="primary"
+            [disabled]="!isInputValid()"
+            (click)="onEmailSignInClick()">
+      Sign In with Email
+    </button>
+    <div style="width: 100%;" fxLayout="row" fxLayoutAlign="end center">
+      <button mat-button class="reset-password-btn"
+              [disabled]="!isUserIdValid()"
+              (click)="onResetPasswordClick()">
+        Create or Reset Password
+      </button>
+    </div>
+    <mat-spinner *ngIf="isLoading" [diameter]="40"></mat-spinner>
+  </form>
+</div>

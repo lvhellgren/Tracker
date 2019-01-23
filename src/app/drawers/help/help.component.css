@@ -1,0 +1,19 @@
+.help {
+  padding: 5px 5px 10px 0;
+}
+
+.version {
+  height: 40px;
+  font-size: small;
+}
+
+.close-icon {
+  color: white;
+  background-color: #3f51b5;
+  margin-left: 10px;
+  border-radius: .25rem;
+}
+
+.close-icon:hover {
+  cursor: pointer;
+}

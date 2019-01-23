@@ -1,0 +1,104 @@
+<div class="page"
+     fxLayout="column"
+     fxLayoutAlign="start stretch">
+  <div class="table-header"
+       fxLayout="row"
+       fxFlexOrder="1"
+       fxLayoutAlign="stretch">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <div class="table-container mat-elevation-z4"
+       fxFlexOrder="2"
+       fxFlexFill>
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Email</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor (row)"
+                  (click)="onUserClick(row)">
+          {{row.email}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;Name</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)"
+                  (click)="onUserClick(row)">
+          &nbsp;{{row.name}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Phone Column -->
+      <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;Phone</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)"
+                  (click)="onUserClick(row)">
+          &nbsp;{{row.phone}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Roles Column -->
+      <ng-container matColumnDef="roles">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;Roles</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <div *ngIf="row.roles?.length == 1" [style.color]="rowColor(row)">
+            &nbsp;{{getUserRoleName(row.roles[0])}}
+          </div>
+          <mat-label *ngIf="row.roles?.length > 1" [style.color]="rowColor(row)">
+            <span style="font-size: larger; font-weight: bolder">...</span>
+          </mat-label>
+          <mat-select *ngIf="row.roles?.length > 1">
+            <mat-select-trigger [style.color]="rowColor(row)">
+            </mat-select-trigger>
+            <mat-option *ngFor="let id of row.roles" [value]="id">
+              &nbsp;{{roleMap.get(id)}}
+            </mat-option>
+          </mat-select>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Active Column -->
+      <ng-container matColumnDef="activeUser">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header
+                         matTooltip="User can access the current account">
+          &nbsp;Active
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)"
+                  (click)="onUserClick(row)">
+          &nbsp;{{!!row.activeAccountUser}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Signed In Column -->
+      <ng-container matColumnDef="signedInAt">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header
+                         matTooltip="Last time this user signed in">
+          &nbsp;Signed In
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)"
+                  (click)="onUserClick(row)">
+          &nbsp;{{row.signedInAt | timestampToDate | date:'yyyy-MM-dd'}}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+               [style.background]="rowBackground(row)">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  </div>
+</div>

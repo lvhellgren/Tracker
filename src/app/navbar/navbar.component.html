@@ -1,0 +1,120 @@
+<mat-toolbar id="navbar-container" color="primary"
+             fxFlex="100%"
+             fxLayout="row"
+             fxLayoutGap="20px">
+  <div fxFlex
+       fxLayout="row"
+       fxFlexOrder="1"
+       fxLayoutGap="10px"
+       style="padding-left: 10px">
+    <!-- Less than medium -->
+    <div *ngIf="isSignedIn"
+         fxShow="false"
+         fxShow.lt-md="true"
+         style="padding-right: 10px; height: 35px;">
+      <button mat-icon-button (click)="onDrawerBtnClick()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <div>
+      <div fxFlex class="txt-logo">
+        <span>Leapfire</span>
+      </div>
+      <img class="logo" src="/assets/leapfire_white.png">
+    </div>
+    <!-- Less than medium -->
+    <div *ngIf="isSignedIn"
+         fxFlex="100%"
+         fxLayoutAlign="center"
+         fxShow="false"
+         fxShow.lt-md="true"
+         class="current-page">
+      <div fxShow.lt-sm="false">
+        {{authService.currentUserAccountId}}
+      </div>
+    </div>
+    <!---->
+  </div>
+  <!-- Not less than medium -->
+  <div *ngIf="isSignedIn"
+       fxFlexOrder="2"
+       fxFlex="100%"
+       fxShow="true"
+       fxShow.lt-md="false">
+    <div class="page-row"
+         fxFlexOrder="1"
+         fxLayout="row"
+         fxLayoutAlign="space-around end">
+      <div>
+        <a href="#" mat-button
+           [routerLink]="['page1']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Sample page">
+          PAGE 1
+        </a>
+      </div>
+      <div>
+        <a href="#" mat-button
+           [routerLink]="['page2']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Sample page">
+          PAGE 2
+        </a>
+      </div>
+      <div>
+        <a href="#" mat-button
+           [routerLink]="['page3']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Sample page">
+          PAGE 3
+        </a>
+      </div>
+      <div>
+        <a href="#" mat-button
+           [routerLink]="['setup']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Account and user setup page">
+          SETUP
+        </a>
+      </div>
+    </div>
+    <div fxFlex
+         fxFlexOrder="2"
+         fxLayoutAlign="end">
+      <div class="account"
+           fxFlexOrder="1"
+           fxLayout="row"
+           fxLayoutAlign="end center"
+           matTooltip="Current account">
+        <mat-select [(ngModel)]="authService.currentUserAccountId"
+                    (ngModelChange)="selectedUserAccountId = $event"
+                    name="accountId">
+          <mat-option *ngFor="let accountId of authService?.userAccountIds" [value]="accountId">
+            {{accountId}}
+          </mat-option>
+        </mat-select>
+      </div>
+      <div fxFlexOrder="2"
+           fxLayoutAlign="end"
+           matTooltip="Currently signed in user">
+        <button mat-button [matMenuTriggerFor]="userMenu">
+          {{authService?.getUserId()}}
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item class="menu-item" (click)="onSignOutClick()">Sign Out</button>
+          <hr style="margin: 2px 0"/>
+          <button mat-menu-item class="menu-item" (click)="onPreferencesClick()">Preferences</button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+  <!---->
+  <div *ngIf="isSignedIn"
+       fxFlexOrder="3"
+       style="padding-right: 15px">
+    <button mat-icon-button matTooltip="Help" (click)="onHelpBtnClick()">
+      <mat-icon>help</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

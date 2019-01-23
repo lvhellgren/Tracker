@@ -1,0 +1,16 @@
+.pages {
+}
+
+.account {
+  width: 80%;
+  font-size: small;
+  font-weight: 500;
+  padding: 0 16px;
+}
+
+.navbar-label {
+  color: gray;
+  font-size: smaller;
+  font-weight: bold;
+  margin-top: 20px;
+}

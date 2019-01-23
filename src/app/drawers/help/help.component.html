@@ -1,0 +1,56 @@
+<div fxFlex="100%" class="help" fxLayout="column">
+  <div fxLayout="row"
+       fxLayoutAlign="space-between start">
+    <span class="version">Version {{version}}</span>
+    <mat-icon class="close-icon" (click)="close()">keyboard_arrow_left</mat-icon>
+  </div>
+  <div fxLayout="column">
+    <p>
+    Leapfire is a running application base for building responsive, serverless enterprise applications requiring
+    user and account management capabilities. Leapfire can be extended with domain-specific functionality and out of
+    the box comes with the following features:
+
+    <h5>Serverless Application</h5>
+    The base application is serverless in that it uses the Google Firebase/Firestore cloud database for access
+    to user and account information.
+    <p>
+    <h5>Single Page Application</h5>
+    Leapfire is a single page Angular application written in TypeScript taking advantage of Angular features
+    such as routing, reactive processing, templating, Material Design, etc.
+    <p>
+    <h5>Responsive Design</h5>
+    Leapfire employs Angular Flex-Layout to automatically format UI layouts to fit various screen sizes.
+    <p>
+    <h5>Modular Development</h5>
+    Leapfire is designed for modular development. The Core module provides sign-in capability and basic features
+    for use by other modules. The Setup module manages users and accounts as well as the relationships
+    between these entities. Application-specific functionality may be implemented by creating new modules
+    (or by extending existing placeholder modules).
+    <p>
+    <h5>Authentication</h5>
+    User authentication is provided through the Firebase Java Web Token implementation. Users can sign in using
+    email and password authentication and also through Auth0 identity providers, such as Google.
+    <p>
+    <h5>Users and Accounts</h5>
+    Users and accounts have a many-to-many relationship, so that a given user may have access to one or more
+    accounts and an account may have one or more users.
+    <p>
+    <h5>User Roles</h5>
+    User permissions are governed through rules defined in the Firestore database, so that a given user may,
+    for example, be assigned create, update, or read roles for accessing data collections in the database. Users
+    having access to multiple accounts may be given different permissions depending on the account.
+    <p>
+    <h5>The Hub Account</h5>
+    Only users in the special Hub account and with create permission can create new accounts. These users will
+    also create the initial user for a new account. An account user with create permission can then create
+    additional users for that account but for that account only.<br/><br/>
+    <p>
+      A user ID created from Leapfire must be a valid email address available to the intended user. Initially, a
+      randomly generated, unknown password is created. The user signing in for the first time will then need to use
+      the Create or Reset Password option to create a known password.
+
+    <h5>Demo Application Sign In with Google</h5>
+    First-time users signing in to the demo Leapfire application with Google will be assigned a new account named
+    the same as their user ID (email address). They will also have a CREATOR role on that account.
+  </div>
+</div>

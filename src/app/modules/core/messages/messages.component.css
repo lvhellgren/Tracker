@@ -1,0 +1,13 @@
+.messages {
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+.messages-error {
+  color: #df5020;
+  background-color: #ffe6e6;
+}
+
+.close-icon:hover {
+  cursor: pointer;
+}

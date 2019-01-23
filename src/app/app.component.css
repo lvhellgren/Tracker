@@ -1,0 +1,13 @@
+
+mat-drawer {
+  width: 50%;
+  padding: 10px 5px 10px 10px;
+}
+
+.footer {
+  font-size: 11px;
+  padding-left: 15px;
+  color: gray;
+  margin: 0;
+  width: 100%;
+}

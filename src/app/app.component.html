@@ -1,3 +1,42 @@
-<main>
-  <router-outlet></router-outlet>
-</main>
+<div fxLayout="column"
+     fxLayoutGap="1px"
+     fxLayoutAlign="space-between stretch">
+  <div fxFlexOrder="1">
+    <app-navbar
+      (navDrawerToggle)="drawerToggle('nav')"
+      (helpDrawerToggle)="drawerToggle('help')"
+      (preferencesDrawerToggle)="drawerToggle('prefs')">
+    </app-navbar>
+  </div>
+
+  <div fxFlexOrder="2">
+    <app-messages></app-messages>
+  </div>
+  <div *ngIf="isSignedIn" fxFlexOrder="3">
+    <mat-drawer-container>
+      <mat-drawer #appdrawer>
+        <div [ngSwitch]="drawerType">
+          <app-pages *ngSwitchCase="'nav'"
+                     (preferencesClick)="drawerToggle('prefs')"
+                     [appdrawer]="appdrawer">
+          </app-pages>
+          <app-help *ngSwitchCase="'help'"
+                    class="help-drawer"
+                    [appdrawer]="appdrawer">
+          </app-help>
+          <app-user-preferences *ngSwitchCase="'prefs'"
+                                class="preferences-drawer"
+                                [appdrawer]="appdrawer">
+          </app-user-preferences>
+        </div>
+      </mat-drawer>
+      <mat-drawer-content>
+        <router-outlet></router-outlet>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+  <div class="footer"
+       fxFlexOrder="4">
+    Copyright &copy; 2019 lars@exelor.com
+  </div>
+</div>

@@ -1,0 +1,49 @@
+.setup {
+  height: calc(100vh - 100px);
+}
+
+.setup-header {
+  background-color: #3f51b5;
+}
+
+.setup-header-btn {
+  color: white;
+  padding-left: 10px;
+}
+
+.setup-header-text {
+  color: white;
+  font-weight: bolder;
+  font-size: 14px;
+}
+
+mat-expansion-panel-header {
+  height: 35px !important;
+}
+
+.panel-title {
+  color: gray;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.panel-item {
+  color: gray;
+  font-size: 13px;
+  text-align: left;
+  line-height: 25px
+}
+
+.active-setup {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+mat-drawer-content {
+  padding: 0 5px;
+}
+
+a.disabled {
+  pointer-events: none;
+  color: lightgray;
+}
