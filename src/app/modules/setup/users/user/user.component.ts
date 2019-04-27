@@ -42,8 +42,6 @@ export class UserComponent implements OnInit, OnDestroy {
   msg: string;
   returnPath: string;
 
-  @Input() user: UserDto;
-
   userIdValidators = [
     Validators.required,
     Validators.email

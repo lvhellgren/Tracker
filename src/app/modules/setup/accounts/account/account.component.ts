@@ -41,8 +41,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   msg: string;
   returnPath: string;
 
-  @Input() account: AccountDto;
-
   routeSubscription: Subscription;
   accountSubscription: Subscription;
   msgSubscription: Subscription;

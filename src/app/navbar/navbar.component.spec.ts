@@ -61,6 +61,6 @@ describe('NavbarComponent', () => {
 
   it('should show application name', () => {
     const txt = fixture.debugElement.query(By.css('.txt-logo'));
-    expect(txt.nativeElement.textContent.trim()).toContain('Leapfire');
+    expect(txt.nativeElement.textContent.trim()).toContain('Tracker');
   });
 });

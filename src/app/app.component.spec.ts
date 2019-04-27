@@ -5,9 +5,9 @@ import { AppComponent } from './app.component';
 import { Router } from '@angular/router';
 import { SignInComponent } from './modules/core/sign-in/sign-in.component';
 import { SetupComponent } from './modules/setup/setup.component';
-import { Page2Component } from './modules/page2/page2.component';
-import { Page3Component } from './modules/page3/page3.component';
-import { Page1Component } from './modules/page1/page1.component';
+import { LandmarksComponent } from './modules/landmarks/landmarks.component';
+import { AlertsComponent } from './modules/alerts/alerts.component';
+import { AssetsComponent } from './modules/assets/assets.component';
 import { UnknownComponent } from './modules/core/unknown/unknown.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -30,7 +30,6 @@ class MockMatDialog {
 }
 
 describe('AppComponent', () => {
-  let component: AppComponent;
   let location: Location;
   let router: Router;
   let fixture;
@@ -45,9 +44,9 @@ describe('AppComponent', () => {
         AppComponent,
         SignInComponent,
         SetupComponent,
-        Page1Component,
-        Page2Component,
-        Page3Component,
+        AssetsComponent,
+        LandmarksComponent,
+        AlertsComponent,
         UnknownComponent,
         NavbarComponent,
         MessagesComponent,
@@ -79,10 +78,10 @@ describe('AppComponent', () => {
     expect(location.path()).toBe('/');
   }));
 
-  xit('navigate to "page1" should redirect to /page1', fakeAsync(() => {
-    router.navigate(['page1']);
+  xit('navigate to "assets" should redirect to /assets', fakeAsync(() => {
+    router.navigate(['assets']);
     tick();
     console.dir(location);
-    expect(location.path()).toBe('/page1');
+    expect(location.path()).toBe('/assets');
   }));
 });

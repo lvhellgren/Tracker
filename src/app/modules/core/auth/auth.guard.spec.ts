@@ -6,9 +6,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { routes } from '../../../app-routing.module';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { SetupComponent } from '../../setup/setup.component';
-import { Page1Component } from '../../page1/page1.component';
-import { Page2Component } from '../../page2/page2.component';
-import { Page3Component } from '../../page3/page3.component';
+import { AssetsComponent } from '../../assets/assets.component';
+import { LandmarksComponent } from '../../landmarks/landmarks.component';
+import { AlertsComponent } from '../../alerts/alerts.component';
 import { UnknownComponent } from '../unknown/unknown.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -24,9 +24,9 @@ describe('AuthGuard', () => {
       declarations: [
         SetupComponent,
         SignInComponent,
-        Page1Component,
-        Page2Component,
-        Page3Component,
+        AssetsComponent,
+        LandmarksComponent,
+        AlertsComponent,
         UnknownComponent],
       providers: [
         {provide: AuthService, useClass: MockAuthService}

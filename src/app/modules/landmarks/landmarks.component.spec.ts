@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Page3Component } from './page3.component';
+import { LandmarksComponent } from './landmarks.component';
 
-describe('Page3Component', () => {
-  let component: Page3Component;
-  let fixture: ComponentFixture<Page3Component>;
+describe('LandmarksComponent', () => {
+  let component: LandmarksComponent;
+  let fixture: ComponentFixture<LandmarksComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [Page3Component]
+      declarations: [LandmarksComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Page3Component);
+    fixture = TestBed.createComponent(LandmarksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

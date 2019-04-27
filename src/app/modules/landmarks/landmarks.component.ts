@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren.
+// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -21,15 +21,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Page3Component } from './page3.component';
+import { Component, OnInit } from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [Page3Component]
+@Component({
+  selector: 'app-landmarks',
+  templateUrl: './landmarks.component.html',
+  styleUrls: ['./landmarks.component.css']
 })
-export class Page3Module {
+export class LandmarksComponent implements OnInit {
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
+
 }

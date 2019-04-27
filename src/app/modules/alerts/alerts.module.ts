@@ -23,13 +23,13 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Page2Component } from './page2.component';
+import { AlertsComponent } from './alerts.component';
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [Page2Component]
+  declarations: [AlertsComponent]
 })
-export class Page2Module {
+export class AlertsModule {
 }

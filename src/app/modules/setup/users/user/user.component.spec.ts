@@ -12,9 +12,9 @@ import { routes } from '../../../../app-routing.module';
 import { SignInComponent } from '../../../core/sign-in/sign-in.component';
 import { AppAngularMaterialModule } from '../../../../app-angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Page1Component } from '../../../page1/page1.component';
-import { Page2Component } from '../../../page2/page2.component';
-import { Page3Component } from '../../../page3/page3.component';
+import { AssetsComponent } from '../../../assets/assets.component';
+import { LandmarksComponent } from '../../../landmarks/landmarks.component';
+import { AlertsComponent } from '../../../alerts/alerts.component';
 import { UnknownComponent } from '../../../core/unknown/unknown.component';
 import { SetupComponent } from '../../setup.component';
 import { By } from '@angular/platform-browser';
@@ -45,9 +45,9 @@ describe('UserComponent', () => {
         UserComponent,
         SetupComponent,
         SignInComponent,
-        Page1Component,
-        Page2Component,
-        Page3Component,
+        AssetsComponent,
+        LandmarksComponent,
+        AlertsComponent,
         UnknownComponent],
       providers: [
         {provide: FormBuilder, useValue: fb},

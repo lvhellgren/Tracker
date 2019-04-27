@@ -27,14 +27,14 @@ import { SignInComponent } from './modules/core/sign-in/sign-in.component';
 import { UnknownComponent } from './modules/core/unknown/unknown.component';
 import { AuthGuard } from './modules/core/auth/auth.guard';
 import { SetupComponent } from './modules/setup/setup.component';
-import { Page1Component } from './modules/page1/page1.component';
-import { Page2Component } from './modules/page2/page2.component';
-import { Page3Component } from './modules/page3/page3.component';
+import { AssetsComponent } from './modules/assets/assets.component';
+import { LandmarksComponent } from './modules/landmarks/landmarks.component';
+import { AlertsComponent } from './modules/alerts/alerts.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'page1',
+    redirectTo: 'assets',
     pathMatch: 'full',
   },
   {
@@ -48,18 +48,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'page1',
-    component: Page1Component,
+    path: 'assets',
+    component: AssetsComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'page2',
-    component: Page2Component,
+    path: 'landmarks',
+    component: LandmarksComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'page3',
-    component: Page3Component,
+    path: 'alerts',
+    component: AlertsComponent,
     canActivate: [AuthGuard]
   },
   {

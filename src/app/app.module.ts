@@ -35,9 +35,9 @@ import { UserPreferencesComponent } from './drawers/user-preferences/user-prefer
 import { PagesComponent } from './drawers/pages/pages.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SetupModule } from './modules/setup/setup.module';
-import { Page1Module } from './modules/page1/page1.module';
-import { Page2Module } from './modules/page2/page2.module';
-import { Page3Module } from './modules/page3/page3.module';
+import { AssetsModule } from './modules/assets/assets.module';
+import { LandmarksModule } from './modules/landmarks/landmarks.module';
+import { AlertsModule } from './modules/alerts/alerts.module';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -52,9 +52,9 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     CoreModule,
     SetupModule,
-    Page1Module,
-    Page2Module,
-    Page3Module,
+    AssetsModule,
+    LandmarksModule,
+    AlertsModule,
     AppRoutingModule,  // Should be last import of application modules
     BrowserAnimationsModule,
     BrowserModule,

@@ -7,9 +7,9 @@ import { AppAngularMaterialModule } from '../../../../app-angular-material.modul
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SetupComponent } from '../../setup.component';
 import { SignInComponent } from '../../../core/sign-in/sign-in.component';
-import { Page1Component } from '../../../page1/page1.component';
-import { Page2Component } from '../../../page2/page2.component';
-import { Page3Component } from '../../../page3/page3.component';
+import { AssetsComponent } from '../../../assets/assets.component';
+import { LandmarksComponent } from '../../../landmarks/landmarks.component';
+import { AlertsComponent } from '../../../alerts/alerts.component';
 import { UnknownComponent } from '../../../core/unknown/unknown.component';
 import { TimestampToDatePipe } from '../../../core/timestamp-to-date.pipe';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -50,9 +50,9 @@ describe('AllUsersComponent', () => {
         AllUsersComponent,
         SetupComponent,
         SignInComponent,
-        Page1Component,
-        Page2Component,
-        Page3Component,
+        AssetsComponent,
+        LandmarksComponent,
+        AlertsComponent,
         UnknownComponent,
         TimestampToDatePipe
       ],

@@ -36,7 +36,7 @@ import { ErrorDlgComponent } from '../error-dlg/error-dlg.component';
 import { MatDialog } from '@angular/material';
 
 export const SIGN_IN_PAGE = '/sign-in';
-export const HOME_PAGE = '/page1';
+export const HOME_PAGE = '/assets';
 
 export const HUB_ACCOUNT_ID = 'Hub';
 
