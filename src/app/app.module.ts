@@ -26,44 +26,55 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppAngularFireModule } from './app-angular-fire.module';
-import { CoreModule } from './modules/core/core.module';
+import { CoreModule } from './main/core/core.module';
 import { AppAngularMaterialModule } from './app-angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HelpComponent } from './drawers/help/help.component';
 import { UserPreferencesComponent } from './drawers/user-preferences/user-preferences.component';
-import { PagesComponent } from './drawers/pages/pages.component';
+import { MainComponent } from './drawers/main/main.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { SetupModule } from './modules/setup/setup.module';
-import { AssetsModule } from './modules/assets/assets.module';
-import { LandmarksModule } from './modules/landmarks/landmarks.module';
-import { AlertsModule } from './modules/alerts/alerts.module';
+import { SetupModule } from './main/setup/setup.module';
+import { UnitsModule } from './main/locations/units/units.module';
+import { PlacesModule } from './main/locations/places/places.module';
+import { NotificationsModule } from './main/notifications/notifications.module';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { AppKendoModule } from './app-kendo.module';
+import { LocationsModule } from './main/locations/locations.module';
+import { GlobalService } from './sevices/global';
+import { MatNativeDateModule } from '@angular/material';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    PagesComponent,
+    MainComponent,
     HelpComponent,
     UserPreferencesComponent
   ],
   imports: [
     CoreModule,
     SetupModule,
-    AssetsModule,
-    LandmarksModule,
-    AlertsModule,
+    LocationsModule,
+    UnitsModule,
+    PlacesModule,
+    NotificationsModule,
     AppRoutingModule,  // Should be last import of application modules
     BrowserAnimationsModule,
     BrowserModule,
     FlexLayoutModule,
     HttpClientModule,
     AppAngularFireModule,
-    AppAngularMaterialModule
+    AppAngularMaterialModule,
+    AppKendoModule,
+    MatNativeDateModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    GlobalService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

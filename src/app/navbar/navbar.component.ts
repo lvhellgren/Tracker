@@ -24,9 +24,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../modules/core/auth/auth.service';
-import { ConfirmationDlgComponent } from '../modules/core/confirmation-dlg/confirmation-dlg-component';
-import { UserService } from '../modules/setup/users/user.service';
+import { AuthService } from '../main/core/auth/auth.service';
+import { ConfirmationDlgComponent } from '../main/core/confirmation-dlg/confirmation-dlg-component';
+import { UserService } from '../main/setup/users/user.service';
 
 @Component({
   selector: 'app-navbar',

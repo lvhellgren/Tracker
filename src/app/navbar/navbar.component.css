@@ -18,11 +18,23 @@ a:hover {
   margin: 0 10px;
 }
 
-.txt-logo {
+.logo {
+  padding-top: 0;
+}
+
+.exelor-logo {
   font-family: Arial, sans-serif;
   font-size: 25px;
-  padding: 5px;
+  padding: 0 5px 5px;
   font-stretch: ultra-condensed;
+  color: white;
+  height: 14px;
+}
+
+.txt-logo {
+  font-size: 11px;
+  padding: 0 5px;
+  margin-top: 4px;
   color: white;
 }
 
@@ -34,6 +46,7 @@ a:hover {
 .active-page {
   font-weight: bold;
   border-bottom: 2px solid currentColor;
+  pointer-events: none;
 }
 
 .account-name {
@@ -49,14 +62,14 @@ a:hover {
   color: white;
 }
 
-.page-row{
+.page-row {
   padding-bottom: 6px;
 }
 
 .account {
   padding-right: 10px;
   width: 40%;
-  font-size: small;
+  font-size: medium;
 }
 
 .dropdown-item {
@@ -77,7 +90,11 @@ a:hover {
   padding-bottom: 0px !important;
 }
 
-.current-page {
+.current-account {
   font-size: medium;
   padding-top: 7px;
+}
+
+.disabled {
+  pointer-events: none;
 }

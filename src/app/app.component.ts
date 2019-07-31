@@ -44,7 +44,7 @@ export class AppComponent {
     // Register the 'Sign In with Google' icon with MathIconRegistry
     this.matIconRegistry.addSvgIcon(
       'google_sign_in',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('/assets/btn_google_dark_normal_ios.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('/devices/btn_google_dark_normal_ios.svg')
     );
   }
 

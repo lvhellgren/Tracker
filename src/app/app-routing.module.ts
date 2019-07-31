@@ -23,18 +23,15 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SignInComponent } from './modules/core/sign-in/sign-in.component';
-import { UnknownComponent } from './modules/core/unknown/unknown.component';
-import { AuthGuard } from './modules/core/auth/auth.guard';
-import { SetupComponent } from './modules/setup/setup.component';
-import { AssetsComponent } from './modules/assets/assets.component';
-import { LandmarksComponent } from './modules/landmarks/landmarks.component';
-import { AlertsComponent } from './modules/alerts/alerts.component';
+import { SignInComponent } from './main/core/sign-in/sign-in.component';
+import { UnknownComponent } from './main/core/unknown/unknown.component';
+import { AuthGuard } from './main/core/auth/auth.guard';
+import { NotificationsComponent } from './main/notifications/notifications.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'assets',
+    redirectTo: 'locations',
     pathMatch: 'full',
   },
   {
@@ -42,24 +39,18 @@ export const routes: Routes = [
     component: SignInComponent
   },
   {
+    path: 'locations',
+    loadChildren: './main/locations/locations.module#LocationsModule',
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'setup',
-    component: SetupComponent,
-    loadChildren: './modules/setup/setup.module#SetupModule',
+    loadChildren: './main/setup/setup.module#SetupModule',
     canActivate: [AuthGuard]
   },
   {
-    path: 'assets',
-    component: AssetsComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'landmarks',
-    component: LandmarksComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'alerts',
-    component: AlertsComponent,
+    path: 'notifications',
+    component: NotificationsComponent,
     canActivate: [AuthGuard]
   },
   {

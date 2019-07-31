@@ -1,0 +1,17 @@
+.unit-name {
+  font-weight: bold;
+  margin: 20px;
+  height: 1vh;
+}
+
+.date {
+  width: 150px !important;
+}
+
+.date-input {
+  font-size: smaller;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+

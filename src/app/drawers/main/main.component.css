@@ -1,0 +1,29 @@
+.pages {
+}
+
+.account {
+  width: 80%;
+  font-size: small;
+  font-weight: 500;
+  padding: 0 16px;
+}
+
+.navbar-label {
+  color: gray;
+  font-size: smaller;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+a {
+  color: gray;
+}
+
+.active-page {
+  color: rgba(0,0,0,.87);
+  pointer-events: none;
+}
+
+.disabled {
+  pointer-events: none;
+}

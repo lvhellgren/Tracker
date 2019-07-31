@@ -2,13 +2,90 @@
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+@import '~@progress/kendo-theme-material/dist/all.css';
 
 html, body {
-  height: 100%;
-  padding: 0;
   font-family: 'Roboto', sans-serif;
+  font-size: medium;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
 }
 
-body {
+
+.unit-table-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/** mat-table styling */
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 220px) !important;
+  height: calc(100vh - 220px) !important;
+}
+
+.table-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
   margin: 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-header-row {
+  min-height: 30px;
+}
+
+.mat-row {
+  min-height: 40px;
+  cursor: pointer;
+  touch-action: pan-x !important;
+}
+
+.mat-row:hover {
+  background-color: lightsteelblue;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  padding: 0 5px;
+  line-break: unset;
+  min-height: fit-content;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+  border-right: 1px solid lightgray;
+}
+
+.mat-cell:last-of-type,
+.mat-header-cell:last-of-type {
+  border-right: 0;
 }

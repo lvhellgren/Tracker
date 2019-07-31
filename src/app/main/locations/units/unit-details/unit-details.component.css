@@ -1,0 +1,32 @@
+.unit-name {
+  font-weight: bold;
+  margin: 20px;
+  height: 1vh;
+}
+
+.list {
+  margin: 10px 0;
+}
+
+.item {
+  height: 30px !important;
+}
+
+.adr-item {
+  height: 20px !important;
+}
+
+.item-name, .adr-item-name {
+  color: gray;
+  width: 130px;
+  font-size: smaller;
+}
+
+.adr-item-name {
+  padding-left: 20px;
+}
+
+.item-value {
+  width: 220px;
+  font-size: smaller;
+}

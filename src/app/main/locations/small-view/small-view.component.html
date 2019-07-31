@@ -1,0 +1,56 @@
+
+<div fxFlex="100%" fxLayout="row">
+  <div fxFlex
+       fxLayout="column">
+    <div class="locations-pane">
+      <div class="header-row"
+           fxLayout="row"
+           fxLayoutAlign="start">
+        <div>
+          <a href="#" mat-button
+             [routerLink]="['units']"
+             [routerLinkActive]="['active-locations']">
+            UNITS
+          </a>
+        </div>
+        <div [ngClass]="{'disabled': unitHistoryDisabled()}">
+          <a href="#" mat-button
+             [disabled]="unitHistoryDisabled()"
+             [routerLink]="['unit-history']"
+             [routerLinkActive]="['unit-history']">
+            UNIT
+          </a>
+        </div>
+        <div [ngClass]="{'disabled': unitInfoDisabled()}">
+          <a href="#" mat-button
+             [disabled]="unitInfoDisabled()"
+             [routerLink]="['unit-details']"
+             [routerLinkActive]="['unit-history']">
+            DETAILS
+          </a>
+        </div>
+        <div class="separator">|</div>
+        <div [ngClass]="{'disabled': placesDisabled()}">
+          <a href="#" mat-button
+             [disabled]="placesDisabled()"
+             [routerLink]="['places']"
+             [routerLinkActive]="['active-locations']">
+            PLACES
+          </a>
+        </div>
+        <div [ngClass]="{'disabled': placeDisabled()}">
+          <a href="#" mat-button
+             [disabled]="placeDisabled()"
+             [routerLink]="['place']"
+             [routerLinkActive]="['active-locations']">
+            PLACE
+          </a>
+        </div>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+    <div class="map-pane">
+      <app-map></app-map>
+    </div>
+  </div>
+</div>

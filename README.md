@@ -1,10 +1,12 @@
 ### Tracker - Angular and Firebase GPS Tracker
 
-####Application Structure
+####Application Description
+A base application for showing device location history information in table and Google Map layouts.
 
 #####Serverless Application
 The base application is serverless in that it uses the Google Firebase/Firestore cloud database for access
-to user and account information.
+to location data as well as user and account information. Location data may be provided by any device capable
+of accessing Firestore. A sample Android application for this purpose is provided by https://github.com/lvhellgren/LayTrax.
 
 #####Single Page Application
 Tracker is a single page Angular application written in TypeScript taking advantage of Angular features
@@ -15,7 +17,7 @@ Tracker employs Angular Flex-Layout to automatically format UI layouts to fit va
 
 #####Modular Development
 Tracker is designed for modular development. The Core module provides sign-in capability and basic features
-for use by other modules. The Structure module manages users and accounts as well as the relationships
+for use by other modules. The Setup module manages users and accounts as well as the relationships
 between these entities. Application-specific functionality may be implemented by creating new modules 
 (or by extending existing placeholder modules).
 
@@ -32,11 +34,30 @@ User permissions are governed through rules defined in the Firestore database, s
 for example, be assigned create, update, or read roles for accessing data collections in the database. Users
 having access to multiple accounts may be given different permissions depending on the account.
 
-#####The Hub Account
-Only users in the special Hub account and with create permission can create new accounts. These users will
+#####The Principal Account
+Only users in the special Principal account and with create permission can create new accounts. These users will
 also create the initial user for a new account. An account user with create permission can then create
 additional users for that account but for that account only.
 
 A user ID created from Tracker must be a valid email address available to the intended user. Initially, a
 randomly generated, unknown password is created. The user signing in for the first time will then need to use 
 the Create or Reset Password option to create a known password.
+
+#####License
+MIT
+
+#####Third Party Software Used
+| Software             | License          |
+|----------------------|------------------|
+| AGM                  | MIT              |
+| Angular              | MIT              |
+| Angular Flex-Layout  | MIT              |
+| Angular Material     | MIT              |
+| Angular rxjs         | MIT              |
+| Core-js              | MIT              |
+| Hammerjs             | MIT              |
+| NG Bootstrap         | MIT              |
+| JavaScript           | Apache 2.0       |
+| Kendo UI for Angular | License required |
+| TypeScript           | Apache 2.0       |
+| Zone.js              | MIT              |

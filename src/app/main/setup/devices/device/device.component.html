@@ -1,0 +1,77 @@
+<div class="device" fxLayoutAlign="center">
+  <form #deviceForm="ngForm"
+        fxFlex.gt-xs="400px"
+        fxFlex.lt-xs="100%"
+        fxLayout="column"
+        [formGroup]="deviceFormGroup"
+        (ngSubmit)="onSubmit()">
+    <div class="active" fxLayout="row"
+         fxLayoutAlign="end center">
+      <mat-checkbox [formControl]="active" disabled="false">Active</mat-checkbox>
+    </div>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             required
+             matInput
+             placeholder="Name"
+             formControlName="name">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             required
+             matInput
+             placeholder="Device ID"
+             formControlName="deviceId">
+      <mat-error>Missing Device ID.</mat-error>
+    </mat-form-field>
+    <div fxLayout="column" *ngIf="!createDevice">
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Modified"
+               [readonly]="true"
+               formControlName="modifiedAt">
+      </mat-form-field>
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Created"
+               [readonly]="true"
+               formControlName="createdAt">
+      </mat-form-field>
+    </div>
+    <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   rows="1"
+                   matInput
+                   placeholder="Comment"
+                   formControlName="comment">
+         </textarea>
+    </mat-form-field>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around start">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button class="clear-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onClear(deviceForm)">
+        Clear
+      </button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="deviceFormGroup.invalid || (
+              deviceFormGroup.pristine &&
+              active.pristine)">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

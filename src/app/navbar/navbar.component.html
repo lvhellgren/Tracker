@@ -11,14 +11,17 @@
     <div *ngIf="isSignedIn"
          fxShow="false"
          fxShow.lt-md="true"
-         style="padding-right: 10px; height: 35px;">
+         style="height: 35px;">
       <button mat-icon-button (click)="onDrawerBtnClick()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
-    <div>
-      <div fxFlex class="txt-logo">
-        <span>Tracker</span>
+    <div class="logo">
+      <div fxFlex
+           fxLayout="column"
+           fxLayoutAlign="space-around start">
+        <div class="exelor-logo">e<sup style="font-size: 20px;">x</sup>elor</div>
+        <div class="txt-logo">T R A C K E R</div>
       </div>
       <img class="logo" src="/assets/tracker_white.png">
     </div>
@@ -28,10 +31,8 @@
          fxLayoutAlign="center"
          fxShow="false"
          fxShow.lt-md="true"
-         class="current-page">
-      <div fxShow.lt-sm="false">
+         class="current-account">
         {{authService.currentUserAccountId}}
-      </div>
     </div>
     <!---->
   </div>
@@ -47,26 +48,20 @@
          fxLayoutAlign="space-around end">
       <div>
         <a href="#" mat-button
-           [routerLink]="['assets']"
+           [routerLink]="['locations']"
            [routerLinkActive]="['active-page']"
-           matTooltip="Sample page">
-          ASSETS
+           matTooltip="Units and Places page">
+          LOCATIONS
         </a>
       </div>
-      <div>
+      <div [ngClass]="{'disabled': true}">
         <a href="#" mat-button
-           [routerLink]="['landmarks']"
+           [ngStyle]="{'color':'lightgray'}"
+           [disabled]=true
+           [routerLink]="['notifications']"
            [routerLinkActive]="['active-page']"
            matTooltip="Sample page">
-          LANDMARKS
-        </a>
-      </div>
-      <div>
-        <a href="#" mat-button
-           [routerLink]="['alerts']"
-           [routerLinkActive]="['active-page']"
-           matTooltip="Sample page">
-          ALERTS
+          NOTIFICATIONS
         </a>
       </div>
       <div>
@@ -84,27 +79,31 @@
       <div class="account"
            fxFlexOrder="1"
            fxLayout="row"
-           fxLayoutAlign="end center"
+           fxLayoutAlign="center center"
            matTooltip="Current account">
         <mat-select [(ngModel)]="authService.currentUserAccountId"
+                    *ngIf="authService.userAccountIds?.length > 1 else singleAccount"
                     (ngModelChange)="selectedUserAccountId = $event"
                     name="accountId">
           <mat-option *ngFor="let accountId of authService?.userAccountIds" [value]="accountId">
             {{accountId}}
           </mat-option>
         </mat-select>
+        <ng-template #singleAccount>
+            {{authService.currentUserAccountId}}
+        </ng-template>
       </div>
       <div fxFlexOrder="2"
            fxLayoutAlign="end"
            matTooltip="Currently signed in user">
-        <button mat-button [matMenuTriggerFor]="userMenu">
+        <button mat-button id="user-dropdown" [matMenuTriggerFor]="userMenu">
           {{authService?.getUserId()}}
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #userMenu="matMenu">
-          <button mat-menu-item class="menu-item" (click)="onSignOutClick()">Sign Out</button>
+          <button mat-menu-item (click)="onSignOutClick()">Sign Out</button>
           <hr style="margin: 2px 0"/>
-          <button mat-menu-item class="menu-item" (click)="onPreferencesClick()">Preferences</button>
+          <button mat-menu-item (click)="onPreferencesClick()">Preferences</button>
         </mat-menu>
       </div>
     </div>

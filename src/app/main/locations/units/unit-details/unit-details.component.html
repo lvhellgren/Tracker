@@ -1,0 +1,100 @@
+<div fxLayout="column"
+     fxLayoutAlign="start stretch">
+  <div class="unit-name"
+       fxFlexOrder="1">
+    {{unitName}}
+  </div>
+  <div class="mat-elevation-z4"
+       fxFlexOrder="2"
+       fxFlexFill>
+    <mat-list class="list">
+      <mat-list-item class="item">
+        <span class="item-name">Account</span>
+        <span class="item-value">{{stepDoc?.account}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Accuracy Given</span>
+        <span class="item-value">{{stepDoc?.hasAccuracy}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Accuracy</span>
+        <span class="item-value">{{stepDoc?.accuracy}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Address</span>
+      </mat-list-item>
+      <mat-list-item class="adr-item">
+        <span class="adr-item-name">Street</span>
+        <span class="item-value">{{stepDoc?.address.subThoroughfare}} {{stepDoc?.address.thoroughfare}}</span>
+      </mat-list-item>
+      <mat-list-item class="adr-item">
+        <span class="adr-item-name">Locality</span>
+        <span class="item-value">{{stepDoc?.address.locality}}</span>
+      </mat-list-item>
+      <mat-list-item class="adr-item">
+        <span class="adr-item-name">Postal Code</span>
+        <span class="item-value">{{stepDoc?.address.postalCode}}</span>
+      </mat-list-item>
+      <mat-list-item class="adr-item">
+        <span class="adr-item-name">County</span>
+        <span class="item-value">{{stepDoc?.address.subAdminArea}}</span>
+      </mat-list-item>
+      <mat-list-item class="adr-item">
+        <span class="adr-item-name">Country</span>
+        <span class="item-value">{{stepDoc?.address.countryName}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Altitude Given</span>
+        <span class="item-value">{{stepDoc?.hasAltitude}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Altitude</span>
+        <span class="item-value">{{stepDoc?.altitude}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Bearing Given</span>
+        <span class="item-value">{{stepDoc?.hasBearing}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Bearing</span>
+        <span class="item-value">{{stepDoc?.bearing}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Time</span>
+        <span class="item-value">{{stepDoc?.datetime}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Device ID</span>
+        <span class="item-value">{{stepDoc?.deviceId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Step Length</span>
+        <span class="item-value">{{stepDoc?.stepLength}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Email</span>
+        <span class="item-value">{{stepDoc?.email}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Document ID</span>
+        <span class="item-value">{{stepDoc?.documentId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Latitude</span>
+        <span class="item-value">{{stepDoc?.latitude}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Longitude</span>
+        <span class="item-value">{{stepDoc?.longitude}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Speed Given</span>
+        <span class="item-value">{{stepDoc?.hasSpeed}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Speed</span>
+        <span class="item-value">{{stepDoc?.speed}}</span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
