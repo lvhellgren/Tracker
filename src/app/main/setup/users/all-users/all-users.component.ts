@@ -43,8 +43,8 @@ export class AllUsersComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['email', 'name', 'activeUser', 'signedInAt'];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
     private authService: AuthService,

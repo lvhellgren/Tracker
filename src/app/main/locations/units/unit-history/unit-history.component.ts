@@ -37,8 +37,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   public length = (this.pageIndex + 1) * this.pageSize + this.pageSize;
   private bottomPageRows = [0];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   private tapCount = 0;
 

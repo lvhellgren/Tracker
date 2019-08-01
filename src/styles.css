@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
 @import '~@progress/kendo-theme-material/dist/all.css';
 
 html, body {

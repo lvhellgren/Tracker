@@ -45,8 +45,8 @@ export class AccountUsersComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['email', 'name', 'phone', 'roles', 'activeUser', 'signedInAt'];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
     private authService: AuthService,

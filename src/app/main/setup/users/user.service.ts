@@ -195,7 +195,7 @@ export class UserService {
           this.updateUserDocs(userDoc, accountUserDoc, returnPath);
         }
       } else {
-        this.afAuth.auth.fetchProvidersForEmail(userDto.email)
+        this.afAuth.auth.fetchSignInMethodsForEmail(userDto.email)
           .then(providers => {
             const userDoc: UserDoc = UserService.buildUserDoc(userDto);
             if (providers.length === 0) {

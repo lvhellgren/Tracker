@@ -36,7 +36,7 @@ export class AppComponent {
 
   @Output() accountClick: EventEmitter<string> = new EventEmitter();
 
-  @ViewChild('appdrawer') private appdrawer: any;
+  @ViewChild('appdrawer', {static: false}) private appdrawer: any;
 
   constructor(
     private matIconRegistry: MatIconRegistry,

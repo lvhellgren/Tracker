@@ -41,8 +41,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public displayedColumns = ['name', 'time', 'street', 'city'];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   private tapCount = 0;
 

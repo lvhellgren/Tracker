@@ -15,8 +15,8 @@ export class UnitDetailsComponent implements OnInit, OnDestroy {
   private routeSubscription: Subscription;
   public unitName: String;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(public unitService: UnitService,
               private mapService: MapService,
