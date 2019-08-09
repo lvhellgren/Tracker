@@ -18,7 +18,9 @@ export class MapComponent implements OnInit, OnDestroy {
   longitude = 0;
   zoom = 4;
 
-  iconUrl = {url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff6347'};
+  iconDir = '../../../../assets/';
+  colorSelected = 'red';
+  colorUnselected = 'blue';
 
   constructor(public unitService: UnitService,
               private mapService: MapService,
@@ -31,7 +33,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.mapSubscription = this.mapService.mapUpdates$.subscribe(
       items => {
         this.items = items;
-        this.setMarkerIcons();
+        this.setMarkerIcons(true);
       });
   }
 
@@ -41,20 +43,32 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-  setMarkerIcons() {
+  setMarkerIcons(bounceSelected: boolean) {
     this.items.forEach((item: StepDoc) => {
-      let icon = {url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff6347'};
-      const selectIcon = {url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3f51b5'};
+      let icon = null;
+      const selectIcon = {url: `${this.iconDir}red_dot19.png`};
+      let animation = null;
       if (item.type && item.type === 'last-step') {
         if (this.unitService.currentUnit && this.unitService.currentUnit.deviceId === item.deviceId) {
-          icon = selectIcon;
+          icon = this.getIcon(this.colorSelected, item.bearingForward);
+          if (bounceSelected) {
+            animation = 'BOUNCE';
+          }
+        } else {
+          icon = this.getIcon(this.colorUnselected, item.bearingForward);
         }
       } else {
         if (this.unitService.currentUnitStep && this.unitService.currentUnitStep.documentId === item.documentId) {
-          icon = selectIcon;
+          icon = this.getIcon(this.colorSelected, item.bearingForward);
+          if (bounceSelected) {
+            animation = 'BOUNCE';
+          }
+        } else {
+          icon = this.getIcon(this.colorUnselected, item.bearingForward);
         }
       }
       item.iconUrl = icon;
+      item.animation = animation;
 
       if (!item.name && this.unitService.currentUnit) {
         item.name = this.unitService.currentUnit.name;
@@ -74,10 +88,10 @@ export class MapComponent implements OnInit, OnDestroy {
       id = item.documentId;
       this.unitService.currentUnitStep = item;
     }
-    this.setMarkerIcons();
+    this.setMarkerIcons(false);
   }
 
-  // Marker dblclick is currently not supported by agm
+  // Marker dblclick is currently (v 1.0.0-beta.7) not supported by agm
   onMarkerDblClick(item: StepDoc) {
     let page: string;
     let id: string;
@@ -90,7 +104,7 @@ export class MapComponent implements OnInit, OnDestroy {
       id = item.documentId;
       this.unitService.currentUnitStep = item;
     }
-    this.setMarkerIcons();
+    this.setMarkerIcons(false);
     this.router.navigate([`/locations/${this.global.currentWidth}/${page}`, id]);
   }
 
@@ -104,5 +118,29 @@ export class MapComponent implements OnInit, OnDestroy {
 
   onMouseOut(infoWindow) {
     infoWindow.close();
+  }
+
+  bearingToIconName(bearing: number): string {
+    let hour = '';
+    let type = 'arrow19_';
+    if (bearing !== null) {
+      let clockValue: number;
+      if (bearing < 0) {
+        bearing = 360 + bearing;
+      }
+      clockValue = Math.floor(bearing / 30);
+      if (bearing % 30 >= 15) {
+        clockValue++;
+      }
+      hour = String(clockValue).padStart(2, '0');
+    } else {
+      type = 'dot19';
+    }
+    return type + hour;
+  }
+
+  getIcon(color: string, bearing: number): any {
+    const url = `${this.iconDir}${color}_${this.bearingToIconName(bearing)}.png`;
+    return {url: url};
   }
 }

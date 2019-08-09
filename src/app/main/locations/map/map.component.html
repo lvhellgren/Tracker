@@ -9,6 +9,7 @@
           [latitude]="item.latitude"
           [longitude]="item.longitude"
           [iconUrl]="item.iconUrl"
+          [animation]="item.animation"
           [agmFitBounds]="true"
           (mouseOver)="onMouseOver(infoWindow)"
           (mouseOut)="onMouseOut(infoWindow)"
@@ -26,7 +27,6 @@
   </mat-card-content>
 </mat-card>
 <!--
-   [iconUrl]= "iconUrl"
    [zoom]="optModel.zoom.current"
    [maxZoom] = "optModel.zoom.max"
    [minZoom] = "optModel.zoom.min"

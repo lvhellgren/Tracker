@@ -13,12 +13,12 @@
         <span class="item-value">{{stepDoc?.account}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Accuracy Given</span>
-        <span class="item-value">{{stepDoc?.hasAccuracy}}</span>
-      </mat-list-item>
-      <mat-list-item class="item">
         <span class="item-name">Accuracy</span>
         <span class="item-value">{{stepDoc?.accuracy}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Accuracy Given</span>
+        <span class="item-value">{{stepDoc?.hasAccuracy}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Address</span>
@@ -44,40 +44,36 @@
         <span class="item-value">{{stepDoc?.address.countryName}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Altitude Given</span>
-        <span class="item-value">{{stepDoc?.hasAltitude}}</span>
-      </mat-list-item>
-      <mat-list-item class="item">
         <span class="item-name">Altitude</span>
         <span class="item-value">{{stepDoc?.altitude}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Bearing Given</span>
-        <span class="item-value">{{stepDoc?.hasBearing}}</span>
+        <span class="item-name">Altitude Given</span>
+        <span class="item-value">{{stepDoc?.hasAltitude}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Bearing</span>
         <span class="item-value">{{stepDoc?.bearing}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Time</span>
-        <span class="item-value">{{stepDoc?.datetime}}</span>
+        <span class="item-name">Bearing Given</span>
+        <span class="item-value">{{stepDoc?.hasBearing}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Bearing Forward</span>
+        <span class="item-value">{{stepDoc?.bearingForward}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Device ID</span>
         <span class="item-value">{{stepDoc?.deviceId}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Step Length</span>
-        <span class="item-value">{{stepDoc?.stepLength}}</span>
+        <span class="item-name">Document ID</span>
+        <span class="item-value">{{stepDoc?.documentId}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Email</span>
         <span class="item-value">{{stepDoc?.email}}</span>
-      </mat-list-item>
-      <mat-list-item class="item">
-        <span class="item-name">Document ID</span>
-        <span class="item-value">{{stepDoc?.documentId}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Latitude</span>
@@ -88,12 +84,24 @@
         <span class="item-value">{{stepDoc?.longitude}}</span>
       </mat-list-item>
       <mat-list-item class="item">
-        <span class="item-name">Speed Given</span>
-        <span class="item-value">{{stepDoc?.hasSpeed}}</span>
+        <span class="item-name">Previous Step Bearing</span>
+        <span class="item-value">{{stepDoc?.previousBearing}}</span>
       </mat-list-item>
       <mat-list-item class="item">
         <span class="item-name">Speed</span>
         <span class="item-value">{{stepDoc?.speed}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Speed Given</span>
+        <span class="item-value">{{stepDoc?.hasSpeed}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Step Length</span>
+        <span class="item-value">{{stepDoc?.stepLength}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Time</span>
+        <span class="item-value">{{stepDoc?.datetime}}</span>
       </mat-list-item>
     </mat-list>
   </div>

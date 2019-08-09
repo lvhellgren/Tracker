@@ -20,6 +20,8 @@ export interface StepDoc {
   address?: Address;
   altitude?: number;
   bearing?: number;
+  bearingForward?: number;
+  previousBearing?: number;
   datetime?: string;
   deviceId?: string;
   documentId?: string;
@@ -36,6 +38,7 @@ export interface StepDoc {
   timestamp?: number;
   type?: string;
   iconUrl?: {};
+  animation?: string;
 }
 
 export interface Address {
@@ -117,3 +120,4 @@ export class UnitService {
     });
   }
 }
+
