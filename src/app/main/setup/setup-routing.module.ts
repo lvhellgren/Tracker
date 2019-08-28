@@ -34,6 +34,8 @@ import { AccountUsersComponent } from './users/account-users/account-users.compo
 import { AllDevicesComponent } from './devices/all-devices/all-devices.component';
 import { AccountDevicesComponent } from './devices/account-devices/account-devices.component';
 import { DeviceComponent } from './devices/device/device.component';
+import { LandmarkComponent } from './landmarks/landmark/landmark.component';
+import { LandmarksComponent } from './landmarks/landmarks.component';
 
 const routes: Routes = [
   {
@@ -144,6 +146,26 @@ const routes: Routes = [
       {
         path: 'account-device-details/:id',
         component: DeviceComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-landmark-add',
+        component: LandmarkComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-landmark',
+        component: LandmarkComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-landmark/:id',
+        component: LandmarkComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-landmarks-list',
+        component: LandmarksComponent,
         canActivate: [AuthGuard]
       },
     ]

@@ -1,9 +1,7 @@
 <div class="user" fxLayoutAlign="center">
-  <form #userForm="ngForm"
-        fxFlex.gt-xs="400px"
-        fxFlex.lt-xs="100%"
+  <form fxFlex.gt-xs="400px"
         fxLayout="column"
-        [formGroup]="userFormGroup"
+        [formGroup]="userForm"
         (ngSubmit)="onSubmit()">
     <mat-form-field floatLabel="always">
       <input type="text"
@@ -90,12 +88,12 @@
       <button type="button"
               mat-raised-button
               color="primary"
-              (click)="onClear(userForm)">
+              (click)="onClear()">
         Clear
       </button>
       <button type="submit" mat-raised-button color="primary"
-              [disabled]="userFormGroup.invalid || (
-              userFormGroup.pristine &&
+              [disabled]="userForm.invalid || (
+              userForm.pristine &&
               activeUser.pristine &&
               activeAccountUser.pristine &&
               roles.pristine)">

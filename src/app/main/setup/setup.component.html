@@ -20,113 +20,124 @@
     <div fxFlex="20">
     </div>
   </div>
-  <div fxLayout="column"
-       style="height:100%">
-    <div fxFlex="100"
-         style="padding: 5px;"
-         fxFlexFill>
-      <mat-drawer-container fxFlex="100">
-        <mat-drawer #setupDrawer
-                    mode="side"
-                    opened="true"
-                    class="mat-elevation-z4">
-          <mat-accordion displayMode="flat"
-                         multi="true">
-            <mat-expansion-panel [expanded]="true"
-                                 [disabled]="!principalView">
-              <mat-expansion-panel-header>
-                <mat-panel-title class="panel-title">
-                  {{getMenuName('principal-accounts-list', 0)}}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="column"
-                   fxLayoutAlign="start start">
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['principal-accounts-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()"
-                   [class.disabled]="!principalView">
-                  {{getMenuName('principal-accounts-list', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['principal-users-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()"
-                   [class.disabled]="!principalView">
-                  {{getMenuName('principal-users-list', 1)}}
-                </a>
+  <div class="setup-body"
+       fxFlex="100"
+       fxFlexFill>
+    <mat-drawer-container fxFlex="100">
+      <mat-drawer #setupDrawer
+                  mode="side"
+                  opened="true"
+                  class="mat-elevation-z4">
+        <mat-accordion displayMode="flat"
+                       multi="true">
+          <mat-expansion-panel [expanded]="true"
+                               [disabled]="!principalView">
+            <mat-expansion-panel-header>
+              <mat-panel-title class="panel-title">
+                {{getMenuName('principal-accounts-list', 0)}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column"
+                 fxLayoutAlign="start start">
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['principal-accounts-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)"
+                 [class.disabled]="!principalView">
+                {{getMenuName('principal-accounts-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['principal-users-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)"
+                 [class.disabled]="!principalView">
+                {{getMenuName('principal-users-list', 1)}}
+              </a>
 
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['principal-devices-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()"
-                   [class.disabled]="!principalView">
-                  {{getMenuName('principal-devices-list', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['create-principal-account']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()"
-                   [class.disabled]="!principalView">
-                  {{getMenuName('create-principal-account', 1)}}
-                </a>
-              </div>
-            </mat-expansion-panel>
-            <mat-expansion-panel [expanded]="true">
-              <mat-expansion-panel-header>
-                <mat-panel-title class="panel-title">
-                  {{getMenuName('user-accounts-list', 0)}}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="column"
-                   fxLayoutAlign="start start">
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['user-accounts-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()">
-                  {{getMenuName('user-accounts-list', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['account-users-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()">
-                  {{getMenuName('account-users-list', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['account-user-add']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()">
-                  {{getMenuName('account-user-add', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['account-devices-list']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()">
-                  {{getMenuName('account-devices-list', 1)}}
-                </a>
-                <a href="#" mat-button
-                   class="panel-item"
-                   [routerLink]="['account-device-add']"
-                   [routerLinkActive]="['active-setup']"
-                   (click)="setupDrawer.toggle()">
-                  {{getMenuName('account-device-add', 1)}}
-                </a>
-              </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </mat-drawer>
-        <mat-drawer-content>
-          <router-outlet (activate)="onActivate($event)"></router-outlet>
-        </mat-drawer-content>
-      </mat-drawer-container>
-    </div>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['principal-devices-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)"
+                 [class.disabled]="!principalView">
+                {{getMenuName('principal-devices-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['create-principal-account']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)"
+                 [class.disabled]="!principalView">
+                {{getMenuName('create-principal-account', 1)}}
+              </a>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title class="panel-title">
+                {{getMenuName('user-accounts-list', 0)}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column"
+                 fxLayoutAlign="start start">
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['user-accounts-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('user-accounts-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-users-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-users-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-user-add']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-user-add', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-devices-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-devices-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-device-add']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-device-add', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-landmarks-list']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-landmarks-list', 1)}}
+              </a>
+              <a href="#" mat-button
+                 class="panel-item"
+                 [routerLink]="['account-landmark-add']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)">
+                {{getMenuName('account-landmark-add', 1)}}
+              </a>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-drawer>
+      <mat-drawer-content>
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
+      </mat-drawer-content>
+    </mat-drawer-container>
   </div>
 </div>

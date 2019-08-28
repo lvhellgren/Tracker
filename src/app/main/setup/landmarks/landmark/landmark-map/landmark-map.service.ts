@@ -21,28 +21,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UnitsComponent } from './units.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { AppAngularMaterialModule } from '../../../app-angular-material.module';
-import { UnitHistoryComponent } from './unit-history/unit-history.component';
-import { UnitDetailsComponent } from './unit-details/unit-details.component';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { LatLngLiteral } from '@agm/core/services/google-maps-types';
+import { LandmarkDoc } from '../landmark.service';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    AppAngularMaterialModule
-  ],
-  exports: [
-    UnitsComponent
-  ],
-  declarations: [
-    UnitsComponent,
-    UnitHistoryComponent,
-    UnitDetailsComponent
-  ]
+@Injectable({
+  providedIn: 'root'
 })
-export class UnitsModule {
+export class LandmarkMapService {
+
+  // Landmarks to be shown on the map
+  private landmark = new BehaviorSubject<LandmarkDoc>(null);
+  landmark$ = this.landmark.asObservable();
+
+  // Coords for map click
+  private coords = new Subject<LatLngLiteral>();
+  coords$ = this.coords.asObservable();
+
+  setLandmark<T>(landmark: LandmarkDoc) {
+    this.landmark.next(landmark);
+  }
+
+  setCoords(coords: LatLngLiteral) {
+    this.coords.next(coords);
+  }
 }

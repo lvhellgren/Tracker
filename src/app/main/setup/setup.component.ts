@@ -25,23 +25,27 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, PRINCIPAL_ACCOUNT_ID } from '../core/auth/auth.service';
+import { SetupService } from './setup.service';
 
 export const MENU_NAMES: Map<string, string[]> = new Map([
-  ['blank',                     ['',               'Setup']],
-  ['principal-accounts-list',   ['Principal View', 'All Accounts']],
+  ['blank', ['', 'Setup']],
+  ['principal-accounts-list', ['Principal View', 'All Accounts']],
   ['principal-account-details', ['Principal View', 'Account Details']],
-  ['create-principal-account',  ['Principal View', 'Add Account']],
-  ['principal-users-list',      ['Principal View', 'All Users']],
-  ['principal-devices-list',    ['Principal View', 'All Devices']],
-  ['principal-user-details',    ['Principal View', 'User Details']],
-  ['user-accounts-list',        ['Account View',   'All Accounts for User']],
-  ['account-details',           ['Account View',   'Account Details']],
-  ['account-users-list',        ['Account View',   'Users']],
-  ['account-user-details',      ['Account View',   'User Details']],
-  ['account-user-add',          ['Account View',   'Add User']],
-  ['account-devices-list',      ['Account View',   'Devices']],
-  ['account-device-details',    ['Account View',   'Device Details']],
-  ['account-device-add',        ['Account View',   'Add Device']]
+  ['create-principal-account', ['Principal View', 'Add Account']],
+  ['principal-users-list', ['Principal View', 'All Users']],
+  ['principal-devices-list', ['Principal View', 'All Devices']],
+  ['principal-user-details', ['Principal View', 'User Details']],
+  ['user-accounts-list', ['Account View', 'All Accounts for User']],
+  ['account-details', ['Account View', 'Account Details']],
+  ['account-users-list', ['Account View', 'Users']],
+  ['account-user-details', ['Account View', 'User Details']],
+  ['account-user-add', ['Account View', 'Add User']],
+  ['account-devices-list', ['Account View', 'Devices']],
+  ['account-device-details', ['Account View', 'Device Details']],
+  ['account-device-add', ['Account View', 'Add Device']],
+  ['account-landmarks-list', ['Account View', 'Landmarks']],
+  ['account-landmark', ['Account View', 'Landmark']],
+  ['account-landmark-add', ['Account View', 'Add Landmark']]
 ]);
 
 @Component({
@@ -63,7 +67,8 @@ export class SetupComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private setupService: SetupService) {
   }
 
   ngOnInit() {
@@ -76,7 +81,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     });
 
     this.routeSubscription = this.route.url.subscribe(segment => {
-      this.setupDrawer.open();
+      // this.setupDrawer.open();
     });
   }
 
@@ -115,5 +120,11 @@ export class SetupComponent implements OnInit, OnDestroy {
 
   isAccountUser() {
     return !this.authService.isPrincipalUser;
+  }
+
+  onItemClick(event) {
+    if (this.setupService.smallView) {
+      this.setupDrawer.toggle();
+    }
   }
 }

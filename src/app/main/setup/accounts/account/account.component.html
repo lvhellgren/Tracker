@@ -1,9 +1,7 @@
 <div class="account" fxLayoutAlign="center">
-  <form #accountForm="ngForm"
-        fxFlex.gt-xs="400px"
-        fxFlex.lt-xs="100%"
+  <form fxFlex.gt-xs="400px"
         fxLayout="column"
-        [formGroup]="accountFormGroup"
+        [formGroup]="accountForm"
         (ngSubmit)="onSubmit()">
     <div class="control-row" fxLayout="row"
          fxLayoutAlign="end center">
@@ -74,9 +72,9 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="space-around start">
       <button type="button" mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
-      <button type="button" mat-raised-button color="primary" (click)="onClear(accountForm)">Clear</button>
+      <button type="button" mat-raised-button color="primary" (click)="onClear()">Clear</button>
       <button type="submit" mat-raised-button color="primary"
-              [disabled]="accountFormGroup.invalid || (accountFormGroup.pristine && active.pristine)">
+              [disabled]="accountForm.invalid || (accountForm.pristine && active.pristine)">
         Save
       </button>
     </div>

@@ -56,7 +56,7 @@ export class UserComponent implements OnInit, OnDestroy {
   activeAccountUser = new FormControl();
   allRoles;
 
-  userFormGroup: FormGroup;
+  userForm: FormGroup;
 
   routeSubscription: Subscription;
   userSubscription: Subscription;
@@ -88,7 +88,7 @@ export class UserComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.userFormGroup = this.fb.group({
+    this.userForm = this.fb.group({
       email: ['', this.userIdValidators],
       name: ['', this.nameValidators],
       phone: ['', []],
@@ -107,7 +107,7 @@ export class UserComponent implements OnInit, OnDestroy {
         if (userId) {
           this.userService.fetchAccountUser(this.authService.currentUserAccountId, userId)
             .then((userDto: UserDto) => {
-              this.userFormGroup.setValue(
+              this.userForm.setValue(
                 {
                   email: userDto.email,
                   name: userDto.name,
@@ -168,7 +168,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    const formGroup = this.userFormGroup;
+    const formGroup = this.userForm;
     const userDto = <UserDto>{
       email: formGroup.get('email').value,
       name: formGroup.get('name').value,
@@ -186,12 +186,12 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onClear(form: NgForm) {
+  public onClear() {
     this.userService.clearUser();
     this.roles.setValue([]);
     this.activeUser.setValue(true);
     this.activeAccountUser.setValue(true);
-    form.resetForm();
+    this.userForm.reset();
     this.msg = '';
   }
 

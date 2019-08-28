@@ -2,6 +2,10 @@
   margin: 20px 0;
 }
 
+form {
+  width: 100%;
+}
+
 .active {
   margin: 0 10px 20px 0;
   font-size: small;

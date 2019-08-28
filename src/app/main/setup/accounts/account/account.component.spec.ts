@@ -61,7 +61,7 @@ describe('AccountComponent', () => {
     fixture = TestBed.createComponent(AccountComponent);
     component = fixture.componentInstance;
 
-    component.accountFormGroup = fb.group({
+    component.accountForm = fb.group({
       id: ['', component.idValidators],
       address1: [''],
       address2: [''],
@@ -83,7 +83,7 @@ describe('AccountComponent', () => {
   });
 
   it('should require Name field', () => {
-    const control = component.accountFormGroup.get('documentId');
+    const control = component.accountForm.get('documentId');
     control.setValue('');
     expect(control.valid).toBeFalsy();
   });

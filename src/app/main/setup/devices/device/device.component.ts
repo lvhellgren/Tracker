@@ -170,10 +170,10 @@ export class DeviceComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onClear(form: NgForm) {
+  public onClear() {
     this.deviceService.clearDevice();
     this.active.setValue(true);
-    form.resetForm();
+    this.deviceFormGroup.reset();
     this.msg = '';
   }
 

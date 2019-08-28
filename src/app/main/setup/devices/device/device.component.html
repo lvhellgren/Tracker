@@ -1,7 +1,5 @@
 <div class="device" fxLayoutAlign="center">
-  <form #deviceForm="ngForm"
-        fxFlex.gt-xs="400px"
-        fxFlex.lt-xs="100%"
+  <form fxFlex.gt-xs="400px"
         fxLayout="column"
         [formGroup]="deviceFormGroup"
         (ngSubmit)="onSubmit()">
@@ -63,7 +61,7 @@
               type="button"
               mat-raised-button
               color="primary"
-              (click)="onClear(deviceForm)">
+              (click)="onClear()">
         Clear
       </button>
       <button type="submit" mat-raised-button color="primary"

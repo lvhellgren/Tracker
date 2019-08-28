@@ -39,12 +39,19 @@ import { AccountUsersComponent } from './users/account-users/account-users.compo
 import { AllDevicesComponent } from './devices/all-devices/all-devices.component';
 import { DeviceComponent } from './devices/device/device.component';
 import { DeviceService } from './devices/device.service';
+import { LandmarksComponent } from './landmarks/landmarks.component';
+import { LandmarksMapComponent } from './landmarks/landmarks-map/landmarks-map.component';
+import { LandmarkComponent } from './landmarks/landmark/landmark.component';
+import { LandmarkMapComponent } from './landmarks/landmark/landmark-map/landmark-map.component';
+import { AppMapModule } from '../../app-map.module';
+import { AccountDevicesComponent } from './devices/account-devices/account-devices.component';
 
 @NgModule({
   imports: [
     FlexLayoutModule,
     CommonModule,
     CoreModule,
+    AppMapModule,
     SetupRoutingModule,
     AppAngularMaterialModule
   ],
@@ -57,7 +64,12 @@ import { DeviceService } from './devices/device.service';
     AllUsersComponent,
     AccountUsersComponent,
     AllDevicesComponent,
-    DeviceComponent
+    DeviceComponent,
+    AccountDevicesComponent,
+    LandmarksComponent,
+    LandmarksMapComponent,
+    LandmarkComponent,
+    LandmarkMapComponent
   ],
   providers: [
     UserService,

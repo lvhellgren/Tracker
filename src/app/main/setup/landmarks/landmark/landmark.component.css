@@ -1,12 +1,22 @@
-.account {
-  margin: 20px 0;
+
+.mat-card {
+  padding: 10px !important;
 }
 
 form {
   width: 100%;
 }
 
-.control-row {
+.landmark {
+  margin: 20px 0;
+  padding-bottom: 10px;
+}
+
+form {
+  width: 100%;
+}
+
+.active {
   margin: 0 10px 20px 0;
   font-size: small;
   color: grey;

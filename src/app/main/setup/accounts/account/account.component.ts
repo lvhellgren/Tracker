@@ -35,7 +35,7 @@ import { Subscription } from 'rxjs';
 })
 export class AccountComponent implements OnInit, OnDestroy {
 
-  accountFormGroup: FormGroup;
+  accountForm: FormGroup;
   active = new FormControl();
   createAccount = false;
   msg: string;
@@ -72,7 +72,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.accountFormGroup = this.fb.group({
+    this.accountForm = this.fb.group({
       active: ['', []],
       id: ['', this.idValidators],
       address1: ['', []],
@@ -90,7 +90,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
       if (accountId) {
         this.accountSubscription = this.accountService.fetchAccount$(accountId).subscribe((accountDto: AccountDto) => {
-          this.accountFormGroup.setValue(
+          this.accountForm.setValue(
             {
               active: accountDto.active,
               id: accountDto.id,
@@ -133,7 +133,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formGroup = this.accountFormGroup;
+    const formGroup = this.accountForm;
     const dto = <AccountDto>{
       active: this.active.value,
       id: formGroup.get('documentId').value,
@@ -148,10 +148,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.accountService.saveAccount(dto, this.returnPath, this.createAccount);
   }
 
-  onClear(form: NgForm) {
+  onClear() {
     this.accountService.clearAccount();
     this.active.reset();
-    form.resetForm();
+    this.accountForm.reset();
   }
 
   onCancel() {

@@ -8,7 +8,6 @@ import { UnitService } from './unit.service';
 
 // const sm = '600px';
 const md = '960px';
-
 // const lg = '1280px';
 
 @Component({

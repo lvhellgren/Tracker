@@ -1,0 +1,123 @@
+<div [fxLayout]="fullView ? 'row' : 'column'">
+  <mat-card>
+    <mat-card-content>
+      <div class="landmark"
+           fxLayout="row"
+           fxLayoutAlign="center">
+        <form fxLayout="column"
+              fxFlex.gt-xs="400px"
+              [formGroup]="landmarkForm"
+              (ngSubmit)="onSubmit()">
+          <div class="active" fxLayout="row"
+               fxLayoutAlign="end center">
+            <mat-checkbox [formControl]="active" disabled="false">Active</mat-checkbox>
+          </div>
+          <mat-form-field floatLabel="always">
+            <input type="text"
+                   matInput
+                   required
+                   placeholder="Name (ID)"
+                   formControlName="landmarkId">
+            <mat-error>Missing Name.</mat-error>
+          </mat-form-field>
+          <!--      <mat-form-field floatLabel="always">-->
+          <!--        <input type="text"-->
+          <!--               matInput-->
+          <!--               placeholder="Address"-->
+          <!--               formControlName="address">-->
+          <!--      </mat-form-field>-->
+          <mat-form-field floatLabel="always">
+            <input type="text"
+                   matInput
+                   required
+                   placeholder="Latitude"
+                   formControlName="latitude">
+            <mat-error>Missing Latitude.</mat-error>
+          </mat-form-field>
+          <mat-form-field floatLabel="always">
+            <input type="text"
+                   matInput
+                   required
+                   placeholder="Longitude"
+                   formControlName="longitude">
+            <mat-error>Missing Longitude.</mat-error>
+          </mat-form-field>
+          <mat-form-field floatLabel="always">
+            <input type="number"
+                   matInput
+                   required
+                   placeholder="Radius (meters)"
+                   formControlName="radius">
+            <mat-error>Missing Radius.</mat-error>
+          </mat-form-field>
+          <mat-form-field floatLabel="always">
+            <input type="text"
+                   matInput
+                   required
+                   placeholder="Color"
+                   formControlName="color">
+            <mat-error>Missing Color.</mat-error>
+          </mat-form-field>
+          <div fxLayout="column" *ngIf="!createLandmark">
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Modified"
+                     [readonly]="true"
+                     formControlName="modifiedAt">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Created"
+                     [readonly]="true"
+                     formControlName="createdAt">
+            </mat-form-field>
+          </div>
+          <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   rows="1"
+                   matInput
+                   placeholder="Comment"
+                   formControlName="comment">
+         </textarea>
+          </mat-form-field>
+          <div class="error" fxLayoutAlign="center start">
+            {{msg}}
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start">
+            <button class="cancel-button"
+                    type="button"
+                    mat-raised-button
+                    color="primary"
+                    (click)="onCancel()">
+              Cancel
+            </button>
+            <button class="clear-button"
+                    type="button"
+                    mat-raised-button
+                    color="primary"
+                    (click)="onClear()">
+              Clear
+            </button>
+            <button class="preview-button"
+                    type="button"
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="landmarkForm.invalid || landmarkForm.pristine"
+                    (click)="onPreview()">
+              Preview
+            </button>
+            <button type="submit" mat-raised-button color="primary"
+                    [disabled]="landmarkForm.invalid || landmarkForm.pristine">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="landmark-map" fxFlex="100">
+    <app-landmark-map></app-landmark-map>
+  </div>
+</div>

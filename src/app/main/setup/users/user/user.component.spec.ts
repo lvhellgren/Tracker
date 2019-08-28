@@ -71,7 +71,7 @@ describe('UserComponent', () => {
     fixture = TestBed.createComponent(UserComponent);
     component = fixture.componentInstance;
 
-    component.userFormGroup = fb.group({
+    component.userForm = fb.group({
       email: ['', component.userIdValidators],
       roles: [''],
       name: ['', component.nameValidators],
@@ -90,25 +90,25 @@ describe('UserComponent', () => {
 
   it('should create form with all controls', () => {
     expect(component).toBeTruthy();
-    expect(component.userFormGroup.contains('email')).toBeTruthy();
-    expect(component.userFormGroup.contains('roles')).toBeTruthy();
-    expect(component.userFormGroup.contains('name')).toBeTruthy();
-    expect(component.userFormGroup.contains('phone')).toBeTruthy();
-    expect(component.userFormGroup.contains('signedInAt')).toBeTruthy();
-    expect(component.userFormGroup.contains('modifiedAt')).toBeTruthy();
-    expect(component.userFormGroup.contains('createdAt')).toBeTruthy();
-    expect(component.userFormGroup.contains('comment')).toBeTruthy();
-    expect(component.userFormGroup.contains('activeUser')).toBeTruthy();
+    expect(component.userForm.contains('email')).toBeTruthy();
+    expect(component.userForm.contains('roles')).toBeTruthy();
+    expect(component.userForm.contains('name')).toBeTruthy();
+    expect(component.userForm.contains('phone')).toBeTruthy();
+    expect(component.userForm.contains('signedInAt')).toBeTruthy();
+    expect(component.userForm.contains('modifiedAt')).toBeTruthy();
+    expect(component.userForm.contains('createdAt')).toBeTruthy();
+    expect(component.userForm.contains('comment')).toBeTruthy();
+    expect(component.userForm.contains('activeUser')).toBeTruthy();
   });
 
   it('should require User ID field', () => {
-    const control = component.userFormGroup.get('email');
+    const control = component.userForm.get('email');
     control.setValue('');
     expect(control.valid).toBeFalsy();
   });
 
   it('should require User ID field to have email format', () => {
-    const control = component.userFormGroup.get('email');
+    const control = component.userForm.get('email');
     control.setValue('xxx@xxx,com');
     expect(control.valid).toBeFalsy();
 
@@ -120,7 +120,7 @@ describe('UserComponent', () => {
   });
 
   it('should require Name field', () => {
-    const control = component.userFormGroup.get('name');
+    const control = component.userForm.get('name');
     control.setValue('');
     expect(control.valid).toBeFalsy();
   });
@@ -129,7 +129,7 @@ describe('UserComponent', () => {
     const dEl = fixture.debugElement.query(By.css('.clear-button'));
     dEl.triggerEventHandler('click', null);
 
-    const control = component.userFormGroup.get('name');
+    const control = component.userForm.get('name');
     expect(control.valid).toBeFalsy();
   });
 });

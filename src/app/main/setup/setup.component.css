@@ -17,6 +17,10 @@
   font-size: 14px;
 }
 
+.setup-body {
+  padding: 0;
+}
+
 mat-expansion-panel-header {
   height: 35px !important;
 }
