@@ -123,7 +123,7 @@ export class MapComponent implements OnInit, OnDestroy {
   bearingToIconName(bearing: number): string {
     let hour = '';
     let type = 'arrow19_';
-    if (bearing !== null) {
+    if (bearing) {
       let clockValue: number;
       if (bearing < 0) {
         bearing = 360 + bearing;
