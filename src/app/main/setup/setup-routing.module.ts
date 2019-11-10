@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -36,6 +36,11 @@ import { AccountDevicesComponent } from './devices/account-devices/account-devic
 import { DeviceComponent } from './devices/device/device.component';
 import { LandmarkComponent } from './landmarks/landmark/landmark.component';
 import { LandmarksComponent } from './landmarks/landmarks.component';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
+import { SubscriptionComponent } from './subscriptions/subscription/subscription.component';
+import { SubscriberComponent } from './subscribers/subscriber/subscriber.component';
+import { SubscribersComponent } from './subscribers/subscribers.component';
+import { AccountConstraintsComponent } from './accounts/account-constraints/account-constraints.component';
 
 const routes: Routes = [
   {
@@ -71,6 +76,16 @@ const routes: Routes = [
       {
         path: 'create-principal-account',
         component: AccountComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'principal-account-constraints',
+        component: AccountConstraintsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'principal-account-constraints/:id',
+        component: AccountConstraintsComponent,
         canActivate: [AuthGuard]
       },
       {
@@ -166,6 +181,46 @@ const routes: Routes = [
       {
         path: 'account-landmarks-list',
         component: LandmarksComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscription-add',
+        component: SubscriptionComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscription',
+        component: SubscriptionComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscription/:id',
+        component: SubscriptionComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscriptions-list',
+        component: SubscriptionsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscriber-add',
+        component: SubscriberComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscriber',
+        component: SubscriberComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscriber/:id',
+        component: SubscriberComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'account-subscribers-list',
+        component: SubscribersComponent,
         canActivate: [AuthGuard]
       },
     ]

@@ -70,9 +70,9 @@
     </mat-form-field>
     <div class="control-row" fxLayout="row center"
          fxLayoutAlign="space-between start">
-      <mat-checkbox [formControl]="activeUser" disabled="">User can log in</mat-checkbox>
+      <mat-checkbox [formControl]="activeUser">User can log in</mat-checkbox>
       <mat-checkbox *ngIf="returnPath === 'account-users-list'"
-                    [formControl]="activeAccountUser" disabled="">User can access current account
+                    [formControl]="activeAccountUser">User can access current account
       </mat-checkbox>
     </div>
     <div class="error" fxLayoutAlign="center start">

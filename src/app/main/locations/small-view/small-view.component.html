@@ -7,50 +7,50 @@
            fxLayout="row"
            fxLayoutAlign="start">
         <div>
-          <a href="#" mat-button
-             [routerLink]="['units']"
+          <a href="#" class="top-button" mat-button
+             [routerLink]="[{outlets:{primary: ['units'], map: ['units-map']}}]"
              [routerLinkActive]="['active-locations']">
             UNITS
           </a>
         </div>
         <div [ngClass]="{'disabled': unitHistoryDisabled()}">
-          <a href="#" mat-button
+          <a href="#" class="top-button" mat-button
              [disabled]="unitHistoryDisabled()"
-             [routerLink]="['unit-history']"
+             [routerLink]="[{outlets:{primary: ['unit-history'], map: ['units-map']}}]"
              [routerLinkActive]="['unit-history']">
             UNIT
           </a>
         </div>
         <div [ngClass]="{'disabled': unitInfoDisabled()}">
-          <a href="#" mat-button
+          <a href="#" class="top-button" mat-button
              [disabled]="unitInfoDisabled()"
-             [routerLink]="['unit-details']"
+             [routerLink]="[{outlets:{primary: ['unit-details'], map: ['units-map']}}]"
              [routerLinkActive]="['unit-history']">
             DETAILS
           </a>
         </div>
         <div class="separator">|</div>
         <div [ngClass]="{'disabled': placesDisabled()}">
-          <a href="#" mat-button
+          <a href="#" class="top-button" mat-button
              [disabled]="placesDisabled()"
-             [routerLink]="['places']"
+             [routerLink]="[{outlets:{primary: ['places'], map: ['places-map']}}]"
              [routerLinkActive]="['active-locations']">
-            PLACES
+            LANDMARKS
           </a>
         </div>
         <div [ngClass]="{'disabled': placeDisabled()}">
-          <a href="#" mat-button
+          <a href="#" class="top-button" mat-button
              [disabled]="placeDisabled()"
-             [routerLink]="['place']"
+             [routerLink]="[{outlets:{primary: ['place'], map: ['place-map']}}]"
              [routerLinkActive]="['active-locations']">
-            PLACE
+            LANDMARK
           </a>
         </div>
       </div>
       <router-outlet></router-outlet>
     </div>
     <div class="map-pane">
-      <app-map></app-map>
+      <router-outlet name="map"></router-outlet>
     </div>
   </div>
 </div>

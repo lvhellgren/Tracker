@@ -1,5 +1,101 @@
-<div class="page">
-  <p>
-    Notifications page works!
-  </p>
+<div class="page"
+     fxLayout="column"
+     fxLayoutAlign="start stretch">
+  <div class="error" fxLayoutAlign="center start">
+    {{msg}}
+  </div>
+  <div class="table-header"
+       fxLayout="row"
+       fxFlexOrder="1"
+       fxLayoutAlign="stretch">
+<!--    <mat-form-field>-->
+<!--      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">-->
+<!--    </mat-form-field>-->
+    <mat-checkbox #allCheckbox
+                  class="select-all"
+                  (click)="onSelectAll(!allCheckbox.checked)">
+      Select All
+    </mat-checkbox>
+    <button class="delete-button"
+            type="button"
+            [disabled]="!(selectedIds.size > 0)"
+            (click)="onDelete()">
+      Delete Selected
+    </button>
+  </div>
+
+  <div class="table-container mat-elevation-z4"
+       fxFlexOrder="2"
+       fxFlexFill>
+    <mat-table class="table-responsive" [dataSource]="dataSource" matSort>
+
+      <!-- Subscription Column -->
+      <ng-container matColumnDef="subscriptionId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Subscription</mat-header-cell>
+        <mat-cell *matCellDef="let row" [style.color]="rowColor (row)">
+          <mat-checkbox #checkbox [checked]=row.checked (click)="onSelectOne(row, !checkbox.checked)"></mat-checkbox>
+          {{row.subscriptionId}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="activity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Type</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor (row)">
+          {{getActivityName(row.activity)}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Landmark Column -->
+      <ng-container matColumnDef="landmarkId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Landmark</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)">
+          &nbsp;{{row.landmarkId}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Device Name Column -->
+      <ng-container matColumnDef="deviceName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Device Name</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)">
+          {{row.deviceName}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Device ID Column -->
+      <ng-container matColumnDef="deviceId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Device ID</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)">
+          {{row.deviceId}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Time Column -->
+      <ng-container matColumnDef="deviceTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Time</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor(row)">
+          {{row.deviceTime | timestampToDate | date:"short"}}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+               [style.background]="rowBackground(row)"
+               (tap)="onRowTap(row)">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator fxLayoutAlign="start"
+                   [length]="length"
+                   [pageIndex]="pageIndex"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPageEvent($event)">
+    </mat-paginator>
+  </div>
 </div>
+

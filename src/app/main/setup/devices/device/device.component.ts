@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -23,7 +23,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DeviceDto, DeviceService } from '../device.service';
 import { Subscription } from 'rxjs';
@@ -66,6 +66,7 @@ export class DeviceComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
               private deviceService: DeviceService,
               private datePipe: DatePipe,
+              private router: Router,
               private route: ActivatedRoute,
               private location: Location,
               private authService: AuthService,
@@ -99,24 +100,27 @@ export class DeviceComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       const deviceId = params['id'] ? params['id'] : this.deviceService.getDeviceId();
 
-      this.deviceAccountSubscription = this.authService.userAccountSelect.subscribe(() => {
+      this.deviceAccountSubscription = this.authService.userAccountSelect.subscribe((accountId: string) => {
         if (deviceId) {
-          this.deviceService.fetchAccountDevice(this.authService.currentUserAccountId, deviceId)
+          this.deviceService.fetchAccountDevice(accountId, deviceId)
             .then((deviceDto: DeviceDto) => {
-              this.deviceFormGroup.setValue(
-                {
-                  name: deviceDto.name,
-                  deviceId: deviceDto.deviceId,
-                  modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
-                  createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
-                  comment: deviceDto.comment ? deviceDto.comment : '',
-                  active: deviceDto.active
-                });
+              if (!!deviceDto) {
+                this.deviceFormGroup.setValue(
+                  {
+                    name: deviceDto.name,
+                    deviceId: deviceDto.deviceId,
+                    modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
+                    createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
+                    comment: deviceDto.comment ? deviceDto.comment : '',
+                    active: deviceDto.active
+                  });
 
-              this.active.setValue(deviceDto.active);
+                this.active.setValue(deviceDto.active);
+              } else {
+                this.router.navigate([`./setup/${this.returnPath}`]);
+              }
             })
             .catch(error => {
-              console.error(error);
               this.dialog.open(ErrorDlgComponent, {
                 data: {msg: error}
               });

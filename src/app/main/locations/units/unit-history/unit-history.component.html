@@ -2,7 +2,7 @@
      fxLayoutAlign="start stretch">
   <div class="unit-name"
        fxFlexOrder="1">
-    {{unitName}} History
+    {{deviceName}} History
   </div>
   <div fxFlexOrder="2"
        fxLayoutAlign="space-evenly center"
@@ -37,7 +37,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header> Time</mat-header-cell>
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
-          {{row.timestamp | date:'MM-dd-yyyy, HH:mm:ss'}}
+          {{row.deviceTime | timestampToDate | date:'MM-dd-yyyy, HH:mm'}}
         </mat-cell>
       </ng-container>
 
@@ -58,6 +58,16 @@
           {{row.address.locality}}
         </mat-cell>
       </ng-container>
+
+      <!-- Landmarks Column -->
+      <ng-container matColumnDef="landmarks">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Landmarks</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor (row)">
+          {{getLandmarkIds(row.landmarks)}}
+        </mat-cell>
+      </ng-container>
+
       <!-- Latitude Column -->
       <ng-container matColumnDef="latitude">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Latitude</mat-header-cell>

@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -31,9 +31,9 @@ import { ACCOUNT_USERS_COLL, ACCOUNTS_COLL, AccountUserDoc, AuthService, PRINCIP
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
-export interface AccountDto {
+export interface Account {
   active?: boolean;
-  id?: string;
+  accountId?: string;
   address1?: string;
   address2?: string;
   city?: string;
@@ -44,22 +44,40 @@ export interface AccountDto {
   description?: string;
 }
 
+export interface AccountConstraint {
+  accountId?: string;
+  maxDevices?: number;
+  maxUsers?: number;
+  maxLandmarks?: number;
+  maxNotificationSubscriptions?: number;
+  maxNotificationSubscribers?: number;
+  maxMonthlyEvents?: number;
+  maxMonthlyNotificationEmails?: number;
+  maxMonthlyNotificationTexts?: number;
+  serviceExpiration?: string;
+  modifiedAt?: any;
+  comment?: string;
+}
+
+export const ACCOUNT_CONSTRAINTS_COLL = 'account-constraints';
+
 @Injectable()
 export class AccountService {
 
-  accounts: AccountDto[];
-  accounts$ = new Subject<AccountDto[]>();
+  accounts: Account[];
+  accounts$ = new Subject<Account[]>();
   accountId: string;
   msg$ = new Subject<string>();
 
   private db;
   private accountsRef;
   private accountUsersRef;
+  private accountConstraintsRef;
 
-  static buildAccountUserDoc(accountDto: AccountDto, userId: string): AccountUserDoc {
+  static buildAccountUserDoc(account: Account, userId: string): AccountUserDoc {
     return {
-      accountId: accountDto.id,
-      active: accountDto.active,
+      accountId: account.accountId,
+      active: account.active,
       userId: userId,
       roles: ['CREATOR']
     };
@@ -79,12 +97,13 @@ export class AccountService {
     this.db = firebase.firestore();
     this.accountsRef = this.db.collection(ACCOUNTS_COLL);
     this.accountUsersRef = this.db.collection(ACCOUNT_USERS_COLL);
+    this.accountConstraintsRef = this.db.collection(ACCOUNT_CONSTRAINTS_COLL);
   }
 
   /**
    * References all accounts in the data base. Subscribers automatically receive updates of changes to accounts in the data base.
    */
-  get allAccounts$(): Observable<AccountDto[]> {
+  get allAccounts$(): Observable<Account[]> {
     return this.afs.collection(ACCOUNTS_COLL).valueChanges();
   }
 
@@ -125,64 +144,115 @@ export class AccountService {
    * Fetches a given account
    * @param id An account ID
    */
-  fetchAccount$(id: string): Observable<AccountDto> {
-    const doc: AngularFirestoreDocument<AccountDto> = this.afs.doc(`${ACCOUNTS_COLL}/${id}`);
+  fetchAccount$(id: string): Observable<Account> {
+    const doc: AngularFirestoreDocument<Account> = this.afs.doc(`${ACCOUNTS_COLL}/${id}`);
     this.accountId = id;
     return doc.valueChanges();
   }
 
   /**
    * Creates a new account or updates an existing one
-   * @param dto Account data
+   * @param account Account data
    * @param create If value true a new account is created
    * @param returnPath Routing path
    */
-  saveAccount(dto: AccountDto, returnPath: string, create) {
-    this.accountsRef.doc(dto.id).get().then((doc) => {
+  saveAccount(account: Account, returnPath: string, create) {
+    this.accountsRef.doc(account.accountId).get().then((doc) => {
       if (doc.exists) {
         if (create) {
-          const msg = `Account with ID ${dto.id} already exists`;
+          const msg = `Account with ID ${account.accountId} already exists`;
           this.msg$.next(msg);
         } else {
-          this.createOrUpdateAccount(dto, returnPath, false);
+          this.createOrUpdateAccount(account, returnPath, false);
         }
       } else {
         if (!create) {
-          const msg = `Account with ID ${dto.id} does not exist`;
+          const msg = `Account with ID ${account.accountId} does not exist`;
           this.msg$.next(msg);
         } else {
-          dto.createdAt = AccountService.timestamp;
-          this.createOrUpdateAccount(dto, returnPath, true);
+          account.createdAt = AccountService.timestamp;
+          this.createOrUpdateAccount(account, returnPath, true);
         }
       }
     }).catch((error) => {
-      console.error(`Error getting document for ${dto.id}: ${error}`);
+      console.error(`Error getting document for ${account.accountId}: ${error}`);
       this.msg$.next(error);
     });
   }
 
-  private createOrUpdateAccount(accountDto: AccountDto, returnPath: string, create) {
+  private createOrUpdateAccount(account: Account, returnPath: string, create) {
     const userId = this.authService.getUserId();
 
-    const accountRef = this.accountsRef.doc(accountDto.id);
+    const accountRef = this.accountsRef.doc(account.accountId);
 
-    accountDto.modifiedAt = AccountService.timestamp;
+    account.modifiedAt = AccountService.timestamp;
 
     const batch = this.db.batch();
-    batch.set(accountRef, accountDto, {merge: !create});
+    batch.set(accountRef, account, {merge: !create});
     if (create) {
-      const accountUserDoc = AccountService.buildAccountUserDoc(accountDto, userId);
-      const accountUserKey = this.authService.makeAccountUserKey(accountDto.id, userId);
+      const accountUserDoc = AccountService.buildAccountUserDoc(account, userId);
+      const accountUserKey = this.authService.makeAccountUserKey(account.accountId, userId);
       const accountUserRef = this.accountUsersRef.doc(accountUserKey);
       batch.set(accountUserRef, accountUserDoc, {merge: false});
+
+      const accountConstraint: AccountConstraint = this.initConstraints(account.accountId);
+      const accountConstraintsRef = this.accountConstraintsRef.doc(account.accountId);
+      accountConstraint.modifiedAt = AccountService.timestamp;
+      batch.set(accountConstraintsRef, accountConstraint, {merge: false});
     }
     batch.commit().then(() => {
-      this.accountId = accountDto.id;
+      this.accountId = account.accountId;
       this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
     }).catch((error) => {
-      console.error(`Error saving account ${accountDto.id}: ${error}`);
+      console.error(`Error saving account ${account.accountId}: ${error}`);
       this.msg$.next(error);
     });
+  }
+
+  private initConstraints(accountId: string) {
+    const now = new Date();
+    const expiration = now.getFullYear().toString() + '/' + (now.getMonth() + 1).toString();
+    return <AccountConstraint> {
+      accountId: accountId,
+      maxDevices: 10,
+      maxUsers: 10,
+      maxLandmarks: 100,
+      maxNotificationSubscriptions: 100,
+      maxNotificationSubscribers: 10,
+      maxMonthlyEvents: 1500,
+      maxMonthlyNotificationEmails: 100,
+      maxMonthlyNotificationTexts: 100,
+      serviceExpiration: expiration,
+      comment: ''
+    };
+  }
+
+  getAccountConstraint(accountId: string) {
+    return this.accountConstraintsRef.doc(accountId).get().then((accountSnap) => {
+      if (accountSnap.exists) {
+        return accountSnap.data();
+      } else {
+        const msg = `Account Constraint with ID ${accountId} does not exist`;
+        this.msg$.next(msg);
+      }
+    }).catch((error) => {
+      this.msg$.next(`Error reading Account Constraint ${accountId}: ${error}`);
+    });
+  }
+
+  saveAccountConstraint(accountConstraint: AccountConstraint, returnPath: string) {
+    accountConstraint.modifiedAt = AccountService.timestamp;
+    this.accountConstraintsRef.doc(accountConstraint.accountId).set(accountConstraint)
+      .then (() => {
+        this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
+      })
+      .catch((error) => {
+        const msg = `Error saving Account Constraint ${accountConstraint.accountId}: ${error}`;
+        this.msg$.next(msg);
+        this.dialog.open(ErrorDlgComponent, {
+          data: {msg: msg}
+        });
+      });
   }
 
   clearAccount() {

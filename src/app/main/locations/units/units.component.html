@@ -1,31 +1,32 @@
 <div fxLayout="column"
      fxLayoutAlign="start stretch">
-  <div class="table-header"
-       fxFlexOrder="1"
-       fxLayoutAlign="stretch">
-    <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-    </mat-form-field>
-  </div>
+<!--  <div class="table-header"-->
+<!--       fxFlexOrder="1"-->
+<!--       fxLayoutAlign="stretch">-->
+<!--    <mat-form-field>-->
+<!--      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">-->
+<!--    </mat-form-field>-->
+<!--  </div>-->
   <div class="unit-table-container mat-elevation-z4"
        fxFlexOrder="2"
        fxFlexFill>
     <mat-table class="table-responsive" [dataSource]="dataSource" matSort>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="name">
+      <ng-container matColumnDef="deviceName">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Name</mat-header-cell>
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
-          {{row.name}}
+          {{row.deviceName}}
         </mat-cell>
       </ng-container>
+
       <!-- Time Column -->
-      <ng-container matColumnDef="time">
+      <ng-container matColumnDef="deviceTime">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Time</mat-header-cell>
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
-          {{row.timestamp | date:'MM-dd-yyyy, HH:mm:ss'}}
+          {{row.deviceTime | timestampToDate | date:'MM-dd-yyyy, HH:mm'}}
         </mat-cell>
       </ng-container>
 
@@ -44,6 +45,15 @@
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
           {{row.address.locality}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Landmarks Column -->
+      <ng-container matColumnDef="landmarks">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Landmarks</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  [style.color]="rowColor (row)">
+          {{getLandmarkIds(row.landmarks)}}
         </mat-cell>
       </ng-container>
 

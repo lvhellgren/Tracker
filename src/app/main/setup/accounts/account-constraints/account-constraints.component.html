@@ -1,0 +1,105 @@
+<div class="constraint" fxLayoutAlign="center">
+  <form fxFlex.gt-xs="400px"
+        fxLayout="column"
+        [formGroup]="accountForm"
+        (ngSubmit)="onSubmit()">
+    <div class="account-name">
+      {{accountId}} Account
+    </div>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Devices"
+             formControlName="maxDevices">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Users"
+             formControlName="maxUsers">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Landmarks"
+             formControlName="maxLandmarks">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Notification Subscriptions"
+             formControlName="maxNotificationSubscriptions">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Notification Subscribers"
+             formControlName="maxNotificationSubscribers">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Monthly Events"
+             formControlName="maxMonthlyEvents">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Monthly Notification Emails"
+             formControlName="maxMonthlyNotificationEmails">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="number"
+             matInput
+             required
+             placeholder="Max Monthly Notification Texts"
+             formControlName="maxMonthlyNotificationTexts">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             required
+             placeholder="Service Expiration (MM/YYYY)"
+             formControlName="serviceExpiration">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Time Last Modified"
+             formControlName="modifiedAt">
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             matInput
+             placeholder="Comment"
+             formControlName="comment">
+    </mat-form-field>
+
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button class="submit-button"
+              type="submit"
+              mat-raised-button color="primary"
+              [disabled]="accountForm.invalid || accountForm.pristine">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

@@ -11,13 +11,15 @@ a:hover {
 }
 
 .header-row {
-  padding-left: 6px;
+  padding: 6px;
 }
 
 .separator {
-  font-size: large;
-  font-weight: bold;
-  color: #3f51b5;
+  width: 0;
+  height: 25px;
+  border: 1px solid #3f51b5;
+  margin: 4px 5px 0 5px;
+  color: #fafafa;
 }
 
 .locations-pane {
@@ -42,3 +44,8 @@ mat-card {
 .disabled {
   pointer-events: none;
 }
+
+.top-button {
+  padding: 0 10px;
+}
+

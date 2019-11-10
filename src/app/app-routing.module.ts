@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -27,6 +27,8 @@ import { SignInComponent } from './main/core/sign-in/sign-in.component';
 import { UnknownComponent } from './main/core/unknown/unknown.component';
 import { AuthGuard } from './main/core/auth/auth.guard';
 import { NotificationsComponent } from './main/notifications/notifications.component';
+import { NotificationComponent } from './main/notifications/notification/notification.component';
+import { DevEnvGuard } from './main/core/env/dev-env-guard';
 
 export const routes: Routes = [
   {
@@ -39,8 +41,18 @@ export const routes: Routes = [
     component: SignInComponent
   },
   {
-    path: 'locations',
-    loadChildren: './main/locations/locations.module#LocationsModule',
+    path: 'notifications',
+    component: NotificationsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'notification/:id',
+    component: NotificationComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'reports',
+    loadChildren: './main/reports/reports.module#ReportsModule',
     canActivate: [AuthGuard]
   },
   {
@@ -49,9 +61,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'notifications',
-    component: NotificationsComponent,
-    canActivate: [AuthGuard]
+    path: 'simulator',
+    loadChildren: './main/simulator/simulator.module#SimulatorModule',
+    canActivate: [AuthGuard],
+    canLoad: [DevEnvGuard]
   },
   {
     path: '**',
@@ -60,8 +73,8 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(
-    routes)],
+  imports: [RouterModule.forRoot(routes)],
+  // imports: [RouterModule.forRoot(routes, { enableTracing: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

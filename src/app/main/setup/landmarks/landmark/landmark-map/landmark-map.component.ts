@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -24,11 +24,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { LandmarkMapService } from './landmark-map.service';
-import { LandmarkDoc } from '../landmark.service';
 import { ConfirmationDlgComponent } from '../../../../core/confirmation-dlg/confirmation-dlg-component';
 import { google } from '@agm/core/services/google-maps-types';
 import { SetupService } from '../../../setup.service';
+import { AccountLandmarkDoc, LandmarkService } from '../../landmark.service';
 
 const CLOSE_UP_ZOOM = 16;
 
@@ -37,17 +36,17 @@ const CLOSE_UP_ZOOM = 16;
   templateUrl: './landmark-map.component.html',
 })
 export class LandmarkMapComponent implements OnInit, OnDestroy {
-  landmarkIcon = '/assets/landmark_flag.png';
+  landmarkIcon = '/assets/landmark_flag_blue.png';
 
   isLoading = false;
   landmarkMapSubscription: Subscription;
 
   map: google.maps.Map;
-  landmark: LandmarkDoc = null;
+  landmark: AccountLandmarkDoc = null;
   zoom = CLOSE_UP_ZOOM;
 
   constructor(
-    private landmarkMapService: LandmarkMapService,
+    private landmarkService: LandmarkService,
     private setupService: SetupService,
     private dialog: MatDialog) {
   }
@@ -61,9 +60,9 @@ export class LandmarkMapComponent implements OnInit, OnDestroy {
     }
 
     // Landmark to display
-    this.landmarkMapSubscription = this.landmarkMapService.landmark$.subscribe(
-      (landmarkDoc: LandmarkDoc) => {
-        this.landmark = landmarkDoc ? landmarkDoc : this.fauxLandmark();
+    this.landmarkMapSubscription = this.landmarkService.landmarkMarker$.subscribe(
+      (landmarkDoc: AccountLandmarkDoc) => {
+        this.landmark = (!!landmarkDoc && !!landmarkDoc.latitude) ? landmarkDoc : this.fauxLandmark();
       });
   }
 
@@ -76,14 +75,14 @@ export class LandmarkMapComponent implements OnInit, OnDestroy {
   fauxLandmark() {
     this.isLoading = true;
     const geolocation: Geolocation = navigator.geolocation;
-    const landmark: LandmarkDoc = {
+    const landmarkDoc: AccountLandmarkDoc = {
       latitude: 0,
       longitude: 0
     };
     geolocation.getCurrentPosition((position: Position) => {
         if (position) {
-          landmark.latitude = position.coords.latitude;
-          landmark.longitude = position.coords.longitude;
+          landmarkDoc.latitude = position.coords.latitude;
+          landmarkDoc.longitude = position.coords.longitude;
         }
         this.isLoading = false;
       },
@@ -91,7 +90,7 @@ export class LandmarkMapComponent implements OnInit, OnDestroy {
         console.error(error);
         this.isLoading = false;
       });
-    return landmark;
+    return landmarkDoc;
   }
 
   onMapReady(map) {
@@ -115,7 +114,7 @@ export class LandmarkMapComponent implements OnInit, OnDestroy {
 
     dlg.afterClosed().subscribe((ok: boolean) => {
       if (ok) {
-        this.landmarkMapService.setCoords($event.coords);
+        this.landmarkService.setMapCoordinates($event.coords);
       }
     });
   }

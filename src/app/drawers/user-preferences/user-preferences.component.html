@@ -1,9 +1,35 @@
-<div fxFlex="100%" class="preferences">
+<div fxFlex="100%"
+     fxLayout="column"
+     class="preferences">
   <div fxFlex="100%"
        fxLayout="row"
        fxLayoutAlign="space-between center"
        class="messages messages-error">
-    (Planned user preferences panel)
+    <div class="heading"
+         fxLayoutAlign="center">
+      User Preferences
+    </div>
     <mat-icon class="close-icon" (click)="close()">keyboard_arrow_left</mat-icon>
+  </div>
+  <div class="mat-elevation-z4 list"
+       fxFlexOrder="2"
+       fxFlexFill>
+    <mat-grid-list cols="2" rowHeight="30px">
+      <div class="row">
+        <mat-grid-tile>
+          <div class="name">Language</div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div class="value">
+            <mat-form-field>
+              <select matNativeControl required>
+                <option value="eng">English</option>
+              </select>
+            </mat-form-field>
+          </div>
+        </mat-grid-tile>
+      </div>
+    </mat-grid-list>
+
   </div>
 </div>

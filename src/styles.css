@@ -13,7 +13,6 @@ html, body {
   overflow-x: hidden;
 }
 
-
 .unit-table-container {
   display: flex;
   flex-direction: column;
@@ -25,8 +24,8 @@ html, body {
 .table-container {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 220px) !important;
-  height: calc(100vh - 220px) !important;
+  min-height: calc(100vh - 160px) !important;
+  height: calc(100vh - 160px) !important;
 }
 
 .table-header {

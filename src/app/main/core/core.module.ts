@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -31,12 +31,15 @@ import { MessagesComponent } from './messages/messages.component';
 import { ConfirmationDlgComponent } from './confirmation-dlg/confirmation-dlg-component';
 import { TimestampToDatePipe } from './timestamp-to-date.pipe';
 import { ErrorDlgComponent } from './error-dlg/error-dlg.component';
+import { AppMapModule } from '../../app-map.module';
+import { MsgDlgComponent } from './msg-dlg/msg-dlg.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
-    AppAngularMaterialModule
+    AppAngularMaterialModule,
+    AppMapModule
   ],
   declarations: [
     SignInComponent,
@@ -44,7 +47,8 @@ import { ErrorDlgComponent } from './error-dlg/error-dlg.component';
     MessagesComponent,
     ConfirmationDlgComponent,
     TimestampToDatePipe,
-    ErrorDlgComponent
+    ErrorDlgComponent,
+    MsgDlgComponent
   ],
   exports: [
     SignInComponent,
@@ -52,10 +56,11 @@ import { ErrorDlgComponent } from './error-dlg/error-dlg.component';
     MessagesComponent,
     ConfirmationDlgComponent,
     ErrorDlgComponent,
+    MsgDlgComponent,
     TimestampToDatePipe
   ],
   providers: [],
-  entryComponents: [ConfirmationDlgComponent, ErrorDlgComponent]
+  entryComponents: [ConfirmationDlgComponent, ErrorDlgComponent, MsgDlgComponent]
 })
 export class CoreModule {
 }

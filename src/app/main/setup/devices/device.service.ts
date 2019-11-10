@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -33,7 +33,7 @@ import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
 export interface DeviceDto {
   name?: string;
-  deviceId: string;
+  deviceId?: string;
   comment?: string;
   active?: boolean;
   accountId?: String;
@@ -51,6 +51,7 @@ export interface DeviceDoc {
 
 export interface AccountDeviceDoc {
   accountId: string;
+  name: string;
   deviceId: string;
   active: boolean;
   modifiedAt: any;
@@ -78,15 +79,18 @@ export class DeviceService {
   }
 
   static buildDeviceDto(deviceDoc: DeviceDoc, accountDeviceDoc: AccountDeviceDoc): DeviceDto {
-    return {
-      name: deviceDoc.name,
-      deviceId: deviceDoc.deviceId,
-      comment: deviceDoc.comment,
-      active: accountDeviceDoc ? accountDeviceDoc.active : false,
-      accountId: accountDeviceDoc ? accountDeviceDoc.accountId : '',
-      createdAt: deviceDoc.createdAt,
-      modifiedAt: deviceDoc.modifiedAt
-    };
+    let deviceDto: DeviceDto;
+    if (!!accountDeviceDoc) {
+      deviceDto = {};
+      deviceDto.name = deviceDoc.name;
+      deviceDto.deviceId = deviceDoc.deviceId;
+      deviceDto.comment = deviceDoc.comment;
+      deviceDto.active = accountDeviceDoc ? accountDeviceDoc.active : false;
+      deviceDto.accountId = accountDeviceDoc ? accountDeviceDoc.accountId : '';
+      deviceDto.createdAt = deviceDoc.createdAt;
+      deviceDto.modifiedAt = deviceDoc.modifiedAt;
+    }
+    return deviceDto;
   }
 
   static get timestamp() {
@@ -96,6 +100,7 @@ export class DeviceService {
   static buildAccountDeviceDoc(accountId: string, deviceDto: DeviceDto): AccountDeviceDoc {
     return {
       accountId: accountId,
+      name: deviceDto.name,
       deviceId: deviceDto.deviceId,
       active: deviceDto.active,
       modifiedAt: this.timestamp
@@ -128,9 +133,6 @@ export class DeviceService {
     this.allDevices$ = this.allDevicesSubject.asObservable();
   }
 
-  /**
-   * Fetches users collection documents for all users having access to a given account.
-   */
   fetchAllDevices$(): Subject<DeviceDto[]> {
     const subject = new Subject<DeviceDto[]>();
     this.accountDevicesRef.get()
@@ -143,14 +145,15 @@ export class DeviceService {
             .then((deviceSnap: QuerySnapshot<DeviceDoc>) => {
               deviceSnap.docs.map(deviceDoc => {
                 const deviceDto: DeviceDto = DeviceService.buildDeviceDto(deviceDoc.data(), accountDeviceDoc.data());
-                deviceDtos.push(deviceDto);
-                subject.next(deviceDtos);
+                if (!!deviceDto) {
+                  deviceDtos.push(deviceDto);
+                }
               });
+              subject.next(deviceDtos);
             });
         });
       })
       .catch((error) => {
-        console.error(`Error getting all devices: ${error}`);
         this.dialog.open(ErrorDlgComponent, {
           data: {msg: error}
         });
@@ -169,21 +172,25 @@ export class DeviceService {
         .get()
         .then((accountDeviceSnap: QuerySnapshot<AccountDeviceDoc>) => {
           const deviceDtos: DeviceDto[] = [];
-          accountDeviceSnap.docs.map(accountDeviceDoc => {
-            this.devicesRef
-              .where('deviceId', '==', accountDeviceDoc.data().deviceId)
-              .get()
-              .then((deviceSnap: QuerySnapshot<DeviceDoc>) => {
-                deviceSnap.docs.map(deviceDoc => {
-                  const deviceDto: DeviceDto = DeviceService.buildDeviceDto(deviceDoc.data(), accountDeviceDoc.data());
-                  deviceDtos.push(deviceDto);
+          if (!accountDeviceSnap.empty) {
+            accountDeviceSnap.docs.map(accountDeviceDoc => {
+              this.devicesRef
+                .where('deviceId', '==', accountDeviceDoc.data().deviceId)
+                .get()
+                .then((deviceSnap: QuerySnapshot<DeviceDoc>) => {
+                  deviceSnap.docs.map(deviceDoc => {
+                    const deviceDto: DeviceDto = DeviceService.buildDeviceDto(deviceDoc.data(), accountDeviceDoc.data());
+                    if (!!deviceDto) {
+                      deviceDtos.push(deviceDto);
+                    }
+                  });
                   this.devicesSubject.next(deviceDtos);
                 });
-              });
-          });
+            });
+          } else {this.devicesSubject.next(deviceDtos);
+          }
         })
         .catch((error) => {
-          console.error(`Error getting document for ${accountId}: ${error}`);
           this.dialog.open(ErrorDlgComponent, {
             data: {msg: error}
           });
@@ -219,22 +226,25 @@ export class DeviceService {
 
       if (!accountDevicesRefDoc.exists) {
         accountDeviceDoc.createdAt = DeviceService.timestamp;
+        batch.set(this.accountDevicesRef.doc(accountDeviceKey), accountDeviceDoc);
+      } else {
+        delete accountDeviceDoc.createdAt;
+        batch.update(this.accountDevicesRef.doc(accountDeviceKey), accountDeviceDoc);
       }
 
-      batch.set(this.accountDevicesRef.doc(accountDeviceKey), accountDeviceDoc, {merge: false});
-
-      this.devicesRef.doc(accountId).get().then((devicesRefDoc) => {
+      this.devicesRef.doc(deviceId).get().then((devicesRefDoc) => {
         const deviceDoc: DeviceDoc = DeviceService.buildDeviceDoc(deviceDto);
 
         if (!devicesRefDoc.exists) {
           deviceDoc.createdAt = DeviceService.timestamp;
+          batch.set(this.devicesRef.doc(deviceId), deviceDoc);
+        } else {
+          delete deviceDoc.createdAt;
+          batch.update(this.devicesRef.doc(deviceId), deviceDoc);
         }
-
-        batch.set(this.devicesRef.doc(deviceId), deviceDoc, {merge: false});
 
         batch.commit()
           .then(() => {
-            console.log(`Saved device document for ${accountId}, ${deviceId}`);
             this.deviceId = deviceDto.deviceId;
             this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
           })

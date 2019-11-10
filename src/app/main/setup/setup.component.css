@@ -25,6 +25,10 @@ mat-expansion-panel-header {
   height: 35px !important;
 }
 
+.panel-group {
+  padding-bottom: 8px;
+}
+
 .panel-title {
   color: gray;
   font-weight: 500;

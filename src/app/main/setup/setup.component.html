@@ -39,6 +39,8 @@
             </mat-expansion-panel-header>
             <div fxLayout="column"
                  fxLayoutAlign="start start">
+            </div>
+            <div class="panel-group" fxLayout="column">
               <a href="#" mat-button
                  class="panel-item"
                  [routerLink]="['principal-accounts-list']"
@@ -49,13 +51,24 @@
               </a>
               <a href="#" mat-button
                  class="panel-item"
+                 [routerLink]="['create-principal-account']"
+                 [routerLinkActive]="['active-setup']"
+                 (click)="onItemClick($event)"
+                 [class.disabled]="!principalView">
+                {{getMenuName('create-principal-account', 1)}}
+              </a>
+            </div>
+            <div class="panel-group" fxLayout="column">
+              <a href="#" mat-button
+                 class="panel-item"
                  [routerLink]="['principal-users-list']"
                  [routerLinkActive]="['active-setup']"
                  (click)="onItemClick($event)"
                  [class.disabled]="!principalView">
                 {{getMenuName('principal-users-list', 1)}}
               </a>
-
+            </div>
+            <div class="panel-group" fxLayout="column">
               <a href="#" mat-button
                  class="panel-item"
                  [routerLink]="['principal-devices-list']"
@@ -63,14 +76,6 @@
                  (click)="onItemClick($event)"
                  [class.disabled]="!principalView">
                 {{getMenuName('principal-devices-list', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['create-principal-account']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)"
-                 [class.disabled]="!principalView">
-                {{getMenuName('create-principal-account', 1)}}
               </a>
             </div>
           </mat-expansion-panel>
@@ -82,55 +87,101 @@
             </mat-expansion-panel-header>
             <div fxLayout="column"
                  fxLayoutAlign="start start">
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['user-accounts-list']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('user-accounts-list', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-users-list']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-users-list', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-user-add']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-user-add', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-devices-list']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-devices-list', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-device-add']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-device-add', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-landmarks-list']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-landmarks-list', 1)}}
-              </a>
-              <a href="#" mat-button
-                 class="panel-item"
-                 [routerLink]="['account-landmark-add']"
-                 [routerLinkActive]="['active-setup']"
-                 (click)="onItemClick($event)">
-                {{getMenuName('account-landmark-add', 1)}}
-              </a>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['user-accounts-list']"
+                   [routerLinkActive]="['active-setup']"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('user-accounts-list', 1)}}
+                </a>
+              </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-users-list']"
+                   [routerLinkActive]="['active-setup']"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-users-list', 1)}}
+                </a>
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-user-add']"
+                   [routerLinkActive]="['active-setup']"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-user-add', 1)}}
+                </a>
+              </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-devices-list']"
+                   [routerLinkActive]="['active-setup']"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-devices-list', 1)}}
+                </a>
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-device-add']"
+                   [routerLinkActive]="['active-setup']"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-device-add', 1)}}
+                </a>
+              </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-landmarks-list']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-landmarks-list', 1)}}
+                </a>
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-landmark-add']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-landmark-add', 1)}}
+                </a>
+              </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-subscriptions-list']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-subscriptions-list', 1)}}
+                </a>
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-subscription-add']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-subscription-add', 1)}}
+                </a>
+              </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-subscribers-list']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-subscribers-list', 1)}}
+                </a>
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-subscriber-add']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-subscriber-add', 1)}}
+                </a>
+              </div>
             </div>
           </mat-expansion-panel>
         </mat-accordion>

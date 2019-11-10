@@ -1,0 +1,23 @@
+
+.place-name {
+  font-weight: bold;
+  color: gray;
+  margin: 0 0 25px 5px;
+  height: 1vh;
+}
+
+.name, .value {
+  text-align: left;
+  width: 100%;
+  border-bottom: 2px;
+}
+
+.name {
+  padding-left: 10px;
+  height: 100%;
+}
+
+.row {
+  color: gray;
+  font-size: smaller;
+}

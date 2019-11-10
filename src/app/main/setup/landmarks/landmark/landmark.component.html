@@ -10,7 +10,7 @@
               (ngSubmit)="onSubmit()">
           <div class="active" fxLayout="row"
                fxLayoutAlign="end center">
-            <mat-checkbox [formControl]="active" disabled="false">Active</mat-checkbox>
+            <mat-checkbox [formControl]="active">Active</mat-checkbox>
           </div>
           <mat-form-field floatLabel="always">
             <input type="text"
@@ -46,9 +46,9 @@
             <input type="number"
                    matInput
                    required
-                   placeholder="Radius (meters)"
+                   placeholder="Fence Radius (meters)"
                    formControlName="radius">
-            <mat-error>Missing Radius.</mat-error>
+            <mat-error>Missing Fence Radius.</mat-error>
           </mat-form-field>
           <mat-form-field floatLabel="always">
             <input type="text"
@@ -58,6 +58,45 @@
                    formControlName="color">
             <mat-error>Missing Color.</mat-error>
           </mat-form-field>
+          <fieldset class="address">
+            <legend>Address (Use with Preview to obtain coordinates)</legend>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Street Number"
+                     formControlName="subThoroughfare">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Street"
+                     formControlName="thoroughfare">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="City"
+                     formControlName="locality">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="State"
+                     formControlName="area">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Postal Code"
+                     formControlName="postalCode">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="Country"
+                     formControlName="countryName">
+            </mat-form-field>
+          </fieldset>
           <div fxLayout="column" *ngIf="!createLandmark">
             <mat-form-field floatLabel="always">
               <input type="text"
@@ -75,41 +114,45 @@
             </mat-form-field>
           </div>
           <mat-form-field floatLabel="always">
-         <textarea type="text"
-                   rows="1"
-                   matInput
-                   placeholder="Comment"
-                   formControlName="comment">
-         </textarea>
+             <textarea type="text"
+                       rows="1"
+                       matInput
+                       placeholder="Comment"
+                       formControlName="comment">
+             </textarea>
           </mat-form-field>
           <div class="error" fxLayoutAlign="center start">
             {{msg}}
           </div>
           <div fxLayout="row" fxLayoutAlign="space-around start">
-            <button class="cancel-button"
-                    type="button"
+            <button type="button"
                     mat-raised-button
                     color="primary"
                     (click)="onCancel()">
               Cancel
             </button>
-            <button class="clear-button"
+            <button *ngIf="createLandmark"
                     type="button"
                     mat-raised-button
                     color="primary"
                     (click)="onClear()">
               Clear
             </button>
-            <button class="preview-button"
+            <button *ngIf="!createLandmark"
                     type="button"
                     mat-raised-button
                     color="primary"
-                    [disabled]="landmarkForm.invalid || landmarkForm.pristine"
+                    (click)="onDelete()">
+              Delete
+            </button>
+            <button type="button"
+                    mat-raised-button
+                    color="primary"
                     (click)="onPreview()">
               Preview
             </button>
             <button type="submit" mat-raised-button color="primary"
-                    [disabled]="landmarkForm.invalid || landmarkForm.pristine">
+                    [disabled]="landmarkForm.invalid || (landmarkForm.pristine && active.pristine)">
               Save
             </button>
           </div>

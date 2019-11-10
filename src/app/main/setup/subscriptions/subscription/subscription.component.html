@@ -1,0 +1,116 @@
+<div class="subscription" fxLayoutAlign="center">
+  <form fxFlex.gt-xs="400px"
+        fxLayout="column"
+        [formGroup]="subscriptionForm"
+        (ngSubmit)="onSubmit()">
+    <div class="active" fxLayout="row"
+         fxLayoutAlign="end center">
+      <mat-checkbox [formControl]="active">Active</mat-checkbox>
+    </div>
+    <mat-form-field floatLabel="always">
+      <input type="text"
+             required
+             matInput
+             placeholder="Subscription Name (ID) "
+             formControlName="subscriptionId">
+      <mat-error>Missing Subscription Name.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-select placeholder="Landmark ID"
+                  required
+                  [formControl]="landmarkId">
+        <mat-option *ngFor="let landmark of allLandmarks" [value]="landmark">
+          {{landmark}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Missing Landmark ID.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-select placeholder="Device Names"
+                  required
+                  multiple
+                  [formControl]="deviceIds">
+        <mat-option *ngFor="let device of allDevices" [value]="device[0]">
+          {{device[1]}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Missing Device Name.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-select placeholder="Activity"
+                  [formControl]="activity">
+        <mat-option *ngFor="let activity of activities" [value]="activity[0]">
+          {{activity[1]}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div fxLayout="column" *ngIf="!createSubscription">
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Modified"
+               [readonly]="true"
+               formControlName="modifiedAt">
+      </mat-form-field>
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Created"
+               [readonly]="true"
+               formControlName="createdAt">
+      </mat-form-field>
+    </div>
+    <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   rows="1"
+                   matInput
+                   placeholder="Comment"
+                   formControlName="comment">
+         </textarea>
+    </mat-form-field>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around start">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button *ngIf="createSubscription"
+              class="clear-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onClear()">
+        Clear
+      </button>
+      <button *ngIf="!createSubscription"
+              class="delete-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onDelete()"
+              [disabled]="subscriptionForm.invalid || !(
+              subscriptionForm.pristine &&
+              active.pristine &&
+              activity.pristine &&
+              landmarkId.pristine &&
+              deviceIds.pristine)">
+        Delete
+      </button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="subscriptionForm.invalid || (
+              subscriptionForm.pristine &&
+              active.pristine &&
+              activity.pristine &&
+              landmarkId.pristine &&
+              deviceIds.pristine)">
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+

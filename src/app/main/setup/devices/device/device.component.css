@@ -12,19 +12,8 @@ form {
   color: grey;
 }
 
-.control-row {
-  margin: 0 10px 20px 0;
-  font-size: small;
-  color: grey;
-}
-
 .error {
   color: red;
   font-size: 12px;
   margin-bottom: 20px;
-}
-
-.account-name {
-  color: darkblue;
-  font-weight: bolder;
 }

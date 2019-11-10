@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -23,7 +23,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { AccountDto, AccountService } from './account.service';
+import { Account, AccountService } from './account.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
@@ -35,15 +35,15 @@ import { AuthService } from '../../core/auth/auth.service';
   styleUrls: ['./accounts.component.css']
 })
 export class AccountsComponent implements OnInit, OnDestroy {
-
+  private tapCount = 0;
   path: string;
   detailsPath: string;
 
   routeSubscription: Subscription;
   accountSubscription: Subscription;
-  dataSource = new MatTableDataSource<AccountDto>();
+  dataSource = new MatTableDataSource<Account>();
 
-  displayedColumns = ['id', 'active'];
+  displayedColumns = ['accountId', 'active'];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -64,6 +64,7 @@ export class AccountsComponent implements OnInit, OnDestroy {
       this.path = segment[0].path;
       this.detailsPath = this.path === 'principal-accounts-list' ? 'principal-account-details' : 'account-details';
       if (this.path.includes('principal')) {
+        this.displayedColumns.push('constraints');
         this.accountSubscription = this.accountService.allAccounts$.subscribe(accounts => {
           this.dataSource.data = accounts;
         });
@@ -99,9 +100,9 @@ export class AccountsComponent implements OnInit, OnDestroy {
   }
 
   /** Display account details */
-  onAccountClick(row) {
-    if (row.id) {
-      this.router.navigate([`../${this.detailsPath}`, row.id], {relativeTo: this.route});
+  onAccountClick(row: Account) {
+    if (row.accountId) {
+      this.router.navigate([`../${this.detailsPath}`, row.accountId], {relativeTo: this.route});
     } else {
       const msg = 'Invalid account data in table row';
       const dlg = this.dialog.open(ErrorDlgComponent, {
@@ -109,6 +110,40 @@ export class AccountsComponent implements OnInit, OnDestroy {
       });
       console.error(msg);
     }
+  }
+
+  onRowTap(row: Account) {
+    this.tapCount++;
+    setTimeout(() => {
+      if (this.tapCount === 1) {
+        this.tapCount = 0;
+        this.onRowClick(row);
+      }
+      if (this.tapCount > 1) {
+        this.tapCount = 0;
+        this.onRowDblclick(row);
+      }
+    }, 300);
+  }
+
+  onRowClick(account: Account) {
+    this.accountService.accountId = account.accountId;
+  }
+
+  onRowDblclick(account: Account) {
+    if (account.accountId) {
+      this.router.navigate([`../${this.detailsPath}`, account.accountId], {relativeTo: this.route});
+    } else {
+      const msg = 'Invalid account data in table row';
+      const dlg = this.dialog.open(ErrorDlgComponent, {
+        data: {msg: msg}
+      });
+      console.error(msg);
+    }
+  }
+
+  onConstraintsClick(row: Account) {
+    this.router.navigate([`../principal-account-constraints`, row.accountId], {relativeTo: this.route});
   }
 
   /** Currently selected row highlight */
@@ -122,8 +157,8 @@ export class AccountsComponent implements OnInit, OnDestroy {
   }
 
   /** Determine if an account table row is currently selected */
-  isSelected(row): boolean {
+  isSelected(row: Account): boolean {
     const id = this.accountService.accountId;
-    return row && id && id === row.id;
+    return row && id && id === row.accountId;
   }
 }

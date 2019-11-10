@@ -15,33 +15,38 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { google } from '@agm/core/services/google-maps-types';
-import { LandmarkDoc, LandmarkService } from '../landmark/landmark.service';
-import { LandmarksMapService } from './landmarks-map.service';
 import { SetupService } from '../../setup.service';
+import { AccountLandmarkDoc, LandmarkService } from '../landmark.service';
+
+interface MarkerDoc extends AccountLandmarkDoc {
+  icon?: string;
+  animation?: string;
+}
 
 @Component({
   selector: 'app-landmarks-map',
   templateUrl: './landmarks-map.component.html'
 })
-export class LandmarksMapComponent implements OnInit {
-  landmarkIcon = '/assets/landmark_flag.png';
+export class LandmarksMapComponent implements OnInit, OnDestroy {
+  markerIcon = '/assets/landmark_flag_red.png';
+  selectedMarkerIcon = '/assets/landmark_flag_blue.png';
 
   landmarksMapSubscription: Subscription;
+  selectLandmarkSubscription: Subscription;
 
   map: google.maps.Map;
-  landmarks: LandmarkDoc[] = [];
+  landmarks: MarkerDoc[] = [];
 
   constructor(
-    private landmarksMapService: LandmarksMapService,
     private landmarkService: LandmarkService,
     private setupService: SetupService
   ) {
@@ -50,18 +55,34 @@ export class LandmarksMapComponent implements OnInit {
   ngOnInit() {
     // Pick CSS file based on display size
     if (this.setupService.smallView) {
-      console.log('small');
       require('style-loader!./landmarks-map.component-sm.css');
     } else {
       require('style-loader!./landmarks-map.component.css');
-      console.log('full');
     }
 
-    // Landmark to display
-    this.landmarksMapSubscription = this.landmarksMapService.landmarks$.subscribe(
-      (landmarkDocs: LandmarkDoc[]) => {
+    // Landmarks to display
+    this.landmarksMapSubscription = this.landmarkService.landmarkMarkers$.subscribe(
+      (landmarkDocs: MarkerDoc[]) => {
+        const selectedLandmarkId = this.landmarkService.getLandmarkId();
+        landmarkDocs.forEach((doc: MarkerDoc) => {
+          doc.icon = doc.landmarkId === selectedLandmarkId ? this.selectedMarkerIcon : this.markerIcon;
+        });
         this.landmarks = landmarkDocs;
       });
+
+    // Selected landmark
+    this.selectLandmarkSubscription = this.landmarkService.selectedLandmark$.subscribe(landmarkId => {
+      this.selectMarker(landmarkId);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.landmarksMapSubscription !== null) {
+      this.landmarksMapSubscription.unsubscribe();
+    }
+    if (this.selectLandmarkSubscription !== null) {
+      this.selectLandmarkSubscription.unsubscribe();
+    }
   }
 
   onMapReady(map) {
@@ -76,7 +97,21 @@ export class LandmarksMapComponent implements OnInit {
     infoWindow.close();
   }
 
-  getIconAnimation(landmarkDoc: LandmarkDoc) {
-    return landmarkDoc.landmarkId === this.landmarkService.getLandmarkId() ? 'BOUNCE' : null;
+  selectMarker(landmarkId) {
+    this.landmarks.forEach((doc: MarkerDoc) => {
+      if (doc.landmarkId === landmarkId) {
+        doc.icon = this.selectedMarkerIcon;
+        doc.animation = 'BOUNCE';
+        this.stopAnimation(doc);
+      } else {
+        doc.icon = this.markerIcon;
+      }
+    });
+  }
+
+  stopAnimation(item) {
+    setTimeout(() => {
+      item.animation = null;
+    }, 1000);
   }
 }

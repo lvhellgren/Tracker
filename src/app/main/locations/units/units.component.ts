@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -25,9 +25,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MapService } from '../map/map.service';
+import { UnitsMapService } from '../units-map/units-map.service';
 import { GlobalService } from '../../../sevices/global';
-import { StepDoc, UnitService } from '../unit.service';
+import { DeviceEvent, UnitService } from '../unit.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-units',
@@ -36,17 +37,20 @@ import { StepDoc, UnitService } from '../unit.service';
 })
 
 export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
-  private lastStepSubscription: Subscription;
-  public dataSource = new MatTableDataSource<StepDoc>();
+  public dataSource = new MatTableDataSource<DeviceEvent>();
 
-  public displayedColumns = ['name', 'time', 'street', 'city'];
+  public displayedColumns = ['deviceName', 'deviceTime', 'street', 'city', 'landmarks'];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   private tapCount = 0;
 
-  constructor(private mapService: MapService,
+  private accountSubscription: Subscription;
+  private lastMoveSubscription: Subscription;
+
+  constructor(private authService: AuthService,
+              private mapService: UnitsMapService,
               private unitService: UnitService,
               private route: ActivatedRoute,
               private router: Router,
@@ -54,9 +58,15 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.lastStepSubscription = this.unitService.allLastSteps$.subscribe(steps => {
-      this.dataSource.data = steps;
-      this.mapService.setMarkers(steps);
+    // Issue last-moves fetch request for the selected account:
+    this.accountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
+      this.unitService.fetchLastMoves(accountId);
+    });
+
+    // Receive response to last-moves fetch request:
+    this.lastMoveSubscription = this.unitService.lastMoves$.subscribe((deviceEvents: DeviceEvent[]) => {
+      this.dataSource.data = deviceEvents;
+      this.mapService.setMarkers(deviceEvents);
     });
   }
 
@@ -66,9 +76,25 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.lastStepSubscription) {
-      this.lastStepSubscription.unsubscribe();
+    if (this.accountSubscription) {
+      this.accountSubscription.unsubscribe();
     }
+    if (this.lastMoveSubscription) {
+      this.lastMoveSubscription.unsubscribe();
+    }
+  }
+
+  getLandmarkIds(landmarks: any[]) {
+    let ids = '';
+    if (!!landmarks) {
+      landmarks.forEach((landmark) => {
+        if (ids.length > 0) {
+          ids += ', ';
+        }
+        ids += landmark.landmarkId;
+      });
+    }
+    return ids;
   }
 
   applyFilter(filterValue: string) {
@@ -77,36 +103,35 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.filter = filterValue;
   }
 
-  onRowClick(row: StepDoc) {
-    this.unitService.currentUnit = <StepDoc>row;
+  onRowClick(deviceEvent: DeviceEvent) {
+    this.unitService.currentDeviceEvent = <DeviceEvent>deviceEvent;
     this.mapService.setMarkers(this.dataSource.data);
   }
 
-  onRowDblClick(row: StepDoc) {
-    this.unitService.historyEndDate = this.unitService.historyStartDate = new Date(row.timestamp);
-    this.unitService.currentUnit = <StepDoc>row;
-    this.unitService.currentUnitStep = null;
-    this.router.navigate([`/locations/${this.global.currentWidth}/unit-history`, row.deviceId]);
+  onRowDblClick(deviceEvent: DeviceEvent) {
+    this.unitService.historyEndDate = this.unitService.historyStartDate = new Date(deviceEvent.deviceTime.toDate());
+    this.unitService.currentDeviceEvent = <DeviceEvent>deviceEvent;
+    this.router.navigate([`/locations/${this.global.currentWidth}/unit-history`, deviceEvent.deviceId]);
   }
 
   // To handle click and dblClick also for mobile devices
-  onRowTap(row: StepDoc) {
+  onRowTap(deviceEvent: DeviceEvent) {
     this.tapCount++;
     setTimeout(() => {
       if (this.tapCount === 1) {
         this.tapCount = 0;
-        this.onRowClick(row);
+        this.onRowClick(deviceEvent);
       }
       if (this.tapCount > 1) {
         this.tapCount = 0;
-        this.onRowDblClick(row);
+        this.onRowDblClick(deviceEvent);
       }
     }, 300);
   }
 
   rowBackground(row) {
     let bg = '';
-    if (row && this.unitService.currentUnit && this.unitService.currentUnit.deviceId === row.deviceId) {
+    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.deviceId === row.deviceId) {
       bg = '#3f51b5';
     }
     return bg;
@@ -114,7 +139,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rowColor(row) {
     let c = '';
-    if (row && this.unitService.currentUnit && this.unitService.currentUnit.deviceId === row.deviceId) {
+    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.deviceId === row.deviceId) {
       c = 'white';
     }
     return c;

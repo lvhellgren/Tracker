@@ -5,14 +5,14 @@
         (ngSubmit)="onSubmit()">
     <div class="control-row" fxLayout="row"
          fxLayoutAlign="end center">
-      <mat-checkbox [formControl]="active" disabled="">Active</mat-checkbox>
+      <mat-checkbox [formControl]="active">Active</mat-checkbox>
     </div>
     <mat-form-field floatLabel="always">
       <input type="text"
              matInput
              placeholder="Name"
              required
-             formControlName="id">
+             formControlName="accountId">
       <mat-error>Missing Account ID.</mat-error>
     </mat-form-field>
     <mat-form-field floatLabel="always">

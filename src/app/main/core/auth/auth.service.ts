@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -30,7 +30,7 @@ import { switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { User } from 'firebase';
 import { UiService } from '../ui-service/ui.service';
-import { AccountDto } from '../../setup/accounts/account.service';
+import { Account } from '../../setup/accounts/account.service';
 import { UserDoc } from '../../setup/users/user.service';
 import { ErrorDlgComponent } from '../error-dlg/error-dlg.component';
 import { MatDialog } from '@angular/material';
@@ -115,7 +115,9 @@ export class AuthService {
               this.fetchUserAccountIds(user.email);
             },
             error => {
-              console.log('Ignoring sign-out DB permission error');
+              if (!this.userSubscription.closed) {
+                console.log(error);
+              }
             });
           return user$;
         } else {
@@ -133,7 +135,7 @@ export class AuthService {
   emailSignIn(email: string, password: string) {
     this.uiService.loadingStateChanged.next(true);
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-      .then((res) => {
+      .then(() => {
         this.authChange.next(true);
         this.updateUserInfo(email);
         this.uiService.loadingStateChanged.next(false);
@@ -163,7 +165,7 @@ export class AuthService {
         this.router.navigate([SIGN_IN_PAGE]);
       })
       .catch(error => {
-        console.error(error);
+        console.error(`signOut: ${error}`);
       });
   }
 
@@ -208,9 +210,9 @@ export class AuthService {
                 };
 
                 const accountRef = this.db.collection(ACCOUNTS_COLL).doc(currentUser.email);
-                const accountDto: AccountDto = {
+                const account: Account = {
                   active: true,
-                  id: currentUser.email,
+                  accountId: currentUser.email,
                   modifiedAt: this.timestamp,
                   createdAt: this.timestamp,
                   description: 'Demo account created through Google Sign In by a first-time user'
@@ -219,7 +221,7 @@ export class AuthService {
                 const batch = this.db.batch();
                 batch.set(userRef, userDoc, {merge: false});
                 batch.set(accountUserRef, accountUserDoc, {merge: false});
-                batch.set(accountRef, accountDto, {merge: false});
+                batch.set(accountRef, account, {merge: false});
                 batch.commit().then(() => {
                   this.authChange.next(true);
                   this.zone.run(() => {
@@ -301,16 +303,16 @@ export class AuthService {
     this.afs.collection(ACCOUNTS_COLL)
       .valueChanges()
       .subscribe(
-        (recs: AccountDto[]) => {
+        (recs: Account[]) => {
           this.userAccountIds = [];
-          recs.forEach((rec: AccountDto) => {
-            this.userAccountIds.push(rec['id']);
+          recs.forEach((rec: Account) => {
+            this.userAccountIds.push(rec['accountId']);
           });
         },
         error => {
           console.error('accounts collection: ', error);
           this.authMsg.next(error);
-          const dlg = this.dialog.open(ErrorDlgComponent, {
+          this.dialog.open(ErrorDlgComponent, {
             data: {msg: error}
           });
         });
@@ -337,7 +339,9 @@ export class AuthService {
         this.userAccountSelect.next(this.currentUserAccountId);
       },
       error => {
-        console.log('Ignorin DB permission error');
+        if (!this.accountIdsSubscription.closed) {
+          console.log(error);
+        }
       });
   }
 
@@ -357,8 +361,9 @@ export class AuthService {
         }
       },
       error => {
-        console.log('Ignoring DB permission error');
-        // TODO: Figure out how to avoid an error here when signing out after a browser refresh
+        if (!this.accountUserSubscription.closed) {
+          console.log('fetchAccountUserRoles: ' + error);
+        }
       });
   }
 

@@ -2,3 +2,15 @@
   padding: 10px;
   height: calc(100vh - 100px);
 }
+
+.mat-column-radius {
+  text-align: left;
+  flex: 0 0 80px;
+  padding: 5px;
+}
+
+.mat-column-units {
+  text-align: left;
+  flex: 0 0 80px;
+  padding: 5px;
+}

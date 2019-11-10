@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -24,12 +24,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { LandmarkDoc, LandmarkService } from './landmark/landmark.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
-import { LandmarksMapService } from './landmarks-map/landmarks-map.service';
-import { LandmarksService } from './landmarks.service';
+import { AccountLandmarkDoc, LandmarkService } from './landmark.service';
 import { SetupService } from '../setup.service';
 
 @Component({
@@ -41,7 +39,7 @@ export class LandmarksComponent implements OnInit, OnDestroy {
 
   fullView = true;
 
-  dataSource = new MatTableDataSource<LandmarkDoc>();
+  dataSource = new MatTableDataSource<AccountLandmarkDoc>();
   displayedColumns = ['landmarkId', 'active'];
   landmarkId: string;
 
@@ -56,8 +54,6 @@ export class LandmarksComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private landmarkService: LandmarkService,
-    private landmarksService: LandmarksService,
-    private landmarksMapService: LandmarksMapService,
     private setupService: SetupService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -71,12 +67,12 @@ export class LandmarksComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
 
     this.accountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
-      this.landmarksService.fetchLandmarks(accountId);
+      this.landmarkService.fetchLandmarks(accountId);
     });
 
-    this.landmarksSubscription = this.landmarksService.landmarks$.subscribe(landmarks => {
+    this.landmarksSubscription = this.landmarkService.fetchedLandmarks$.subscribe((landmarks: AccountLandmarkDoc[]) => {
       this.dataSource.data = landmarks;
-      this.landmarksMapService.setLandmarks(landmarks);
+      this.landmarkService.setLandmarkMarkers(landmarks);
     });
   }
 
@@ -99,18 +95,18 @@ export class LandmarksComponent implements OnInit, OnDestroy {
     }
   }
 
-  onRowClick(row: LandmarkDoc) {
+  onRowClick(row: AccountLandmarkDoc) {
     this.landmarkService.setLandmarkId(row.landmarkId);
   }
 
-  onRowDblClick(row: LandmarkDoc) {
+  onRowDblClick(row: AccountLandmarkDoc) {
     if (row.landmarkId) {
       this.landmarkId = row.landmarkId;
       const landmarkKey = LandmarkService.makeAccountLandmarkKey(row.accountId, row.landmarkId);
       this.router.navigate([`../account-landmark`, landmarkKey], {relativeTo: this.route});
     } else {
       const msg = 'Invalid landmark data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);
@@ -118,7 +114,7 @@ export class LandmarksComponent implements OnInit, OnDestroy {
   }
 
   // To handle click and dblClick also for mobile devices
-  onRowTap(row: LandmarkDoc) {
+  onRowTap(row: AccountLandmarkDoc) {
     this.tapCount++;
     setTimeout(() => {
       if (this.tapCount === 1) {
@@ -140,7 +136,7 @@ export class LandmarksComponent implements OnInit, OnDestroy {
     return this.isSelected(row) ? 'white' : '';
   }
 
-  isSelected(row: LandmarkDoc): boolean {
+  isSelected(row: AccountLandmarkDoc): boolean {
     const landmarkId = this.landmarkService.getLandmarkId();
     return row && landmarkId && landmarkId === row.landmarkId;
   }

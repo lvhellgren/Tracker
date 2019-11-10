@@ -2,6 +2,13 @@
   padding: 5px 5px 0 0;
 }
 
+.heading {
+  width: 100%;
+  color: gray;
+  font-size: larger;
+  margin-bottom: 20px;
+}
+
 .close-icon {
   color: white;
   background-color: #3f51b5;
@@ -11,4 +18,23 @@
 
 .close-icon:hover {
   cursor: pointer;
+}
+
+.list {
+  padding-top: 15px;
+}
+
+.name .value {
+  text-align: left;
+  height: 40px;
+  padding-left: 10px;
+}
+
+.name {
+  width: 100%;
+}
+
+.row {
+  color: gray;
+  font-size: smaller;
 }

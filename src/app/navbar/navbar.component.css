@@ -24,7 +24,6 @@ a:hover {
 
 .exelor-logo {
   font-family: Arial, sans-serif;
-  font-size: 25px;
   padding: 0 5px 5px;
   font-stretch: ultra-condensed;
   color: white;
@@ -32,7 +31,7 @@ a:hover {
 }
 
 .txt-logo {
-  font-size: 11px;
+  font-size: 9px;
   padding: 0 5px;
   margin-top: 4px;
   color: white;

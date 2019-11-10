@@ -11,13 +11,20 @@
       LOCATIONS
     </a>
   </div>
-  <div [ngClass]="{'disabled': true}">
+  <div>
     <a href="#" mat-button
-       [disabled]="true"
        [routerLink]="['notifications']"
        [routerLinkActive]="['active-page']"
        (click)="appdrawer.close()">
       NOTIFICATIONS
+    </a>
+  </div>
+  <div>
+    <a href="#" mat-button
+       [routerLink]="['reports']"
+       [routerLinkActive]="['active-page']"
+       (click)="appdrawer.close()">
+      REPORTS
     </a>
   </div>
   <div>
@@ -51,9 +58,9 @@
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">
-      <button mat-menu-item class="menu-item" (click)="onPreferencesClick()">Preferences</button>
+      <button mat-menu-item (click)="onSignOutClick()">Sign Out</button>
       <hr style="margin: 2px 0"/>
-      <button mat-menu-item class="menu-item" (click)="onSignOutClick()">Sign Out</button>
+      <button mat-menu-item (click)="onPreferencesClick()">Preferences</button>
     </mat-menu>
   </div>
 </div>

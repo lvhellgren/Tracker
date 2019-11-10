@@ -15,13 +15,13 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, isDevMode, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../main/core/auth/auth.service';
 import { UserService } from '../../main/setup/users/user.service';
 
@@ -30,9 +30,11 @@ import { UserService } from '../../main/setup/users/user.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   @Input() appdrawer;
   @Output() preferencesClick: EventEmitter<any> = new EventEmitter();
+
+  isDevMode: boolean;
 
   constructor(public authService: AuthService,
               public userService: UserService) {
@@ -43,6 +45,10 @@ export class MainComponent {
     this.authService.userAccountSelect.next(accountId);
     this.userService.fetchAccountUsers(accountId);
     this.appdrawer.close();
+  }
+
+  ngOnInit() {
+    this.isDevMode = isDevMode();
   }
 
   onSignOutClick() {

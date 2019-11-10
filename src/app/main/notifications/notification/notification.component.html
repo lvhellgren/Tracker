@@ -1,0 +1,64 @@
+<div fxLayout="column"
+     fxLayoutAlign="start stretch">
+  <div class="mat-elevation-z4"
+       fxFlexFill>
+    <div class="title">Notification Details</div>
+    <mat-list class="list">
+      <mat-list-item class="item">
+        <span class="item-name">Subscription</span>
+        <span class="item-value">{{notificationDoc?.subscriptionId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Time</span>
+        <span class="item-value">{{notificationDoc?.deviceTime | timestampToDate | date:"long"}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Activity</span>
+        <span class="item-value">{{getActivityName(notificationDoc?.activity)}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Landmark</span>
+        <span class="item-value">{{notificationDoc?.landmarkId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Device Name</span>
+        <span class="item-value">{{notificationDoc?.deviceName}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Device ID</span>
+        <span class="item-value">{{notificationDoc?.deviceId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Document ID</span>
+        <span class="item-value">{{notificationDoc?.documentId}}</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Subscribers</span>
+        <span class="item-value">TBD</span>
+      </mat-list-item>
+      <mat-list-item class="item">
+        <span class="item-name">Comment</span>
+        <span class="item-value">{{notificationDoc?.comment}}</span>
+      </mat-list-item>
+    </mat-list>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div class="return-btn">
+      <button class="return-btn"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button class="return-btn"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onDelete(notificationDoc)">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

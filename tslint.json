@@ -77,7 +77,7 @@
     "object-literal-sort-keys": false,
     "one-line": [
       true,
-      "check-open-brace",
+//      "check-open-brace",
       "check-catch",
       "check-else",
       "check-whitespace"

@@ -1,0 +1,103 @@
+<div class="subscriber" fxLayoutAlign="center">
+  <form fxFlex.gt-xs="400px"
+        fxLayout="column"
+        [formGroup]="subscriberForm"
+        (ngSubmit)="onSubmit()">
+    <div class="active" fxLayout="row"
+         fxLayoutAlign="end center">
+      <mat-checkbox [formControl]="active">Active</mat-checkbox>
+    </div>
+    <mat-form-field floatLabel="always">
+      <mat-select placeholder="Subscriber"
+                  required
+                  [formControl]="user">
+        <mat-option *ngFor="let email of allUsers" [value]="email">
+          {{email}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Missing Subscriber.</mat-error>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-select placeholder="Subscription"
+                  required
+                  [formControl]="subscription">
+        <mat-option *ngFor="let id of allSubscriptions" [value]="id">
+          {{id}}
+        </mat-option>
+      </mat-select>
+      <mat-error>Missing Subscription.</mat-error>
+    </mat-form-field>
+    <div class="email-checkbox">
+      <mat-checkbox [formControl]="emailNotification">Email Notification</mat-checkbox>
+    </div>
+    <div class="text-checkbox">
+      <mat-checkbox [formControl]="textNotification">Text Message Notification</mat-checkbox>
+    </div>
+    <div fxLayout="column" *ngIf="!createSubscriber">
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Modified"
+               [readonly]="true"
+               formControlName="modifiedAt">
+      </mat-form-field>
+      <mat-form-field floatLabel="always">
+        <input type="text"
+               matInput
+               placeholder="Created"
+               [readonly]="true"
+               formControlName="createdAt">
+      </mat-form-field>
+    </div>
+    <mat-form-field floatLabel="always">
+         <textarea type="text"
+                   rows="1"
+                   matInput
+                   placeholder="Comment"
+                   formControlName="comment">
+         </textarea>
+    </mat-form-field>
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around start">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button *ngIf="createSubscriber"
+              class="clear-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onClear()">
+        Clear
+      </button>
+      <button *ngIf="!createSubscriber"
+              class="delete-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onDelete()"
+              [disabled]="subscriberForm.invalid || !(
+              subscriberForm.pristine &&
+              active.pristine)">
+        Delete
+      </button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="subscriberForm.invalid ||
+              (subscriberForm.pristine &&
+              active.pristine &&
+              user.pristine &&
+              subscription.pristine &&
+              emailNotification.pristine &&
+              textNotification.pristine)">
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+

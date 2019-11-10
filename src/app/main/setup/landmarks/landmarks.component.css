@@ -1,7 +1,7 @@
 
 .mat-card {
   padding: 10px;
-  markin: 0;
+  margin: 0;
 }
 
 .table-container {
@@ -12,4 +12,10 @@
   color: red;
   font-size: 12px;
   margin-bottom: 20px;
+}
+
+.mat-column-active {
+  text-align: left;
+  flex: 0 0 60px;
+  padding: 5px;
 }

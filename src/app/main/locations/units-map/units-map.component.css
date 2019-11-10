@@ -1,0 +1,8 @@
+.sebm-google-map-container {
+  height:calc(100vh - 105px)
+}
+
+.mat-card {
+  padding: 0;
+  margin: 1px;
+}

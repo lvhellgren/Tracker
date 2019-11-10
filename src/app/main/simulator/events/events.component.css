@@ -1,0 +1,47 @@
+.table-container {
+  height: calc(100vh - 150px) !important;
+}
+
+/* To prevent checked checkboxes from partially moving out of view. */
+mat-cell {
+  overflow: visible;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.mat-mini-fab {
+  width: 20px;
+  height: 20px;
+  color: gray !important;
+}
+
+.mat-cell {
+  padding: 10px 5px;
+}
+
+.mat-column-trigger {
+  text-align: center;
+  flex: 0 0 80px;
+  padding: 5px;
+}
+
+.mat-column-eventType {
+  flex: 0 0 60px;
+}
+
+.mat-column-deviceId {
+  flex: 0 0 160px;
+}
+
+.mat-column-email {
+  flex: 0 0 200px;
+}
+
+.mat-column-addressLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

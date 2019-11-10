@@ -1,6 +1,7 @@
 .unit-name {
   font-weight: bold;
-  margin: 20px;
+  color: gray;
+  margin: 0 0 10px 5px;
   height: 1vh;
 }
 
@@ -12,6 +13,12 @@
   font-size: smaller;
   font-weight: bold;
   color: #3f51b5;
+}
+
+.mat-column-time {
+  text-align: left;
+  flex: 0 0 115px;
+  padding: 5px;
 }
 
 

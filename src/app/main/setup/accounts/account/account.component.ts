@@ -15,17 +15,17 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AccountDto, AccountService } from '../account.service';
+import { Account, AccountService } from '../account.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -74,7 +74,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.accountForm = this.fb.group({
       active: ['', []],
-      id: ['', this.idValidators],
+      accountId: ['', this.idValidators],
       address1: ['', []],
       address2: ['', []],
       city: ['', []],
@@ -89,22 +89,22 @@ export class AccountComponent implements OnInit, OnDestroy {
       const accountId = params['id'] ? params['id'] : this.accountService.accountId;
 
       if (accountId) {
-        this.accountSubscription = this.accountService.fetchAccount$(accountId).subscribe((accountDto: AccountDto) => {
+        this.accountSubscription = this.accountService.fetchAccount$(accountId).subscribe((account: Account) => {
           this.accountForm.setValue(
             {
-              active: accountDto.active,
-              id: accountDto.id,
-              address1: accountDto.address1 ? accountDto.address1 : '',
-              address2: accountDto.address2 ? accountDto.address2 : '',
-              city: accountDto.city ? accountDto.city : '',
-              state: accountDto.state ? accountDto.state : '',
-              postalCode: accountDto.postalCode ? accountDto.postalCode : '',
-              modifiedAt: this.datePipe.transform(this.toDate(accountDto.modifiedAt), 'long'),
-              createdAt: this.datePipe.transform(this.toDate(accountDto.createdAt), 'long'),
-              description: accountDto.description ? accountDto.description : ''
+              active: account.active,
+              accountId: account.accountId,
+              address1: account.address1 ? account.address1 : '',
+              address2: account.address2 ? account.address2 : '',
+              city: account.city ? account.city : '',
+              state: account.state ? account.state : '',
+              postalCode: account.postalCode ? account.postalCode : '',
+              modifiedAt: this.datePipe.transform(this.toDate(account.modifiedAt), 'long'),
+              createdAt: this.datePipe.transform(this.toDate(account.createdAt), 'long'),
+              description: account.description ? account.description : ''
             });
 
-          this.active.setValue(accountDto.active);
+          this.active.setValue(account.active);
         });
       } else if (path === 'account-details') {
         this.msg = 'No account selected';
@@ -133,19 +133,19 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formGroup = this.accountForm;
-    const dto = <AccountDto>{
+    const form = this.accountForm;
+    const account = <Account>{
       active: this.active.value,
-      id: formGroup.get('documentId').value,
-      address1: formGroup.get('address1').value,
-      address2: formGroup.get('address2').value,
-      city: formGroup.get('city').value,
-      state: formGroup.get('state').value,
-      postalCode: formGroup.get('postalCode').value,
-      description: formGroup.get('description').value
+      accountId: form.get('accountId').value,
+      address1: form.get('address1').value,
+      address2: form.get('address2').value,
+      city: form.get('city').value,
+      state: form.get('state').value,
+      postalCode: form.get('postalCode').value,
+      description: form.get('description').value
     };
 
-    this.accountService.saveAccount(dto, this.returnPath, this.createAccount);
+    this.accountService.saveAccount(account, this.returnPath, this.createAccount);
   }
 
   onClear() {

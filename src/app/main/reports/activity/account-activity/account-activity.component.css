@@ -1,0 +1,26 @@
+
+.time {
+  text-align: center;
+  color: gray;
+  padding: 20px 0;
+}
+
+.name, .value {
+  text-align: left;
+  width: 100%;
+  border-bottom: 2px;
+}
+
+.name {
+  padding-left: 10px;
+}
+
+.heading {
+  padding: 10px 0;
+  color: gray;
+}
+
+.row {
+  color: gray;
+  font-size: smaller;
+}

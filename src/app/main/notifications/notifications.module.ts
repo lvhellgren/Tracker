@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -24,12 +24,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationsComponent } from './notifications.component';
+import { NotificationComponent } from './notification/notification.component';
+import { AppAngularMaterialModule } from '../../app-angular-material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    CoreModule,
+    FlexLayoutModule,
+    AppAngularMaterialModule
   ],
-  declarations: [NotificationsComponent]
+  declarations: [
+    NotificationsComponent,
+    NotificationComponent
+  ]
 })
 export class NotificationsModule {
 }

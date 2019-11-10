@@ -1,0 +1,29 @@
+.constraint {
+  margin: 20px 0;
+}
+
+.account-name {
+  text-align: center;
+  padding: 20px;
+  font-size: medium;
+  color: gray;
+}
+
+form {
+  width: 100%;
+}
+
+.column {
+  width: 40%;
+  margin:  30px 0;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.cancel-button {
+  margin-right: 50px;
+}

@@ -20,7 +20,7 @@
       <div fxFlex
            fxLayout="column"
            fxLayoutAlign="space-around start">
-        <div class="exelor-logo">e<sup style="font-size: 20px;">x</sup>elor</div>
+        <div class="exelor-logo">e<sup style="font-size: 12px;">x</sup>elor</div>
         <div class="txt-logo">T R A C K E R</div>
       </div>
       <img class="logo" src="/assets/tracker_white.png">
@@ -54,14 +54,20 @@
           LOCATIONS
         </a>
       </div>
-      <div [ngClass]="{'disabled': true}">
+      <div>
         <a href="#" mat-button
-           [ngStyle]="{'color':'lightgray'}"
-           [disabled]=true
            [routerLink]="['notifications']"
            [routerLinkActive]="['active-page']"
-           matTooltip="Sample page">
+           matTooltip="Conditional notifications">
           NOTIFICATIONS
+        </a>
+      </div>
+      <div>
+        <a href="#" mat-button
+           [routerLink]="['reports']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Reorts page">
+          REPORTS
         </a>
       </div>
       <div>
@@ -70,6 +76,14 @@
            [routerLinkActive]="['active-page']"
            matTooltip="Account and user setup page">
           SETUP
+        </a>
+      </div>
+      <div *ngIf="isDevMode">
+        <a href="#" mat-button
+           [routerLink]="['simulator']"
+           [routerLinkActive]="['active-page']"
+           matTooltip="Test simulation page">
+          SIMULATOR
         </a>
       </div>
     </div>

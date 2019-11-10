@@ -1,29 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
 
 
-export interface StepDto {
-  name: string;
-  deviceId: string;
-  latitude: number;
-  longitude: number;
-  bearing: number;
-  address: Address;
-  timestamp: number;
+export interface Address extends GeoAddress {
+  notUsed?: boolean;
 }
 
-export interface StepDoc {
-  account?: string;
+export interface DeviceEvent {
+  accountId?: string;
   accuracy?: number;
-  address?: Address;
+  address?: GeoAddress;
   altitude?: number;
   bearing?: number;
   bearingForward?: number;
-  previousBearing?: number;
-  datetime?: string;
+  previousEventBearing?: number;
+  deviceName?: string;
   deviceId?: string;
+  deviceTime?: Timestamp;
+  deviceType?: string;
   documentId?: string;
   email?: string;
   hasAccuracy?: boolean;
@@ -32,16 +29,14 @@ export interface StepDoc {
   hasSpeed?: boolean;
   latitude?: number;
   longitude?: number;
-  name?: string;
+  landmarks?: Landmark[];
+  serverTime?: Timestamp;
   speed?: number;
   stepLength?: number;
-  timestamp?: number;
-  type?: string;
-  iconUrl?: {};
-  animation?: string;
+  isLastMove?: boolean;
 }
 
-export interface Address {
+export interface GeoAddress {
   subThoroughfare: string;
   thoroughfare: string;
   locality: string;
@@ -51,9 +46,16 @@ export interface Address {
   countryName: string;
 }
 
-const STEPS_COLL = 'steps';
-const LAST_STEPS_COLL = 'last-steps';
-const PAGE_SIZE = 10;
+export interface Landmark {
+  landmarkId?: string;
+  latitude?: number;
+  longitude?: number;
+  radius?: number;
+  color?: string;
+}
+
+export const DEVICE_EVENTS_COLL = 'device-events';
+export const LAST_MOVES_COLL = 'last-moves';
 
 @Injectable()
 export class UnitService {
@@ -61,63 +63,68 @@ export class UnitService {
   historyEndDate: Date;
 
   private db;
-  lastStepsRef;
-  stepsRef;
-  currentUnit: StepDoc;
-  currentUnitStep: StepDoc = null;
+  movesRef;
+  currentDeviceEvent: DeviceEvent;
+
+  // Last moves fetched from DB.
+  private lastMovesSubject = new BehaviorSubject<DeviceEvent[]>([]);
+  public lastMoves$ = this.lastMovesSubject.asObservable();
+
+  // Device events fetched from DB.
+  private deviceEventsSubject = new BehaviorSubject<DeviceEvent[]>([]);
+  public deviceEvents$ = this.deviceEventsSubject.asObservable();
 
   constructor(
     private afs: AngularFirestore) {
     this.db = firebase.firestore();
-    this.lastStepsRef = this.db.collection(LAST_STEPS_COLL);
-    this.stepsRef = this.db.collection(STEPS_COLL);
+    this.movesRef = this.db.collection(DEVICE_EVENTS_COLL);
   }
 
-  /**
-   * References all last steps in the data base. Subscribers automatically receive updates of collection changes.
-   */
-  get allLastSteps$(): Observable<StepDoc[]> {
-    return this.afs.collection(LAST_STEPS_COLL).valueChanges();
+  fetchLastMoves(accountId: string) {
+    this.afs.collection(LAST_MOVES_COLL, ref => ref.where('accountId', '==', accountId))
+      .valueChanges()
+      .subscribe((deviceEvents: DeviceEvent[]) => {
+        this.lastMovesSubject.next(deviceEvents);
+      });
   }
 
-  unitHistory$(unitId: String, startDate: Date, endDate: Date, startAfter: number, limit: number): Observable<StepDoc[]> {
-    const _startDate = startDate.setHours(0, 0, 0, 0).valueOf();
-    const _endDate = endDate.setHours(23, 59, 59, 999).valueOf();
+  deviceEventHistory$(accountId: string, deviceId: String, startDate: Date, endDate: Date, startAfter: Timestamp, limit: number):
+      Observable<DeviceEvent[]> {
+    const startTs = Timestamp.fromDate(new Date(startDate.setHours(0, 0, 0, 0).valueOf()));
+    const endTs = Timestamp.fromDate(new Date(endDate.setHours(23, 59, 59, 999).valueOf()));
 
-    if (startAfter > 0) {
-      return this.afs.collection(STEPS_COLL, ref => ref
-        .where('deviceId', '==', unitId)
-        .where('timestamp', '>', _startDate)
-        .where('timestamp', '<', _endDate)
-        .orderBy('timestamp', 'desc')
+    if (!!startAfter) {
+      return this.afs.collection(DEVICE_EVENTS_COLL, ref => ref
+        .where('accountId', '==', accountId)
+        .where('deviceId', '==', deviceId)
+        .where('deviceTime', '>', startTs)
+        .where('deviceTime', '<', endTs)
+        .orderBy('deviceTime', 'desc')
         .startAfter(startAfter)
         .limit(limit)
       ).valueChanges();
     } else {
-      return this.afs.collection(STEPS_COLL, ref => ref
-        .where('deviceId', '==', unitId)
-        .where('timestamp', '>', _startDate)
-        .where('timestamp', '<', _endDate)
-        .orderBy('timestamp', 'desc')
+      return this.afs.collection(DEVICE_EVENTS_COLL, ref => ref
+        .where('accountId', '==', accountId)
+        .where('deviceId', '==', deviceId)
+        .where('deviceTime', '>', startTs)
+        .where('deviceTime', '<', endTs)
+        .orderBy('deviceTime', 'desc')
         .limit(limit)
       ).valueChanges();
     }
   }
 
-  getUnitName() {
-    return this.currentUnit ? this.currentUnit.name : 'No unit selected';
+  getDeviceName() {
+    return this.currentDeviceEvent ? this.currentDeviceEvent.deviceName : '[No unit selected]';
   }
 
-  loadHistoryDoc(id: String) {
-    this.stepsRef.doc(id).get().then((doc) => {
-      if (doc.exists) {
-        this.currentUnitStep = doc.data();
-      } else {
-        console.log('No document for ID ' + id);
-      }
-    }).catch(function (error) {
-      console.log('Error getting document:', error);
-    });
+  clear() {
+    this.currentDeviceEvent = null;
+  }
+
+  fetchHistoryDoc(documentId: string): Observable<DeviceEvent> {
+    return this.afs.collection(DEVICE_EVENTS_COLL).doc(documentId).valueChanges();
   }
 }
 

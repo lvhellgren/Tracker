@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -32,6 +32,7 @@ export const MENU_NAMES: Map<string, string[]> = new Map([
   ['principal-accounts-list', ['Principal View', 'All Accounts']],
   ['principal-account-details', ['Principal View', 'Account Details']],
   ['create-principal-account', ['Principal View', 'Add Account']],
+  ['principal-account-constraints', ['Principal View', 'Account Constraints']],
   ['principal-users-list', ['Principal View', 'All Users']],
   ['principal-devices-list', ['Principal View', 'All Devices']],
   ['principal-user-details', ['Principal View', 'User Details']],
@@ -45,7 +46,13 @@ export const MENU_NAMES: Map<string, string[]> = new Map([
   ['account-device-add', ['Account View', 'Add Device']],
   ['account-landmarks-list', ['Account View', 'Landmarks']],
   ['account-landmark', ['Account View', 'Landmark']],
-  ['account-landmark-add', ['Account View', 'Add Landmark']]
+  ['account-landmark-add', ['Account View', 'Add Landmark']],
+  ['account-subscriptions-list', ['Account View', 'Notification Subscriptions']],
+  ['account-subscription', ['Account View', 'Subscription']],
+  ['account-subscription-add', ['Account View', 'Add Subscription']],
+  ['account-subscribers-list', ['Account View', 'Notification Subscribers']],
+  ['account-subscriber', ['Account View', 'Subscriber']],
+  ['account-subscriber-add', ['Account View', 'Add Subscriber']]
 ]);
 
 @Component({
@@ -63,7 +70,6 @@ export class SetupComponent implements OnInit, OnDestroy {
   @ViewChild('setupDrawer', {static: false}) setupDrawer;
 
   userAccountSelectSubscription: Subscription;
-  routeSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -79,19 +85,11 @@ export class SetupComponent implements OnInit, OnDestroy {
         this.router.navigate([`./`], {relativeTo: this.route});
       }
     });
-
-    this.routeSubscription = this.route.url.subscribe(segment => {
-      // this.setupDrawer.open();
-    });
   }
 
   ngOnDestroy(): void {
     if (this.userAccountSelectSubscription) {
       this.userAccountSelectSubscription.unsubscribe();
-    }
-
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
     }
   }
 
@@ -124,7 +122,7 @@ export class SetupComponent implements OnInit, OnDestroy {
 
   onItemClick(event) {
     if (this.setupService.smallView) {
-      this.setupDrawer.toggle();
+      this.setupDrawer.toggle(false);
     }
   }
 }

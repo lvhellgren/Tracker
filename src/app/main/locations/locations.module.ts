@@ -11,12 +11,17 @@ import { FullViewComponent } from './full-view/full-view.component';
 import { SmallViewComponent } from './small-view/small-view.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AppMapModule } from '../../app-map.module';
-import { MapComponent } from './map/map.component';
+import { UnitsMapComponent } from './units-map/units-map.component';
+import { PlacesMapComponent } from './places-map/places-map.component';
+import { PlaceMapComponent } from './places/place/place-map/place-map.component';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [
     LocationsComponent,
-    MapComponent,
+    UnitsMapComponent,
+    PlacesMapComponent,
+    PlaceMapComponent,
     FullViewComponent,
     SmallViewComponent
   ],
@@ -29,7 +34,8 @@ import { MapComponent } from './map/map.component';
     UnitsModule,
     PlacesModule,
     AppMapModule,
-    LocationsRoutingModule
+    LocationsRoutingModule,
+    CoreModule
   ],
   exports: [
     LocationsComponent

@@ -10,6 +10,9 @@ import { SmallViewComponent } from './small-view/small-view.component';
 import { FullViewComponent } from './full-view/full-view.component';
 import { PlaceComponent } from './places/place/place.component';
 import { UnitDetailsComponent } from './units/unit-details/unit-details.component';
+import { UnitsMapComponent } from './units-map/units-map.component';
+import { PlacesMapComponent } from './places-map/places-map.component';
+import { PlaceMapComponent } from './places/place/place-map/place-map.component';
 
 const routes: Routes = [
   {
@@ -28,9 +31,19 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
+            path: '',
+            component: UnitsMapComponent,
+            outlet: 'map'
+          },
+          {
             path: 'units',
             component: UnitsComponent,
             canActivate: [AuthGuard]
+          },
+          {
+            path: 'units-map',
+            component: UnitsMapComponent,
+            outlet: 'map'
           },
           {
             path: 'unit-history',
@@ -58,6 +71,11 @@ const routes: Routes = [
             canActivate: [AuthGuard]
           },
           {
+            path: 'places-map',
+            component: PlacesMapComponent,
+            outlet: 'map'
+          },
+          {
             path: 'place',
             component: PlaceComponent,
             canActivate: [AuthGuard]
@@ -66,6 +84,11 @@ const routes: Routes = [
             path: 'place/:id',
             component: PlaceComponent,
             canActivate: [AuthGuard]
+          },
+          {
+            path: 'place-map',
+            component: PlaceMapComponent,
+            outlet: 'map'
           },
           {
             path: '**',
@@ -84,9 +107,19 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
+            path: '',
+            component: UnitsMapComponent,
+            outlet: 'map'
+          },
+          {
             path: 'units',
             component: UnitsComponent,
             canActivate: [AuthGuard]
+          },
+          {
+            path: 'units-map',
+            component: UnitsMapComponent,
+            outlet: 'map'
           },
           {
             path: 'unit-history',
@@ -114,6 +147,11 @@ const routes: Routes = [
             canActivate: [AuthGuard]
           },
           {
+            path: 'places-map',
+            component: PlacesMapComponent,
+            outlet: 'map'
+          },
+          {
             path: 'place',
             component: PlaceComponent,
             canActivate: [AuthGuard]
@@ -122,6 +160,11 @@ const routes: Routes = [
             path: 'place/:id',
             component: PlaceComponent,
             canActivate: [AuthGuard]
+          },
+          {
+            path: 'place-map',
+            component: PlaceMapComponent,
+            outlet: 'map'
           },
           {
             path: '**',

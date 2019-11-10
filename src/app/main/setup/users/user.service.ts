@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -27,7 +27,7 @@ import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
-import { ACCOUNT_USERS_COLL, ACCOUNTS_COLL, AccountUserDoc, AuthService, USERS_COLL } from '../../core/auth/auth.service';
+import { ACCOUNT_USERS_COLL, AccountUserDoc, AuthService, USERS_COLL } from '../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../core/confirmation-dlg/confirmation-dlg-component';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
@@ -61,7 +61,6 @@ export interface UserDoc {
 export class UserService {
   private db;
   private usersRef;
-  private accountsRef;
   private accountUsersRef;
   private usersSubject = new Subject<UserDto[]>();
   private userId: string;
@@ -122,7 +121,6 @@ export class UserService {
   ) {
     this.db = firebase.firestore();
     this.usersRef = this.db.collection(USERS_COLL);
-    this.accountsRef = this.db.collection(ACCOUNTS_COLL);
     this.accountUsersRef = this.db.collection(ACCOUNT_USERS_COLL);
 
     this.accountUsers$ = this.usersSubject.asObservable();
@@ -156,7 +154,6 @@ export class UserService {
           });
         })
         .catch((error) => {
-          console.error(`Error getting document for ${accountId}: ${error}`);
           this.dialog.open(ErrorDlgComponent, {
             data: {msg: error}
           });

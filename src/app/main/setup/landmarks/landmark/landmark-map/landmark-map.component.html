@@ -1,4 +1,4 @@
-<div *ngIf="landmark != null">
+<div *ngIf="!!landmark">
   <mat-card class="mat-elevation-z4">
     <mat-card-content>
       <agm-map [fitBounds]="false"
@@ -8,12 +8,12 @@
                (mapReady)="onMapReady($event)"
                (mapClick)="onMapClick($event)">
         <agm-marker *ngIf="landmark.landmarkId"
-          [latitude]="landmark.latitude - 0.0002"
-          [longitude]="landmark.longitude"
-          [iconUrl]="landmarkIcon"
-          [agmFitBounds]="true"
-          (mouseOver)="onMouseOver(infoWindow)"
-          (mouseOut)="onMouseOut(infoWindow)">
+                    [latitude]="landmark.latitude - 0.0002"
+                    [longitude]="landmark.longitude"
+                    [iconUrl]="landmarkIcon"
+                    [agmFitBounds]="true"
+                    (mouseOver)="onMouseOver(infoWindow)"
+                    (mouseOut)="onMouseOut(infoWindow)">
           <agm-info-window [disableAutoPan]="false" #infoWindow>
             <div>
               {{landmark.landmarkId}}

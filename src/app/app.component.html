@@ -14,14 +14,13 @@
   </div>
   <div *ngIf="isSignedIn" fxFlexOrder="3">
     <mat-drawer-container>
-      <mat-drawer #appdrawer>
+      <mat-drawer #appdrawer [ngClass]="{'expanded':expand}">
         <div [ngSwitch]="drawerType">
           <app-pages *ngSwitchCase="'nav'"
                      (preferencesClick)="drawerToggle('prefs')"
                      [appdrawer]="appdrawer">
           </app-pages>
           <app-help *ngSwitchCase="'help'"
-                    class="help-drawer"
                     [appdrawer]="appdrawer">
           </app-help>
           <app-user-preferences *ngSwitchCase="'prefs'"

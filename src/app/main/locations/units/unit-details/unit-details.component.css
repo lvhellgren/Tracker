@@ -1,32 +1,27 @@
-.unit-name {
+.device-name {
   font-weight: bold;
-  margin: 20px;
+  color: gray;
+  margin: 0 0 25px 5px;
   height: 1vh;
 }
 
-.list {
-  margin: 10px 0;
+.name, .value {
+  text-align: left;
+  width: 100%;
+  border-bottom: 2px;
 }
 
-.item {
-  height: 30px !important;
+.name {
+  padding-left: 10px;
+  height: 100%;
 }
 
-.adr-item {
-  height: 20px !important;
+.address-item {
+  padding-left: 30px;
 }
 
-.item-name, .adr-item-name {
+.row {
   color: gray;
-  width: 150px;
   font-size: smaller;
 }
 
-.adr-item-name {
-  padding-left: 20px;
-}
-
-.item-value {
-  width: 220px;
-  font-size: smaller;
-}

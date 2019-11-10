@@ -1,0 +1,206 @@
+<div class="event" fxLayoutAlign="center">
+  <form fxFlex.gt-xs="400px"
+        fxLayout="column"
+        [formGroup]="eventForm"
+        (ngSubmit)="onSubmit()">
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div class="column" fxLayout="column">
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 required
+                 placeholder="accountId"
+                 formControlName="accountId">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="accuracy"
+                 formControlName="accuracy">
+        </mat-form-field>
+        <div formGroupName="address">
+          <fieldset class="address">
+            <legend>address*</legend>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="subThoroughfare (Street Number)"
+                     formControlName="subThoroughfare">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.thoroughfare (Street)"
+                     formControlName="thoroughfare">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.locality (City)"
+                     formControlName="locality">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.area (State)"
+                     formControlName="area">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.postalCode (ZIP)"
+                     formControlName="postalCode">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.subAdminArea (County)"
+                     formControlName="subAdminArea">
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <input type="text"
+                     matInput
+                     placeholder="address.countryName (Country)"
+                     formControlName="countryName">
+            </mat-form-field>
+          </fieldset>
+        </div>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="altitude"
+                 formControlName="altitude">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="Bearing"
+                 formControlName="bearing">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="bearingForward"
+                 formControlName="bearingForward">
+        </mat-form-field>
+      </div>
+      <div class="column" fxLayout="column">
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 required
+                 placeholder="deviceId"
+                 formControlName="deviceId">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="documentId"
+                 formControlName="documentId">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 required
+                 placeholder="email"
+                 formControlName="email">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 required
+                 placeholder="eventType"
+                 formControlName="eventType">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="boolean"
+                 matInput
+                 placeholder="hasAccuracy"
+                 formControlName="hasAccuracy">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="boolean"
+                 matInput
+                 placeholder="hasAltitude"
+                 formControlName="hasAltitude">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="boolean"
+                 matInput
+                 placeholder="hasBearing"
+                 formControlName="hasBearing">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="boolean"
+                 matInput
+                 placeholder="hasSpeed"
+                 formControlName="hasSpeed">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 required
+                 placeholder="latitude"
+                 formControlName="latitude">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 required
+                 placeholder="longitude"
+                 formControlName="longitude">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="previousEventBearing"
+                 formControlName="previousEventBearing">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="speed"
+                 formControlName="speed">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 placeholder="stepLength"
+                 formControlName="stepLength">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="error" fxLayoutAlign="center start">
+      {{msg}}
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button class="cancel-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button *ngIf="createEvent"
+              class="clear-button"
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="onClear()">
+        Clear
+      </button>
+      <div *ngIf="!createEvent"
+           style="width:40px">
+      </div>
+      <button class="submit-button"
+              type="submit"
+              mat-raised-button color="primary"
+              [disabled]="eventForm.invalid ||
+              eventForm.pristine">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

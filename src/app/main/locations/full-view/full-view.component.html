@@ -2,7 +2,7 @@
   <div fxFlex
        fxLayout="row">
     <kendo-splitter orientation="horizontal" style="height: 100%;">
-      <kendo-splitter-pane [collapsible]="true" size="30%">
+      <kendo-splitter-pane [collapsible]="true" size="35%">
         <div class="locations-pane"
           fxFlex="100%"
           fxShow="true"
@@ -11,43 +11,43 @@
                fxLayout="row"
                fxLayoutAlign="start">
             <div>
-              <a href="#" mat-button
-                 [routerLink]="['units']"
+              <a href="#" class="top-button" mat-button
+                 [routerLink]="[{outlets:{primary: ['units'], map: ['units-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 UNITS
               </a>
             </div>
             <div [ngClass]="{'disabled': unitHistoryDisabled()}">
-              <a href="#" mat-button
+              <a href="#" class="top-button" mat-button
                  [disabled]="unitHistoryDisabled()"
-                 [routerLink]="['unit-history']"
+                 [routerLink]="[{outlets:{primary: ['unit-history'], map: ['units-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 UNIT
               </a>
             </div>
             <div [ngClass]="{'disabled': unitInfoDisabled()}">
-              <a href="#" mat-button
+              <a href="#" class="top-button" mat-button
                  [disabled]="unitInfoDisabled()"
-                 [routerLink]="['unit-details']"
+                 [routerLink]="[{outlets:{primary: ['unit-details'], map: ['units-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 DETAILS
               </a>
             </div>
-            <div class="separator">|</div>
+            <hr class="separator">
             <div [ngClass]="{'disabled': placesDisabled()}">
-              <a href="#" mat-button
+              <a href="#" class="top-button" mat-button
                  [disabled]="placesDisabled()"
-                 [routerLink]="['places']"
+                 [routerLink]="[{outlets:{primary: ['places'], map: ['places-map']}}]"
                  [routerLinkActive]="['active-locations']">
-                PLACES
+                LANDMARKS
               </a>
             </div>
             <div [ngClass]="{'disabled': placeDisabled()}">
               <a href="#" mat-button
                  [disabled]="placeDisabled()"
-                 [routerLink]="['place']"
+                 [routerLink]="[{outlets:{primary: ['place'], map: ['place-map']}}]"
                  [routerLinkActive]="['active-locations']">
-                PLACE
+                LANDMARK
               </a>
             </div>
           </div>
@@ -56,7 +56,7 @@
       </kendo-splitter-pane>
       <kendo-splitter-pane [collapsible]="true">
         <div class="map-pane">
-          <app-map></app-map>
+          <router-outlet name="map"></router-outlet>
         </div>
       </kendo-splitter-pane>
     </kendo-splitter>

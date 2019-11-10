@@ -1,1 +1,12 @@
 
+.mat-column-constraints {
+  text-align: center;
+  flex: 0 0 120px;
+  padding: 5px;
+}
+
+.mat-column-active {
+  text-align: left;
+  flex: 0 0 60px;
+  padding: 5px;
+}

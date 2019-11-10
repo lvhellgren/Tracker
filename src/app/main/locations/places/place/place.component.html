@@ -1,3 +1,27 @@
-<p>
-  place works!
-</p>
+<div fxLayout="column"
+     fxLayoutAlign="start stretch">
+  <div class="place-name"
+       fxFlexOrder="1">
+    {{landmarkId}}
+  </div>
+  <div class="mat-elevation-z4 list"
+       fxFlexOrder="2"
+       fxFlexFill>
+    <mat-grid-list cols="2" rowHeight="30px">
+      <div class="row" *ngFor="let row of rows">
+        <mat-grid-tile [rowspan]="row.rowspan">
+          <div class="name">{{row.name}}</div>
+        </mat-grid-tile>
+        <mat-grid-tile *ngIf="row.rowspan == 1; else list">
+          <div class="value">{{row.value}}</div>
+        </mat-grid-tile>
+        <ng-template #list>
+          <mat-grid-tile *ngFor="let item of row.value">
+            <div class="value">{{item}}</div>
+          </mat-grid-tile>
+        </ng-template>
+      </div>
+    </mat-grid-list>
+
+  </div>
+</div>

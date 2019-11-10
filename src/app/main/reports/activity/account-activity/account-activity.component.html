@@ -1,0 +1,25 @@
+<div class="time">{{time}}</div>
+<mat-grid-list cols="3" rowHeight="30px">
+  <div class="heading">
+    <mat-grid-tile>
+      <div class="name">Resource Name</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="value">Usage</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="value">Limit</div>
+    </mat-grid-tile>
+  </div>
+  <div  class="row" *ngFor="let row of rows">
+    <mat-grid-tile>
+      <div class="name">{{row.name}}</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="value">{{row.value}}</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="value">{{row.limit}}</div>
+    </mat-grid-tile>
+  </div>
+</mat-grid-list>

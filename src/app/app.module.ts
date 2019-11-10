@@ -15,7 +15,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -44,6 +44,8 @@ import { AppKendoModule } from './app-kendo.module';
 import { LocationsModule } from './main/locations/locations.module';
 import { GlobalService } from './sevices/global';
 import { MatNativeDateModule } from '@angular/material';
+import { SimulatorModule } from './main/simulator/simulator.module';
+import { ReportsModule } from './main/reports/reports.module';
 
 
 @NgModule({
@@ -57,10 +59,12 @@ import { MatNativeDateModule } from '@angular/material';
   imports: [
     CoreModule,
     SetupModule,
+    SimulatorModule,
     LocationsModule,
+    NotificationsModule,
+    ReportsModule,
     UnitsModule,
     PlacesModule,
-    NotificationsModule,
     AppRoutingModule,  // Should be last import of application modules
     BrowserAnimationsModule,
     BrowserModule,

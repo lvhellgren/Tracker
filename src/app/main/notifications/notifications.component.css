@@ -1,4 +1,35 @@
 .page {
-  padding: 30px;
-  height: calc(100vh - 100px);
+  padding: 4px;
 }
+
+/* To prevent checked checkboxes from partially moving out of view. */
+mat-cell {
+  overflow: visible;
+}
+
+mat-checkbox {
+  margin-right: 8px;
+}
+
+.select-all {
+  padding: 5px 10px 5px 0;
+  color: grey;
+  font-size: smaller;
+}
+
+.delete-button {
+  height: 30px;
+  width: 130px;
+  cursor: pointer;
+}
+
+.delete-button:disabled {
+  cursor: default;
+  color: lightgray;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
