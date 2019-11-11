@@ -55,6 +55,8 @@ export interface AccountConstraint {
   maxMonthlyNotificationEmails?: number;
   maxMonthlyNotificationTexts?: number;
   serviceExpiration?: string;
+  serviceExpirationYear?: number;  // For use in Firestore rules
+  serviceExpirationMonth?: number; // For use in Firestore rules
   modifiedAt?: any;
   comment?: string;
 }
@@ -242,6 +244,11 @@ export class AccountService {
 
   saveAccountConstraint(accountConstraint: AccountConstraint, returnPath: string) {
     accountConstraint.modifiedAt = AccountService.timestamp;
+
+    const yearDate = accountConstraint.serviceExpiration.split('/');
+    accountConstraint.serviceExpirationMonth = parseInt(yearDate[0], 10);
+    accountConstraint.serviceExpirationYear = parseInt(yearDate[1], 10);
+
     this.accountConstraintsRef.doc(accountConstraint.accountId).set(accountConstraint)
       .then (() => {
         this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
