@@ -148,6 +148,17 @@ export class AuthService {
   }
 
   signOut(): void {
+    if (!!this.afAuth.auth.currentUser) {
+      this.afAuth.auth.signOut()
+        .then(() => {
+          this.authChange.next(false);
+          this.router.navigate([SIGN_IN_PAGE]);
+        })
+        .catch(error => {
+          console.error(`signOut: ${error}`);
+        });
+      }
+
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
@@ -157,15 +168,6 @@ export class AuthService {
     if (this.accountIdsSubscription) {
       this.accountIdsSubscription.unsubscribe();
     }
-
-    this.afAuth.auth.signOut()
-      .then(() => {
-        this.authChange.next(false);
-        this.router.navigate([SIGN_IN_PAGE]);
-      })
-      .catch(error => {
-        console.error(`signOut: ${error}`);
-      });
   }
 
   googleSignIn() {
