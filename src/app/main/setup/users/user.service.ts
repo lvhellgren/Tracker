@@ -55,6 +55,7 @@ export interface UserDoc {
   modifiedAt?: any;
   createdAt?: any;
   uid?: string;
+  currentAccountId?: string;
 }
 
 @Injectable()

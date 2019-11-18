@@ -8,8 +8,8 @@ html, body {
   font-size: medium;
   width: 100%;
   height: 100%;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
@@ -87,4 +87,30 @@ html, body {
 .mat-cell:last-of-type,
 .mat-header-cell:last-of-type {
   border-right: 0;
+}
+
+/** Help page **/
+
+.help-section {
+  color: grey;
+  margin-top: 20px;
+}
+
+.help-ul {
+  margin-top: 5px;
+}
+
+.help-link {
+  color: blue;
+  cursor: pointer;
+}
+
+.help-page {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: grey;
+  font-size: larger;
+}
+
+.help-text {
 }

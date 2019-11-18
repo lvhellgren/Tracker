@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { PRINC_ACCOUNT_CONSTRAINTS, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-account-constraints',
@@ -22,7 +23,8 @@ export class AccountConstraintsComponent implements OnInit, OnDestroy {
               private location: Location,
               private fb: FormBuilder,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -67,6 +69,8 @@ export class AccountConstraintsComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.helpService.component$.next(PRINC_ACCOUNT_CONSTRAINTS);
   }
 
   ngOnDestroy() {

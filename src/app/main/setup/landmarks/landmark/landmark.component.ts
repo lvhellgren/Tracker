@@ -35,6 +35,7 @@ import { AccountLandmarkDoc, LandmarkService } from '../landmark.service';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import GeocoderResult = google.maps.GeocoderResult;
 import GeocoderStatus = google.maps.GeocoderStatus;
+import { ACT_LANDMARK, HelpService } from '../../../../drawers/help/help.service';
 
 const DEFAULT_RADIUS = 300;
 const DEFAULT_COLOR = 'red';
@@ -79,7 +80,8 @@ export class LandmarkComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private datePipe: DatePipe,
               private mapsApiLoader: MapsAPILoader,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -169,6 +171,8 @@ export class LandmarkComponent implements OnInit, OnDestroy {
     this.mapsApiLoader.load().then(() => {
       this.geocoder = new google.maps.Geocoder();
     });
+
+    this.helpService.component$.next(ACT_LANDMARK);
   }
 
   ngOnDestroy(): void {

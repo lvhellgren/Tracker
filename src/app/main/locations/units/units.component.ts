@@ -29,6 +29,8 @@ import { UnitsMapService } from '../units-map/units-map.service';
 import { GlobalService } from '../../../sevices/global';
 import { DeviceEvent, UnitService } from '../unit.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { CenterComponent } from '../../help-content/center/center.component';
+import { HelpService, LOC_UNITS } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-units',
@@ -54,7 +56,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
               private unitService: UnitService,
               private route: ActivatedRoute,
               private router: Router,
-              private global: GlobalService) {
+              private global: GlobalService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -68,6 +71,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dataSource.data = deviceEvents;
       this.mapService.setMarkers(deviceEvents);
     });
+
+    this.helpService.component$.next(LOC_UNITS);
   }
 
   ngAfterViewInit() {

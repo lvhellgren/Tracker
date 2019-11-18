@@ -29,6 +29,7 @@ import { LANDMARK_ACTIVITIES } from '../setup/subscriptions/subscription.service
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationDlgComponent } from '../core/confirmation-dlg/confirmation-dlg-component';
 import { AuthService } from '../core/auth/auth.service';
+import { HelpService, NOTIFICATIONS } from '../../drawers/help/help.service';
 
 @Component({
   selector: 'app-notifications',
@@ -72,7 +73,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               private route: ActivatedRoute,
               private router: Router,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -90,6 +92,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.notificationService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(NOTIFICATIONS);
   }
 
   fetchPage(accountId: string) {

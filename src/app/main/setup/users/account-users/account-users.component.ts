@@ -30,6 +30,7 @@ import { ACCOUNT_USER_ROLES, AuthService, PRINCIPAL_USER_ROLES } from '../../../
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { ACT_USERS, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-account-users',
@@ -53,7 +54,8 @@ export class AccountUsersComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -67,6 +69,8 @@ export class AccountUsersComponent implements OnInit, OnDestroy {
     this.userSubscription = this.userService.accountUsers$.subscribe(users => {
       this.dataSource.data = users;
     });
+
+    this.helpService.component$.next(ACT_USERS);
   }
 
   ngOnDestroy(): void {
@@ -94,7 +98,7 @@ export class AccountUsersComponent implements OnInit, OnDestroy {
       this.router.navigate([`../account-user-details`, row.email], {relativeTo: this.route});
     } else {
       const msg = 'Invalid user data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

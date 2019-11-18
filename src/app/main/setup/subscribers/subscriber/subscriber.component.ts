@@ -31,6 +31,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { ACT_NOTIFICATION_SUBSCRIBER, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-subscriber',
@@ -78,7 +79,8 @@ export class SubscriberComponent implements OnInit, OnDestroy {
               private location: Location,
               private authService: AuthService,
               private subscriberService: SubscriberService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -160,6 +162,8 @@ export class SubscriberComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.subscriberService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(ACT_NOTIFICATION_SUBSCRIBER);
   }
 
   ngOnDestroy(): void {

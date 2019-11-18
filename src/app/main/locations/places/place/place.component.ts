@@ -5,6 +5,7 @@ import { PlaceDoc, PlaceService, UnitInfo } from '../place.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { LandmarkService } from '../../../setup/landmarks/landmark.service';
 import * as moment from 'moment';
+import { HelpService, LOC_LANDMARK } from '../../../../drawers/help/help.service';
 
 
 export interface Row {
@@ -30,7 +31,8 @@ export class PlaceComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService,
               private placeService: PlaceService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -66,10 +68,12 @@ export class PlaceComponent implements OnInit, OnDestroy {
           this.addRow('Latitude', doc.latitude);
           this.addRow('Longitude', doc.longitude);
           this.addRow('Last Modified', moment(doc.modifiedAt.toDate()).format('YYYY-MM-DD, HH:mm:ss'));
-          this.addRow('comment', doc.comment);
+          this.addRow('Notes', doc.comment);
         }
       }
     });
+
+    this.helpService.component$.next(LOC_LANDMARK);
   }
 
   ngOnDestroy() {

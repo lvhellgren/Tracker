@@ -28,6 +28,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { AuthService } from '../../core/auth/auth.service';
+import { ACT_DEVICES, ACT_USER_ACCOUNTS, HelpService, PRINC_ACCOUNTS } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-accounts',
@@ -53,7 +54,8 @@ export class AccountsComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -68,10 +70,14 @@ export class AccountsComponent implements OnInit, OnDestroy {
         this.accountSubscription = this.accountService.allAccounts$.subscribe(accounts => {
           this.dataSource.data = accounts;
         });
+
+        this.helpService.component$.next(PRINC_ACCOUNTS);
       } else {
         this.accountSubscription = this.accountService.accounts$.subscribe(accounts => {
           this.dataSource.data = accounts;
         });
+
+        this.helpService.component$.next(ACT_USER_ACCOUNTS);
       }
     });
 
@@ -105,7 +111,7 @@ export class AccountsComponent implements OnInit, OnDestroy {
       this.router.navigate([`../${this.detailsPath}`, row.accountId], {relativeTo: this.route});
     } else {
       const msg = 'Invalid account data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);
@@ -135,7 +141,7 @@ export class AccountsComponent implements OnInit, OnDestroy {
       this.router.navigate([`../${this.detailsPath}`, account.accountId], {relativeTo: this.route});
     } else {
       const msg = 'Invalid account data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

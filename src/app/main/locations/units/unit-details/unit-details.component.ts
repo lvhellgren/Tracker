@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import * as moment from 'moment';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
+import { HelpService, LOC_UNIT_DETAILS } from '../../../../drawers/help/help.service';
 
 
 export interface Row {
@@ -36,7 +37,8 @@ export class UnitDetailsComponent implements OnInit, OnDestroy {
               private mapService: UnitsMapService,
               private global: GlobalService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -90,6 +92,8 @@ export class UnitDetailsComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.helpService.component$.next(LOC_UNIT_DETAILS);
   }
 
   ngOnDestroy(): void {

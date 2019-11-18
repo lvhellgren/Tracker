@@ -31,6 +31,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { ACT_DEVICE, HelpService, SETUP } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-device',
@@ -70,7 +71,8 @@ export class DeviceComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private location: Location,
               private authService: AuthService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -136,6 +138,8 @@ export class DeviceComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.deviceService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(ACT_DEVICE);
   }
 
   ngOnDestroy(): void {

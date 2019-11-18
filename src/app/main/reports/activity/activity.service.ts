@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { ACCOUNT_DEVICES_COLL } from '../../setup/devices/device.service';
 import { ACCOUNT_LANDMARKS } from '../../setup/landmarks/landmark.service';
-import { ACCOUNT_USERS_COLL } from '../../core/auth/auth.service';
+import { ACCOUNT_USERS_COLL, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
 import { SUBSCRIBERS_COLL } from '../../setup/subscribers/subscriber.service';
 
 export interface AccountTraffic {
@@ -45,9 +45,11 @@ export class ActivityService {
         if (accountTrafficSnap.exists) {
           activityReport.accountTraffic = accountTrafficSnap.data();
         } else {
-          this.dialog.open(ErrorDlgComponent, {
-            data: {msg: `Missing account record document for ${accountId}`}
-          });
+          if (accountId !== PRINCIPAL_ACCOUNT_ID) {
+            this.dialog.open(ErrorDlgComponent, {
+              data: {msg: `Missing account traffic document for ${accountId}`}
+            });
+          }
           return null; // Breaks the promise chain
         }
       })

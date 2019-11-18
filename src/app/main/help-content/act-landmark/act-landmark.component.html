@@ -1,0 +1,34 @@
+<div>
+  <div class="help-page">{{classRef.page}}</div>
+  <div class="help-text">
+    <p>
+      Interface for creating, modifying, and viewing landmarks for the currently selected account.
+    </p>
+    <p>
+      The location of a landmark can be specified in three different ways:
+    </p>
+    <ol>
+      <li>By manually entering the <i>Latitude</i> and <i>Longitude</i> values.</li>
+      <li>By clicking on the desired map location, which will populate the <i>Latitude</i> and <i>Longitude</i> fields.</li>
+      <li>By entering the location address into the <i>Address</i> box before clicking on the <i>Preview</i> button to
+      populate the <i>Latitude</i> and <i>Longitude</i> fields.</li>
+    </ol>
+    <p>
+    Changes to <i>Fence Radius</i> and <i>Color</i> can be visualized py clicking the <i>Preview</i> button.
+    </p>
+    <p>
+      Landmark <i>Name</i> must be unique within the account.
+    </p>
+    <p>
+      Click the <i>Save</i> button to persist a new landmark or changes to an existing one.
+    </p>
+    <p>
+      Note that saving an existing landmark after changing only the <i>Name</i> creates a new landmark at the exact same
+      location. This feature may be used for creating concentric landmarks with different fence radii.
+    </p>
+    <p>
+      To create overlapping but offset landmarks, it may be necessary to first reduce the radii of existing landmarks that
+      would be overlapped. Then after creating the new landmark restore the affected fence offsets to their desired values.
+    </p>
+  </div>
+</div>

@@ -31,6 +31,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { HelpService, ACT_USER } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-user',
@@ -69,7 +70,8 @@ export class UserComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private location: Location,
               public authService: AuthService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -103,7 +105,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       const userId = params['id'] ? params['id'] : this.userService.getUserId();
 
-      this.userAccountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
+      this.userAccountSubscription = this.authService.userAccountSelect.subscribe(() => {
         if (userId) {
           this.userService.fetchAccountUser(this.authService.currentUserAccountId, userId)
             .then((userDto: UserDto) => {
@@ -126,7 +128,7 @@ export class UserComponent implements OnInit, OnDestroy {
             })
             .catch(error => {
               console.error(error);
-              const dlg = this.dialog.open(ErrorDlgComponent, {
+              this.dialog.open(ErrorDlgComponent, {
                 data: {msg: error}
               });
             });
@@ -147,6 +149,8 @@ export class UserComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.userService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(ACT_USER);
   }
 
   ngOnDestroy(): void {

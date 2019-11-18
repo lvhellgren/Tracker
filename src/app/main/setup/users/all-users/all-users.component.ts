@@ -28,6 +28,7 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import { Subscription } from 'rxjs';
+import { HelpService, PRINC_USERS } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-all-users',
@@ -51,7 +52,8 @@ export class AllUsersComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -61,6 +63,8 @@ export class AllUsersComponent implements OnInit, OnDestroy {
     this.userSubscription = this.userService.fetchAllUsers$().subscribe((users: UserDoc[]) => {
       this.dataSource.data = users;
     });
+
+    this.helpService.component$.next(PRINC_USERS);
   }
 
   ngOnDestroy(): void {
@@ -84,7 +88,7 @@ export class AllUsersComponent implements OnInit, OnDestroy {
       this.router.navigate([`../${this.detailsPath}`, row.email], {relativeTo: this.route});
     } else {
       const msg = 'Invalid user data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

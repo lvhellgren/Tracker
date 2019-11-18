@@ -30,6 +30,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { MatDialog } from '@angular/material';
 import { LANDMARK_ACTIVITIES, SubscriptionDoc, SubscriptionService } from '../subscription.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
+import { ACT_NOTIFICATION_SUBSCRIPTION, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-subscription',
@@ -80,7 +81,8 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
               private location: Location,
               private authService: AuthService,
               private subscriptionService: SubscriptionService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -162,6 +164,8 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     this.deviceSubscription = this.subscriptionService.allDevices$.subscribe(allDevices => {
       this.allDevices = Array.from(allDevices);
     });
+
+    this.helpService.component$.next(ACT_NOTIFICATION_SUBSCRIPTION);
   }
 
   ngOnDestroy(): void {
@@ -255,7 +259,6 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    const subscriptionId = this.subscriptionForm.value.subscriptionId;
     this.confirmDeleteSubscription(this.subscriptionForm.value);
   }
 

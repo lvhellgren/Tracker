@@ -29,6 +29,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { AccountLandmarkDoc, LandmarkService } from './landmark.service';
 import { SetupService } from '../setup.service';
+import { ACT_LANDMARKS, HelpService } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-landmarks',
@@ -57,7 +58,8 @@ export class LandmarksComponent implements OnInit, OnDestroy {
     private setupService: SetupService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -74,6 +76,8 @@ export class LandmarksComponent implements OnInit, OnDestroy {
       this.dataSource.data = landmarks;
       this.landmarkService.setLandmarkMarkers(landmarks);
     });
+
+    this.helpService.component$.next(ACT_LANDMARKS);
   }
 
   ngOnDestroy() {

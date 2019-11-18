@@ -26,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, PRINCIPAL_ACCOUNT_ID } from '../core/auth/auth.service';
 import { SetupService } from './setup.service';
+import { HelpService, SETUP } from '../../drawers/help/help.service';
 
 export const MENU_NAMES: Map<string, string[]> = new Map([
   ['blank', ['', 'Setup']],
@@ -74,7 +75,8 @@ export class SetupComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private setupService: SetupService) {
+              private setupService: SetupService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -85,6 +87,8 @@ export class SetupComponent implements OnInit, OnDestroy {
         this.router.navigate([`./`], {relativeTo: this.route});
       }
     });
+
+    this.helpService.component$.next(SETUP);
   }
 
   ngOnDestroy(): void {

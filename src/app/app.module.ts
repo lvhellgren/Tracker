@@ -46,6 +46,8 @@ import { GlobalService } from './sevices/global';
 import { MatNativeDateModule } from '@angular/material';
 import { SimulatorModule } from './main/simulator/simulator.module';
 import { ReportsModule } from './main/reports/reports.module';
+import { HelpContentModule } from './main/help-content/help-content.module';
+import { CenterComponent } from './main/help-content/center/center.component';
 
 
 @NgModule({
@@ -65,6 +67,7 @@ import { ReportsModule } from './main/reports/reports.module';
     ReportsModule,
     UnitsModule,
     PlacesModule,
+    HelpContentModule,
     AppRoutingModule,  // Should be last import of application modules
     BrowserAnimationsModule,
     BrowserModule,

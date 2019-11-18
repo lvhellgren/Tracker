@@ -30,6 +30,7 @@ import { PlaceService, UnitInfo } from './place.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MsgDlgComponent } from '../../core/msg-dlg/msg-dlg.component';
+import { HelpService, LOC_LANDMARKS } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-places',
@@ -53,7 +54,8 @@ export class PlacesComponent implements OnInit, OnDestroy {
               private dialog: MatDialog,
               private placeService: PlaceService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -67,6 +69,8 @@ export class PlacesComponent implements OnInit, OnDestroy {
     this.landmarksSubscription = this.placeService.landmarks$.subscribe((landmarks: AccountLandmarkDoc[]) => {
       this.dataSource.data = landmarks;
     });
+
+    this.helpService.component$.next(LOC_LANDMARKS);
   }
 
   ngOnDestroy() {

@@ -27,6 +27,7 @@ import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Account, AccountService } from '../account.service';
 import { Subscription } from 'rxjs';
+import { HelpService, PRINC_ACCOUNT } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-account',
@@ -52,7 +53,8 @@ export class AccountComponent implements OnInit, OnDestroy {
               private location: Location,
               private datePipe: DatePipe,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -116,6 +118,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.accountService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(PRINC_ACCOUNT);
   }
 
   ngOnDestroy(): void {

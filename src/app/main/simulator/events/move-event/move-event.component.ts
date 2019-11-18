@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { SimulatorService } from '../../simulator.service';
 import { DeviceEvent } from '../../../locations/unit.service';
+import { HelpService, SIMULATOR_EVENT } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-move-event',
@@ -29,7 +30,8 @@ export class MoveEventComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               private authService: AuthService,
-              private simulatorService: SimulatorService) {
+              private simulatorService: SimulatorService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -114,6 +116,8 @@ export class MoveEventComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.simulatorService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(SIMULATOR_EVENT);
   }
 
   public ngOnDestroy() {

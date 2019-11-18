@@ -116,6 +116,7 @@ export class AccountService {
   async fetchUserAccounts(userId: string) {
     this.accountUsersRef
       .where('userId', '==', userId)
+      .where('active', '==', true)
       .get()
       .then(async (accountUserSnap: QuerySnapshot<AccountUserDoc>) => {
         const accountDocs = accountUserSnap.docs.map(async (accountUserDoc) => {

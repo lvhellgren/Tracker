@@ -28,6 +28,7 @@ import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { LANDMARK_ACTIVITIES, SubscriptionDoc, SubscriptionService } from './subscription.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
+import { ACT_NOTIFICATION_SUBSCRIPTIONS, HelpService } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-subscriptions',
@@ -61,7 +62,8 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -86,6 +88,8 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     this.deviceSubscription = this.subscriptionService.allDevices$.subscribe(allDevices => {
       this.allDevices = allDevices;
     });
+
+    this.helpService.component$.next(ACT_NOTIFICATION_SUBSCRIPTIONS);
   }
 
   ngOnDestroy() {
@@ -120,7 +124,7 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
       this.router.navigate([`../account-subscription`, key], {relativeTo: this.route});
     } else {
       const msg = 'Invalid subscription data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

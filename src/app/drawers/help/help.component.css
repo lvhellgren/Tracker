@@ -17,3 +17,8 @@
 .close-icon:hover {
   cursor: pointer;
 }
+
+.link {
+  color: blue;
+  cursor: pointer;
+}

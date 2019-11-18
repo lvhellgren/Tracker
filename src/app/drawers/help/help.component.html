@@ -5,46 +5,10 @@
     <mat-icon class="close-icon" (click)="close()">keyboard_arrow_left</mat-icon>
   </div>
   <div fxLayout="column">
-    <h5>Summary</h5>
-    A base application for showing device location history information in table and Google Map layouts.
-    <p>
-    <h6>Serverless Application</h6>
-    The Tracker application is serverless in that it uses the Google Firebase/Firestore cloud database for access
-    to user and account information.
-    <p>
-    <h6>Single Page Application</h6>
-    Tracker is a single page Angular application written in TypeScript taking advantage of Angular features
-    such as routing, reactive processing, templating, Material Design, etc.
-    <p>
-    <h6>Responsive Design</h6>
-    Tracker employs Angular Flex-Layout to automatically format UI layouts to fit various screen sizes.
-    <p>
-    <h6>Modular Development</h6>
-    Tracker is designed for modular development. The Core module provides sign-in capability and basic features
-    for use by other modules. The Setup module manages users and accounts as well as the relationships
-    between these entities. Specific application functionality is implemented through the Units, Places, and
-    Notifications pages.
-    <p>
-    <h6>Authentication</h6>
-    User authentication is provided through the Firebase Java Web Token implementation. Users can sign in using
-    email and password authentication and also through Auth0 identity providers, such as Google.
-    <p>
-    <h6>Users and Accounts</h6>
-    Users and accounts have a many-to-many relationship, so that a given user may have access to one or more
-    accounts and an account may have one or more users.
-    <p>
-    <h6>User Roles</h6>
-    User permissions are governed through rules defined in the Firestore database, so that a given user may,
-    for example, be assigned create, update, or read roles for accessing data collections in the database. Users
-    having access to multiple accounts may be given different permissions depending on the account.
-    <p>
-    <h6>The Principal Account</h6>
-    Only users in the special Principal account and with create permission can create new accounts. These users will
-    also create the initial user for a new account. An account user with create permission can then create
-    additional users for that account but for that account only.<br/><br/>
-    <p>
-      A user ID created from Tracker must be a valid email address available to the intended user. Initially, a
-      randomly generated, unknown password is created. The user signing in for the first time will then need to use
-      the Create or Reset Password option to create a known password.
+    <div class="link"
+         (click)="onHelpCenterClick()">
+        Help Center
+    </div>
+    <ng-template #entry></ng-template>
   </div>
 </div>

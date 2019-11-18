@@ -3,6 +3,7 @@ import { AccountTraffic, ActivityReport, ActivityService } from '../activity.ser
 import { AuthService } from '../../../core/auth/auth.service';
 import { AccountConstraint } from '../../../setup/accounts/account.service';
 import { Subscription } from 'rxjs';
+import { HelpService, ACT_ACTIVITY_REPORT } from '../../../../drawers/help/help.service';
 
 export interface Row {
   name: string;
@@ -22,7 +23,8 @@ export class AccountActivityComponent implements OnInit, OnDestroy {
   accountSubscription: Subscription;
 
   constructor(private authService: AuthService,
-              private activityService: ActivityService) {
+              private activityService: ActivityService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -50,6 +52,8 @@ export class AccountActivityComponent implements OnInit, OnDestroy {
           });
       }
     });
+
+    this.helpService.component$.next(ACT_ACTIVITY_REPORT);
   }
 
   ngOnDestroy() {

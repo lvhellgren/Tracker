@@ -29,6 +29,7 @@ import { Subscription } from 'rxjs';
 import { ConfirmationDlgComponent } from '../../core/confirmation-dlg/confirmation-dlg-component';
 import { MatDialog } from '@angular/material';
 import { LANDMARK_ACTIVITIES } from '../../setup/subscriptions/subscription.service';
+import { HelpService, NOTIFICATION } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-notification',
@@ -45,7 +46,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
               private location: Location,
               private router: Router,
               private route: ActivatedRoute,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -63,6 +65,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.notificationService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(NOTIFICATION);
   }
 
   ngOnDestroy() {

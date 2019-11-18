@@ -7,6 +7,7 @@ import { DeviceEvent, UnitService } from '../../unit.service';
 import { GlobalService } from '../../../../sevices/global';
 import { FormControl } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
+import { HelpService, LOC_UNIT } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-unit',
@@ -50,7 +51,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
               private mapService: UnitsMapService,
               private global: GlobalService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -85,6 +87,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
         this.fetchPage(this.deviceId);
       }
     });
+
+    this.helpService.component$.next(LOC_UNIT);
   }
 
   ngOnDestroy(): void {

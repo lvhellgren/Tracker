@@ -111,8 +111,7 @@ export class AuthService {
                 this.authMsg.next(`Application access denied for user ${userDoc.email}`);
                 return of(null);
               }
-              this.currentUserAccountId = userDoc['currentAccountId'];
-              this.fetchUserAccountIds(user.email);
+              this.fetchUserAccountIds(user.email, userDoc);
             },
             error => {
               if (!this.userSubscription.closed) {
@@ -198,7 +197,7 @@ export class AuthService {
                   signedInAt: this.timestamp,
                   uid: res.user.uid
                 };
-                userDoc['currentAccountId'] = currentUser.email;
+                userDoc.currentAccountId = currentUser.email;
 
                 const accountUserKey = this.makeAccountUserKey(currentUser.email, currentUser.email);
                 const accountUserRef = this.db.collection(ACCOUNT_USERS_COLL).doc(accountUserKey);
@@ -228,11 +227,11 @@ export class AuthService {
                     this.router.navigate([HOME_PAGE]);
                   });
                 })
-                .catch(error => {
-                  console.error(error);
-                  this.authMsg.next(error);
-                  this.uiService.loadingStateChanged.next(false);
-                });
+                  .catch(error => {
+                    console.error(error);
+                    this.authMsg.next(error);
+                    this.uiService.loadingStateChanged.next(false);
+                  });
               }
             });
           } else {
@@ -246,9 +245,9 @@ export class AuthService {
           this.uiService.loadingStateChanged.next(false);
         });
     })
-    .catch(error => {
-      console.error(error);
-    });
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   get timestamp() {
@@ -322,9 +321,10 @@ export class AuthService {
    * Fetches all accounts accessible to a given user.
    * @param userId
    */
-  private fetchUserAccountIds(userId) {
+  private fetchUserAccountIds(userId: string, userDoc: UserDoc) {
     const accountIds$ = this.afs.collection(ACCOUNT_USERS_COLL, ref => ref
-      .where('userId', '==', userId))
+      .where('userId', '==', userId)
+      .where('active', '==', true))
       .valueChanges();
     this.accountIdsSubscription = accountIds$.subscribe(
       (recs: AccountUserDoc[]) => {
@@ -335,12 +335,21 @@ export class AuthService {
           }
           this.userAccountIds.push(accountUserDoc['accountId']);
         });
+        if (this.userAccountIds.length > 0) {
+          if (!this.userAccountIds.includes(userDoc.currentAccountId)) {
+            userDoc.currentAccountId = this.userAccountIds[0];
+            this.currentUserAccountId = userDoc.currentAccountId;
+          }
 
-        this.userAccountSelect.next(this.currentUserAccountId);
+          this.currentUserAccountId = userDoc.currentAccountId;
+          this.userAccountSelect.next(this.currentUserAccountId);
+        } else {
+          console.error(`User ${userId} has no account assignments`);
+        }
       },
       error => {
         if (!this.accountIdsSubscription.closed) {
-          console.log(error);
+          console.error(error);
         }
       });
   }

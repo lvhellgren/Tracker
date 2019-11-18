@@ -28,6 +28,7 @@ import { DeviceDto, DeviceService } from '../device.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
+import { HelpService, PRINC_DEVICES } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-all-devices',
@@ -49,7 +50,8 @@ export class AllDevicesComponent implements OnInit, OnDestroy {
     private deviceService: DeviceService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -59,6 +61,8 @@ export class AllDevicesComponent implements OnInit, OnDestroy {
     this.deviceSubscription = this.deviceService.fetchAllDevices$().subscribe((devices: DeviceDto[]) => {
       this.dataSource.data = devices;
     });
+
+    this.helpService.component$.next(PRINC_DEVICES);
   }
 
   ngOnDestroy(): void {

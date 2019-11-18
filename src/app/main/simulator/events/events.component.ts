@@ -9,6 +9,7 @@ import { SimulatorService } from '../simulator.service';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 import { AuthService } from '../../core/auth/auth.service';
+import { HelpService, SIMULATOR_EVENTS } from '../../../drawers/help/help.service';
 
 
 export interface SimulatorEvent extends DeviceEvent {
@@ -48,7 +49,8 @@ export class EventsComponent implements OnInit, OnDestroy {
               private simulatorService: SimulatorService,
               private route: ActivatedRoute,
               private router: Router,
-              private geoService: GeoService) {
+              private geoService: GeoService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -57,6 +59,8 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.msgSubscription = this.simulatorService.msg$.subscribe(msg => {
       this.msg = msg;
     });
+
+    this.helpService.component$.next(SIMULATOR_EVENTS);
   }
 
   ngOnDestroy() {

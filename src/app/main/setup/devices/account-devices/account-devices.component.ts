@@ -28,6 +28,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import { DeviceDto, DeviceService } from '../device.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ACT_DEVICES, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-account-devices',
@@ -50,7 +51,8 @@ export class AccountDevicesComponent implements OnInit, OnDestroy {
     private deviceService: DeviceService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -64,6 +66,8 @@ export class AccountDevicesComponent implements OnInit, OnDestroy {
     this.deviceSubscription = this.deviceService.accountDevices$.subscribe(devices => {
       this.dataSource.data = devices;
     });
+
+    this.helpService.component$.next(ACT_DEVICES);
   }
 
   ngOnDestroy(): void {
@@ -91,7 +95,7 @@ export class AccountDevicesComponent implements OnInit, OnDestroy {
       this.router.navigate([`../account-device-details`, row.deviceId], {relativeTo: this.route});
     } else {
       const msg = 'Invalid device data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

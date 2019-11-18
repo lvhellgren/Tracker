@@ -5,6 +5,7 @@ import { SubscriberDoc, SubscriberService } from './subscriber.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { AuthService } from '../../core/auth/auth.service';
+import { ACT_NOTIFICATION_SUBSCRIBERS, HelpService } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-subscribers',
@@ -37,7 +38,8 @@ export class SubscribersComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private helpService: HelpService) {
   }
 
   ngOnInit() {
@@ -54,6 +56,8 @@ export class SubscribersComponent implements OnInit, OnDestroy {
             this.dataSource.data = docs;
           });
     });
+
+    this.helpService.component$.next(ACT_NOTIFICATION_SUBSCRIBERS);
   }
 
   ngOnDestroy() {
@@ -80,7 +84,7 @@ export class SubscribersComponent implements OnInit, OnDestroy {
       this.router.navigate([`../account-subscriber`, row.documentId], {relativeTo: this.route});
     } else {
       const msg = 'Invalid subscriber data in table row';
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: msg}
       });
       console.error(msg);

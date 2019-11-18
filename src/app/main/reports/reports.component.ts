@@ -3,6 +3,7 @@ import { AuthService } from '../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SimulatorService } from '../simulator/simulator.service';
 import { ReportService } from './report.service';
+import { HelpService, REPORTS } from '../../drawers/help/help.service';
 
 export const MENU_NAMES: Map<string, string> = new Map([
   ['blank', 'Reports']
@@ -21,10 +22,12 @@ export class ReportsComponent implements OnInit {
   constructor(private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private reportService: ReportService) {
+              private reportService: ReportService,
+              private helpService: HelpService) {
   }
 
   ngOnInit() {
+    this.helpService.component$.next(REPORTS);
   }
 
   onActivate($event) {
