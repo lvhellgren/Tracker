@@ -11,7 +11,7 @@ import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 import FieldValue = admin.firestore.FieldValue;
-import { ACCOUNT_TRAFFIC_COLL, makeRecordKey } from './AccountTraffic';
+import { updateAccountTraffic } from './AccountTraffic';
 
 export interface DeviceEvent {
   accountId?: string;
@@ -39,15 +39,10 @@ export const onCreateDeviceEvent = functions.firestore
     const deviceEvent: DeviceEvent = deviceEventSnap.data();
     deviceEvent.serverTime = FieldValue.serverTimestamp();
 
-    await incrementEventCount(deviceEvent);
+    await updateAccountTraffic(deviceEvent.accountId);
 
     return handleNewDeviceEvent(deviceEventSnap, deviceEvent);
   });
-
-function incrementEventCount(deviceEvent) {
-  const keyObj = makeRecordKey(deviceEvent.accountId);
-  return ACCOUNT_TRAFFIC_COLL.doc(keyObj.key).update({events: admin.firestore.FieldValue.increment(1)});
-}
 
 function handleNewDeviceEvent(deviceEventSnap: DocumentSnapshot, deviceEvent: DeviceEvent) {
   return DEVICES_COLL.where('deviceId', '==', deviceEvent.deviceId).get()

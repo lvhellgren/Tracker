@@ -13,33 +13,47 @@ export interface AccountTraffic {
   texts?: number;
 }
 
-export interface AccountTraffickey {
+export interface AccountTrafficKey {
   month?: string;
   year?: string;
   key?: string;
 }
 
-export function createAccountTraffic(accountId: string) {
+export async function updateAccountTraffic(accountId: string) {
   const keyObj = makeRecordKey(accountId);
-  const accountTraffic: AccountTraffic = {
+  // @ts-ignore
+  return ACCOUNT_TRAFFIC_COLL.doc(keyObj.key).get().then( doc => {
+    if (!doc.exists) {
+      return createAccountTraffic(keyObj, accountId)
+    }
+    return Promise.resolve();
+  })
+  .then( () => {
+    return ACCOUNT_TRAFFIC_COLL.doc(keyObj.key).update({events: admin.firestore.FieldValue.increment(1)});
+  })
+}
+
+export function createAccountTraffic(keyObj: AccountTrafficKey, accountId: string) {
+  let accountTraffic: AccountTraffic;
+  accountTraffic = {
     accountId: accountId,
-    month: keyObj.month,
     year: keyObj.year,
+    month: keyObj.month,
     events: 0,
-    notifications: 0,
     emails: 0,
+    notifications: 0,
     texts: 0
   };
 
   return ACCOUNT_TRAFFIC_COLL.doc(keyObj.key).set(accountTraffic);
 }
 
-export function makeRecordKey(accountId: string): AccountTraffickey {
-  const accountTraffickey: AccountTraffickey = {};
+export function makeRecordKey(accountId: string): AccountTrafficKey {
+  const accountTrafficKey: AccountTrafficKey = {};
   const date = new Date();
-  accountTraffickey.month =  (date.getMonth() + 1).toString();
-  accountTraffickey.year = date.getFullYear().toString();
-  accountTraffickey.key = accountId + ':' + accountTraffickey.month + ':' + accountTraffickey.year;
+  accountTrafficKey.month =  (date.getMonth() + 1).toString();
+  accountTrafficKey.year = date.getFullYear().toString();
+  accountTrafficKey.key = accountId + ':' + accountTrafficKey.month + ':' + accountTrafficKey.year;
 
-  return accountTraffickey;
+  return accountTrafficKey;
 }
