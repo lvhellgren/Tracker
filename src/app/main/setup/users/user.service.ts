@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -27,7 +27,7 @@ import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
-import { ACCOUNT_USERS_COLL, AccountUserDoc, AuthService, USERS_COLL } from '../../core/auth/auth.service';
+import { ACCOUNT_USERS, AccountUserDoc, AuthService, USERS } from '../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../core/confirmation-dlg/confirmation-dlg-component';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
@@ -121,14 +121,14 @@ export class UserService {
     private dialog: MatDialog
   ) {
     this.db = firebase.firestore();
-    this.usersRef = this.db.collection(USERS_COLL);
-    this.accountUsersRef = this.db.collection(ACCOUNT_USERS_COLL);
+    this.usersRef = this.db.collection(USERS);
+    this.accountUsersRef = this.db.collection(ACCOUNT_USERS);
 
     this.accountUsers$ = this.usersSubject.asObservable();
   }
 
   fetchAllUsers$(): Observable<UserDoc[]> {
-    return this.afs.collection<UserDoc>(`${USERS_COLL}`).valueChanges();
+    return this.afs.collection<UserDoc>(`${USERS}`).valueChanges();
   }
 
   /**

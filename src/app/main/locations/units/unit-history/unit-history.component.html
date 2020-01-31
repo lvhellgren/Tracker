@@ -46,7 +46,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header> Street</mat-header-cell>
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
-          {{row.address.subThoroughfare}}&nbsp;{{row.address.thoroughfare}}
+          {{row.address?.subThoroughfare}}&nbsp;{{row.address?.thoroughfare}}
         </mat-cell>
       </ng-container>
 
@@ -55,7 +55,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header> City</mat-header-cell>
         <mat-cell *matCellDef="let row"
                   [style.color]="rowColor (row)">
-          {{row.address.locality}}
+          {{row.address?.locality}}
         </mat-cell>
       </ng-container>
 

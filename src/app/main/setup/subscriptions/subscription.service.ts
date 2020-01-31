@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -29,7 +29,7 @@ import { MatDialog } from '@angular/material';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ACCOUNT_DEVICES_COLL, AccountDeviceDoc } from '../devices/device.service';
+import { ACCOUNT_DEVICES, AccountDeviceDoc } from '../devices/device.service';
 import { NotificationDoc } from '../../notifications/notification.service';
 import { SubscriberService } from '../subscribers/subscriber.service';
 import { ACCOUNT_LANDMARKS, AccountLandmarkDoc, LandmarkService } from '../landmarks/landmark.service';
@@ -51,7 +51,7 @@ export const LANDMARK_ACTIVITIES: Map<string, string> = new Map([
   ['EXIT', 'Departure']
 ]);
 
-const ACCOUNT_SUBSCRIPTIONS_COLL = 'account-subscriptions';
+const ACCOUNT_SUBSCRIPTIONS = 'account-subscriptions';
 
 @Injectable({
   providedIn: 'root'
@@ -89,9 +89,9 @@ export class SubscriptionService implements OnDestroy {
               private subscriberService: SubscriberService,
               private landmarkService: LandmarkService,
               private dialog: MatDialog) {
-    this.subscriptionsRef = firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS_COLL);
+    this.subscriptionsRef = firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS);
     this.accountLandmarksRef = firebase.firestore().collection(ACCOUNT_LANDMARKS);
-    this.accountDevicesRef = firebase.firestore().collection(ACCOUNT_DEVICES_COLL);
+    this.accountDevicesRef = firebase.firestore().collection(ACCOUNT_DEVICES);
 
     this.deleteLandmarkSubscription = this.landmarkService.deleteSubscriptions$.subscribe((landmarkId: string) => {
       this.deleteLandmarkSubscriptions(landmarkId);
@@ -105,7 +105,7 @@ export class SubscriptionService implements OnDestroy {
   }
 
   subscriptions$(accountId: string, startAfter: number, limit: number): Observable<SubscriptionDoc[]> {
-    return this.afs.collection(ACCOUNT_SUBSCRIPTIONS_COLL, ref => ref
+    return this.afs.collection(ACCOUNT_SUBSCRIPTIONS, ref => ref
       .where('accountId', '==', accountId)
       .orderBy('subscriptionId', 'asc')
       .startAfter(startAfter)
@@ -207,7 +207,7 @@ export class SubscriptionService implements OnDestroy {
   async deleteLandmarkSubscriptions(landmarkId) {
     const accountId = this.authService.currentUserAccountId;
     const batch = firebase.firestore().batch();
-    const docs = await firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS_COLL)
+    const docs = await firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS)
       .where('accountId', '==', accountId)
       .where('landmarkId', '==', landmarkId)
       .get();

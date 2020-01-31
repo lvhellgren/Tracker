@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -102,23 +102,25 @@ export class GeoService {
 
   buildAddressLine(geoAddress: GeoAddress): string {
     let addressLine = '';
-    if (!!geoAddress.subThoroughfare) {
-      addressLine += ' ' + geoAddress.subThoroughfare;
-    }
-    if (!!geoAddress.thoroughfare) {
-      addressLine += ' ' + geoAddress.thoroughfare;
-    }
-    if (!!geoAddress.locality) {
-      addressLine += ' ' + geoAddress.locality;
-    }
-    if (!!geoAddress.area) {
-      addressLine += ' ' + geoAddress.area;
-    }
-    if (!!geoAddress.postalCode) {
-      addressLine += ' ' + geoAddress.postalCode;
-    }
-    if (!!geoAddress.countryName) {
-      addressLine += ' ' + geoAddress.countryName;
+    if (!!geoAddress) {
+      if (!!geoAddress.subThoroughfare) {
+        addressLine += ' ' + geoAddress.subThoroughfare;
+      }
+      if (!!geoAddress.thoroughfare) {
+        addressLine += ' ' + geoAddress.thoroughfare;
+      }
+      if (!!geoAddress.locality) {
+        addressLine += ' ' + geoAddress.locality;
+      }
+      if (!!geoAddress.area) {
+        addressLine += ' ' + geoAddress.area;
+      }
+      if (!!geoAddress.postalCode) {
+        addressLine += ' ' + geoAddress.postalCode;
+      }
+      if (!!geoAddress.countryName) {
+        addressLine += ' ' + geoAddress.countryName;
+      }
     }
     return addressLine;
   }

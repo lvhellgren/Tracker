@@ -1,0 +1,32 @@
+.list {
+  margin: 20px;
+  max-width: 600px;
+}
+.header {
+  color: gray;
+  font-weight: bolder;
+}
+
+.row {
+  color: gray;
+  font-size: smaller;
+}
+
+.name, .value {
+  width: 100%;
+  border-bottom: 2px;
+}
+
+.name {
+  text-align: left;
+  padding-left: 10px;
+  height: 100%;
+}
+
+.value {
+  text-align: right;
+}
+
+.alert {
+  color: red;
+}

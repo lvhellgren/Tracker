@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -21,8 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { LatLngLiteral } from '@agm/core';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
@@ -82,7 +82,7 @@ export const ACCOUNT_LANDMARKS = 'account-landmarks';
 @Injectable({
   providedIn: 'root'
 })
-export class LandmarkService {
+export class LandmarkService implements OnDestroy {
   private landmarkId: string;
 
   msg$ = new Subject<string>();
@@ -115,6 +115,8 @@ export class LandmarkService {
   private deleteSubscriptionsSubject = new Subject<string>();
   public deleteSubscriptions$ = this.deleteSubscriptionsSubject.asObservable();
 
+  private landmarksSubscription: Subscription;
+
   static makeAccountLandmarkKey(accountId: string, landmarkId: string): string {
     return `${accountId}:${landmarkId}`;
   }
@@ -131,9 +133,18 @@ export class LandmarkService {
               private dialog: MatDialog) {
   }
 
+  ngOnDestroy() {
+    if (!!this.landmarksSubscription) {
+      this.landmarksSubscription.unsubscribe();
+    }
+  }
+
   fetchLandmarks(accountId: string) {
     const landmarks$ = this.afs.collection(ACCOUNT_LANDMARKS, ref => ref.where('accountId', '==', accountId));
-    landmarks$.valueChanges().subscribe((docs: any) => {
+    if (!!this.landmarksSubscription) {
+      this.landmarksSubscription.unsubscribe();
+    }
+    this.landmarksSubscription = landmarks$.valueChanges().subscribe((docs: any) => {
       const landmarkDocs: AccountLandmarkDoc[] = [];
       docs.map((landmarkDoc: AccountLandmarkDoc) => {
         landmarkDocs.push(landmarkDoc);

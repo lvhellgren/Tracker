@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -51,6 +51,7 @@ export const ACT_NOTIFICATION_SUBSCRIPTIONS = 'Notification Subscriptions';
 export const ACT_NOTIFICATION_SUBSCRIPTION = 'Notification Subscription';
 export const ACT_NOTIFICATION_SUBSCRIBERS = 'Notification Subscribers';
 export const ACT_NOTIFICATION_SUBSCRIBER = 'Notification Subscriber';
+export const ACT_SERVICE_STATUS = 'Service Status';
 export const SIMULATOR_EVENTS = 'Simulator Events';
 export const SIMULATOR_EVENT = 'Simulator Move Event';
 

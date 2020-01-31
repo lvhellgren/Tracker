@@ -21,9 +21,9 @@ export interface SubscriberDoc {
   comment?: string;
 }
 
-export const SUBSCRIBERS_COLL = 'subscribers';
-export const ACCOUNT_USERS_COLL = 'account-users';
-export const ACCOUNT_SUBSCRIPTIONS_COLL = 'account-subscriptions';
+export const SUBSCRIBERS = 'subscribers';
+export const ACCOUNT_USERS = 'account-users';
+export const ACCOUNT_SUBSCRIPTIONS = 'account-subscriptions';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,7 @@ export class SubscriberService {
   }
 
   subscribers$(accountId: string, startAfter: number, limit: number): Observable<SubscriptionDoc[]> {
-    return this.afs.collection(SUBSCRIBERS_COLL, ref => ref
+    return this.afs.collection(SUBSCRIBERS, ref => ref
       .where('accountId', '==', accountId)
       .orderBy('subscriber', 'asc')
       .orderBy('subscriptionId', 'asc')
@@ -68,7 +68,7 @@ export class SubscriberService {
     const documentId = firebase.firestore().collection('notifications').doc().id;
     subscriberDoc.documentId = documentId;
 
-    firebase.firestore().collection(SUBSCRIBERS_COLL).doc(documentId).set(subscriberDoc)
+    firebase.firestore().collection(SUBSCRIBERS).doc(documentId).set(subscriberDoc)
       .then(() => {
         this.subscriberId = subscriberDoc.documentId;
         this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
@@ -85,7 +85,7 @@ export class SubscriberService {
     delete subscriberDoc.createdAt;
     subscriberDoc.modifiedAt = SubscriberService.timestamp;
 
-    firebase.firestore().collection(SUBSCRIBERS_COLL).doc(subscriberDoc.documentId).update(subscriberDoc)
+    firebase.firestore().collection(SUBSCRIBERS).doc(subscriberDoc.documentId).update(subscriberDoc)
       .then(() => {
         this.subscriberId = subscriberDoc.documentId;
         this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
@@ -99,7 +99,7 @@ export class SubscriberService {
   }
 
   getSubscriber(key: string) {
-    return firebase.firestore().collection(SUBSCRIBERS_COLL).doc(key).get()
+    return firebase.firestore().collection(SUBSCRIBERS).doc(key).get()
       .then(doc => {
         if (doc.exists) {
           this.subscriberId = doc.data().documentId;
@@ -119,7 +119,7 @@ export class SubscriberService {
   }
 
   deleteSubscriber(documentId: string, returnPath: string) {
-    return firebase.firestore().collection(SUBSCRIBERS_COLL).doc(documentId).delete()
+    return firebase.firestore().collection(SUBSCRIBERS).doc(documentId).delete()
       .then(() => {
         this.router.navigate([`./setup/${returnPath}`], {relativeTo: this.route});
       })
@@ -137,7 +137,7 @@ export class SubscriberService {
   async deleteSubscriptionSubscribers(subscriptionId: string) {
     const accountId = this.authService.currentUserAccountId;
     const batch = firebase.firestore().batch();
-    const docs = await firebase.firestore().collection(SUBSCRIBERS_COLL)
+    const docs = await firebase.firestore().collection(SUBSCRIBERS)
       .where('accountId', '==', accountId)
       .where('subscriptionId', '==', subscriptionId)
       .get();
@@ -159,7 +159,7 @@ export class SubscriberService {
    */
   fetchAccountUsers() {
     const accountId = this.authService.currentUserAccountId;
-    firebase.firestore().collection(ACCOUNT_USERS_COLL)
+    firebase.firestore().collection(ACCOUNT_USERS)
       .where('accountId', '==', accountId)
       .where('active', '==', true)
       .get()
@@ -184,7 +184,7 @@ export class SubscriberService {
    */
   fetchAccountSubscriptions() {
     const accountId = this.authService.currentUserAccountId;
-    firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS_COLL)
+    firebase.firestore().collection(ACCOUNT_SUBSCRIPTIONS)
       .where('accountId', '==', accountId)
       .where('active', '==', true)
       .get()

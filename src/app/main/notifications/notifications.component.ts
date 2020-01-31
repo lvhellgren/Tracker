@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -30,6 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationDlgComponent } from '../core/confirmation-dlg/confirmation-dlg-component';
 import { AuthService } from '../core/auth/auth.service';
 import { HelpService, NOTIFICATIONS } from '../../drawers/help/help.service';
+import { DEFAULT_PAGE_SIZE, UserPreferences, UserPreferencesService } from '../../sevices/user-preferences.service';
 
 @Component({
   selector: 'app-notifications',
@@ -60,17 +61,19 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   // Page attributes:
   public pageIndex = 0;
   public previousPageIndex = 0;
-  public startPageSize = 20;
-  public pageSize = this.startPageSize;
-  public pageSizeOptions = [this.startPageSize, 50, 100];
+  public pageSize = DEFAULT_PAGE_SIZE;
+  public pageSizeOptions = [this.pageSize, 5, 25, 50, 100];
   public length = (this.pageIndex + 1) * this.pageSize + this.pageSize;
-  private bottomPageRows = [0];
+  private bottomPageRows = [];
+
+  private userPreferencesSubscription: Subscription;
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(private authService: AuthService,
               private notificationService: NotificationService,
+              private userPreferencesService: UserPreferencesService,
               private route: ActivatedRoute,
               private router: Router,
               private dialog: MatDialog,
@@ -89,6 +92,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.userPreferencesSubscription = this.userPreferencesService.userPreferences$.subscribe((preferences: UserPreferences) => {
+      this.pageSize = !!preferences.pageSize ? preferences.pageSize : DEFAULT_PAGE_SIZE;
+      const newOptions = [this.pageSize];
+      for (const option of this.pageSizeOptions) {
+        if (option !== this.pageSize) {
+          newOptions.push(option);
+        }
+      }
+      this.pageSizeOptions = newOptions;
+    });
+
     this.msgSubscription = this.notificationService.msg$.subscribe(msg => {
       this.msg = msg;
     });
@@ -97,19 +111,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   fetchPage(accountId: string) {
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
+    }
+    const startAfter = this.bottomPageRows[this.bottomPageRows.length - 1];
     this.notificationSubscription =
-      this.notificationService.notifications$(accountId, this.bottomPageRows[this.bottomPageRows.length - 1], this.pageSize)
+      this.notificationService.notifications$(accountId, startAfter, this.pageSize)
         .subscribe((notifications: NotificationDoc[]) => {
-          if (notifications.length > 0) {
-            this.dataSource.data = notifications;
-            const fetchCount = notifications.length;
-            // @ts-ignore
-            this.bottomPageRows.push(notifications[fetchCount - 1].deviceTime.seconds);
-            if (fetchCount === this.pageSize) {
-              this.length = (this.pageIndex + 2) * this.pageSize;
-            } else {
-              this.length = this.pageIndex * this.pageSize + fetchCount;
-            }
+          this.dataSource.data = notifications;
+          const fetchCount = notifications.length;
+          if (fetchCount > 0) {
+            this.bottomPageRows.push(notifications[fetchCount - 1].deviceTime);
+          } else if (fetchCount === this.pageSize) {
+            this.length = (this.pageIndex + 2) * this.pageSize;
+          } else {
+            this.length = this.pageIndex * this.pageSize + fetchCount;
           }
         });
   }
@@ -123,6 +139,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
     if (this.accountSubscription) {
       this.accountSubscription.unsubscribe();
+    }
+    if (this.userPreferencesSubscription) {
+      this.userPreferencesSubscription.unsubscribe();
     }
   }
 
@@ -158,6 +177,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   onPageEvent(event) {
     if (this.pageSize !== event.pageSize) {
       this.pageSize = event.pageSize;
+      this.userPreferencesService.saveUserPreference('pageSize', this.pageSize);
       this.resetPagination();
     } else {
       this.pageIndex = event.pageIndex;
@@ -225,7 +245,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   resetPagination() {
-    this.bottomPageRows = [0];
+    this.bottomPageRows = [null];
     this.pageIndex = 0;
     this.previousPageIndex = 0;
     this.length = 2 * this.pageSize;

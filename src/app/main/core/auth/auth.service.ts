@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -40,9 +40,9 @@ export const HOME_PAGE = '/locations';
 
 export const PRINCIPAL_ACCOUNT_ID = 'Principal';
 
-export const USERS_COLL = 'users';
-export const ACCOUNTS_COLL = 'accounts';
-export const ACCOUNT_USERS_COLL = 'account-users';
+export const USERS = 'users';
+export const ACCOUNTS = 'accounts';
+export const ACCOUNT_USERS = 'account-users';
 
 export const PRINCIPAL_USER_ROLES: Map<string, string> = new Map([
   ['CREATOR', 'Creator'],
@@ -96,14 +96,14 @@ export class AuthService {
     private zone: NgZone
   ) {
     this.db = firebase.firestore();
-    this.usersRef = this.db.collection(USERS_COLL);
+    this.usersRef = this.db.collection(USERS);
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
           this.authChange.next(true);
 
           // Create an inner observable to the user's document:
-          const user$ = this.afs.doc<UserDoc>(`${USERS_COLL}/${user.email}`).valueChanges();
+          const user$ = this.afs.doc<UserDoc>(`${USERS}/${user.email}`).valueChanges();
           this.userSubscription = user$.subscribe(
             (userDoc: UserDoc) => {
               if (!userDoc.active) {
@@ -202,7 +202,7 @@ export class AuthService {
                 userDoc.currentAccountId = currentUser.email;
 
                 const accountUserKey = this.makeAccountUserKey(currentUser.email, currentUser.email);
-                const accountUserRef = this.db.collection(ACCOUNT_USERS_COLL).doc(accountUserKey);
+                const accountUserRef = this.db.collection(ACCOUNT_USERS).doc(accountUserKey);
                 const accountUserDoc: AccountUserDoc = {
                   accountId: currentUser.email,
                   userId: currentUser.email,
@@ -210,7 +210,7 @@ export class AuthService {
                   roles: ['EDITOR', 'CREATOR', 'VIEWER']
                 };
 
-                const accountRef = this.db.collection(ACCOUNTS_COLL).doc(currentUser.email);
+                const accountRef = this.db.collection(ACCOUNTS).doc(currentUser.email);
                 const account: Account = {
                   active: true,
                   accountId: currentUser.email,
@@ -257,7 +257,7 @@ export class AuthService {
   }
 
   updateUserInfo(email: string): void {
-    this.afs.collection(USERS_COLL).doc(email)
+    this.afs.collection(USERS).doc(email)
       .set({signedInAt: this.timestamp}, {merge: true})
       .then(() => {
         this.zone.run(() => {
@@ -273,7 +273,7 @@ export class AuthService {
 
   saveCurrentAccountId(userId: string, accountId: string): void {
     if (userId && accountId) {
-      this.afs.collection(USERS_COLL).doc(userId)
+      this.afs.collection(USERS).doc(userId)
         .set({currentAccountId: accountId}, {merge: true})
         .then(() => {
         })
@@ -287,7 +287,7 @@ export class AuthService {
 
   saveUserUid(userId: string, uid: string): void {
     if (userId && uid) {
-      this.afs.collection(USERS_COLL).doc(userId)
+      this.afs.collection(USERS).doc(userId)
         .set({uid: uid}, {merge: true})
         .then(() => {
         })
@@ -301,7 +301,7 @@ export class AuthService {
 
   // TODO: Use or remove
   private getAllAccountIds() {
-    this.afs.collection(ACCOUNTS_COLL)
+    this.afs.collection(ACCOUNTS)
       .valueChanges()
       .subscribe(
         (recs: Account[]) => {
@@ -324,7 +324,7 @@ export class AuthService {
    * @param userId
    */
   private fetchUserAccountIds(userId: string, userDoc: UserDoc) {
-    const accountIds$ = this.afs.collection(ACCOUNT_USERS_COLL, ref => ref
+    const accountIds$ = this.afs.collection(ACCOUNT_USERS, ref => ref
       .where('userId', '==', userId)
       .where('active', '==', true))
       .valueChanges();
@@ -363,7 +363,7 @@ export class AuthService {
    */
   private fetchAccountUserRoles(accountId: string, userId: string) {
     this.currentUserRoles = [];
-    const accountUsers$ = this.afs.doc(`${ACCOUNT_USERS_COLL}/${this.makeAccountUserKey(accountId, userId)}`)
+    const accountUsers$ = this.afs.doc(`${ACCOUNT_USERS}/${this.makeAccountUserKey(accountId, userId)}`)
       .valueChanges();
     this.accountUserSubscription = accountUsers$.subscribe(
       (accountUserDoc: AccountUserDoc) => {

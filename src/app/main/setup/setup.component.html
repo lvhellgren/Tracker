@@ -182,6 +182,16 @@
                   {{getMenuName('account-subscriber-add', 1)}}
                 </a>
               </div>
+              <div class="panel-group" fxLayout="column">
+                <a href="#" mat-button
+                   class="panel-item"
+                   [routerLink]="['account-service-status']"
+                   [routerLinkActive]="['active-setup']"
+                   [class.disabled]="principalView"
+                   (click)="onItemClick($event)">
+                  {{getMenuName('account-service-status', 1)}}
+                </a>
+              </div>
             </div>
           </mat-expansion-panel>
         </mat-accordion>

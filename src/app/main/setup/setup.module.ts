@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren.
+// Copyright (c) 2020 Lars Hellgren.
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SetupComponent } from './setup.component';
 import { AccountsComponent } from './accounts/accounts.component';
@@ -50,6 +50,7 @@ import { SubscriptionComponent } from './subscriptions/subscription/subscription
 import { SubscribersComponent } from './subscribers/subscribers.component';
 import { SubscriberComponent } from './subscribers/subscriber/subscriber.component';
 import { AccountConstraintsComponent } from './accounts/account-constraints/account-constraints.component';
+import { ServiceStatusComponent } from './service-status/service-status.component';
 
 @NgModule({
   imports: [
@@ -79,7 +80,8 @@ import { AccountConstraintsComponent } from './accounts/account-constraints/acco
     SubscriptionComponent,
     SubscribersComponent,
     SubscriberComponent,
-    AccountConstraintsComponent
+    AccountConstraintsComponent,
+    ServiceStatusComponent,
   ],
   providers: [
     UserService,

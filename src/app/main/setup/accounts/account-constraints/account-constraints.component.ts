@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AccountConstraint, AccountService } from '../account.service';
+import { AccountConstraint, AccountService, constraintNames } from '../account.service';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
@@ -16,6 +16,7 @@ export class AccountConstraintsComponent implements OnInit, OnDestroy {
   accountForm: FormGroup;
   msg = '';
   accountId: string;
+  constraintNames = constraintNames;
 
   constructor(private accountService: AccountService,
               private dialog: MatDialog,

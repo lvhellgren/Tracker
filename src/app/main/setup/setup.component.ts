@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -53,7 +53,8 @@ export const MENU_NAMES: Map<string, string[]> = new Map([
   ['account-subscription-add', ['Account View', 'Add Subscription']],
   ['account-subscribers-list', ['Account View', 'Notification Subscribers']],
   ['account-subscriber', ['Account View', 'Subscriber']],
-  ['account-subscriber-add', ['Account View', 'Add Subscriber']]
+  ['account-subscriber-add', ['Account View', 'Add Subscriber']],
+  ['account-service-status', ['Account View', 'Service Status']]
 ]);
 
 @Component({

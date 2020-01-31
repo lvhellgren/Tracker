@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ACCOUNT_CONSTRAINTS_COLL, AccountConstraint, AccountService } from '../../setup/accounts/account.service';
+import { ACCOUNT_CONSTRAINTS, AccountConstraint, AccountService } from '../../setup/accounts/account.service';
 import * as firebase from 'firebase';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
-import { ACCOUNT_DEVICES_COLL } from '../../setup/devices/device.service';
+import { ACCOUNT_DEVICES } from '../../setup/devices/device.service';
 import { ACCOUNT_LANDMARKS } from '../../setup/landmarks/landmark.service';
-import { ACCOUNT_USERS_COLL, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
-import { SUBSCRIBERS_COLL } from '../../setup/subscribers/subscriber.service';
+import { ACCOUNT_USERS, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
+import { SUBSCRIBERS } from '../../setup/subscribers/subscriber.service';
 
 export interface AccountTraffic {
   accountId?: string;
@@ -54,7 +54,7 @@ export class ActivityService {
         }
       })
       .then(() => {
-        const devices = firebase.firestore().collection(ACCOUNT_DEVICES_COLL)
+        const devices = firebase.firestore().collection(ACCOUNT_DEVICES)
           .where('accountId', '==', accountId).get()
           .then((deviceSnaps) => {
             activityReport.deviceCount = deviceSnaps.size;
@@ -64,12 +64,12 @@ export class ActivityService {
           .then((userSnaps) => {
             activityReport.landmarkCount = userSnaps.size;
           });
-        const users = firebase.firestore().collection(ACCOUNT_USERS_COLL)
+        const users = firebase.firestore().collection(ACCOUNT_USERS)
           .where('accountId', '==', accountId).get()
           .then((userSnaps) => {
             activityReport.userCount = userSnaps.size;
           });
-        const subscribers = firebase.firestore().collection(SUBSCRIBERS_COLL)
+        const subscribers = firebase.firestore().collection(SUBSCRIBERS)
           .where('accountId', '==', accountId).get()
           .then((subscriberSnaps) => {
             activityReport.subscriberCount = subscriberSnaps.size;
@@ -77,7 +77,7 @@ export class ActivityService {
         return Promise.all([devices, landmarks, users, subscribers]);
       })
       .then(() => {
-        return firebase.firestore().collection(ACCOUNT_CONSTRAINTS_COLL).doc(accountId).get()
+        return firebase.firestore().collection(ACCOUNT_CONSTRAINTS).doc(accountId).get()
           .then((accountConstraintSnap) => {
             if (accountConstraintSnap.exists) {
               activityReport.accountConstraint = accountConstraintSnap.data();

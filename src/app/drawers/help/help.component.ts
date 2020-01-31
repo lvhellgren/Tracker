@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -54,7 +54,8 @@ import {
   ACT_ACTIVITY_REPORT,
   SETUP,
   SIMULATOR_EVENTS,
-  SIMULATOR_EVENT
+  SIMULATOR_EVENT,
+  ACT_SERVICE_STATUS
 } from './help.service';
 import { ActDeviceComponent } from '../../main/help-content/act-device/act-device.component';
 import { ActLandmarkComponent } from '../../main/help-content/act-landmark/act-landmark.component';
@@ -86,6 +87,7 @@ import { SimulatorEventsComponent } from '../../main/help-content/simulator-even
 import { SimulatorMoveEventComponent } from '../../main/help-content/simulator-move-event/simulator-move-event.component';
 // tslint:disable-next-line:max-line-length
 import { PrincipalAccountConstraintsComponent } from '../../main/help-content/principal-account-constraints/principal-account-constraints.component';
+import { ActServiceStatusComponent } from '../../main/help-content/act-service-status/act-service-status.component';
 
 @Component({
   selector: 'app-help',
@@ -159,6 +161,10 @@ export class HelpComponent implements OnInit, OnDestroy {
         }
         case ACT_USERS: {
           this.insert(ActUsersComponent);
+          break;
+        }
+        case ACT_SERVICE_STATUS: {
+          this.insert(ActServiceStatusComponent);
           break;
         }
         case LOC_LANDMARK: {

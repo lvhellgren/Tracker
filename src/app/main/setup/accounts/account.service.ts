@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -27,7 +27,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument, QuerySnapshot } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { ACCOUNT_USERS_COLL, ACCOUNTS_COLL, AccountUserDoc, AuthService, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
+import { ACCOUNT_USERS, ACCOUNTS, AccountUserDoc, AuthService, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
 import { MatDialog } from '@angular/material';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
@@ -61,7 +61,21 @@ export interface AccountConstraint {
   comment?: string;
 }
 
-export const ACCOUNT_CONSTRAINTS_COLL = 'account-constraints';
+export const constraintNames = new Map([
+    ['devices', 'Devices'],
+    ['users', 'Users'],
+    ['landmarks', 'Landmarks'],
+    ['notificationSubscriptions', 'Notification Subscriptions'],
+    ['notificationSubscribers', 'Notification Subscribers'],
+    ['monthlyEvents', 'Events/Month'],
+    ['monthlyNotificationEmails', 'Notification Emails/Month'],
+    ['monthlyNotificationTexts', 'Notification Texts/Month'],
+    ['serviceExpiration', 'Service Expiration (MM/YYYY)'],
+    ['modifiedAt', 'Time Last Modified'],
+    ['comment', 'Notes']
+  ]);
+
+export const ACCOUNT_CONSTRAINTS = 'account-constraints';
 
 @Injectable()
 export class AccountService {
@@ -89,6 +103,24 @@ export class AccountService {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
+  static initConstraints(accountId: string) {
+    const now = new Date();
+    const expiration = now.getFullYear().toString() + '/' + (now.getMonth() + 1).toString();
+    return <AccountConstraint> {
+      accountId: accountId,
+      maxDevices: 10,
+      maxUsers: 10,
+      maxLandmarks: 100,
+      maxNotificationSubscriptions: 100,
+      maxNotificationSubscribers: 10,
+      maxMonthlyEvents: 1500,
+      maxMonthlyNotificationEmails: 100,
+      maxMonthlyNotificationTexts: 100,
+      serviceExpiration: expiration,
+      comment: ''
+    };
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -97,16 +129,16 @@ export class AccountService {
     private authService: AuthService,
     private dialog: MatDialog) {
     this.db = firebase.firestore();
-    this.accountsRef = this.db.collection(ACCOUNTS_COLL);
-    this.accountUsersRef = this.db.collection(ACCOUNT_USERS_COLL);
-    this.accountConstraintsRef = this.db.collection(ACCOUNT_CONSTRAINTS_COLL);
+    this.accountsRef = this.db.collection(ACCOUNTS);
+    this.accountUsersRef = this.db.collection(ACCOUNT_USERS);
+    this.accountConstraintsRef = this.db.collection(ACCOUNT_CONSTRAINTS);
   }
 
   /**
    * References all accounts in the data base. Subscribers automatically receive updates of changes to accounts in the data base.
    */
   get allAccounts$(): Observable<Account[]> {
-    return this.afs.collection(ACCOUNTS_COLL).valueChanges();
+    return this.afs.collection(ACCOUNTS).valueChanges();
   }
 
   /**
@@ -148,7 +180,7 @@ export class AccountService {
    * @param id An account ID
    */
   fetchAccount$(id: string): Observable<Account> {
-    const doc: AngularFirestoreDocument<Account> = this.afs.doc(`${ACCOUNTS_COLL}/${id}`);
+    const doc: AngularFirestoreDocument<Account> = this.afs.doc(`${ACCOUNTS}/${id}`);
     this.accountId = id;
     return doc.valueChanges();
   }
@@ -198,7 +230,7 @@ export class AccountService {
       const accountUserRef = this.accountUsersRef.doc(accountUserKey);
       batch.set(accountUserRef, accountUserDoc, {merge: false});
 
-      const accountConstraint: AccountConstraint = this.initConstraints(account.accountId);
+      const accountConstraint: AccountConstraint = AccountService.initConstraints(account.accountId);
       const accountConstraintsRef = this.accountConstraintsRef.doc(account.accountId);
       accountConstraint.modifiedAt = AccountService.timestamp;
       batch.set(accountConstraintsRef, accountConstraint, {merge: false});
@@ -210,24 +242,6 @@ export class AccountService {
       console.error(`Error saving account ${account.accountId}: ${error}`);
       this.msg$.next(error);
     });
-  }
-
-  private initConstraints(accountId: string) {
-    const now = new Date();
-    const expiration = now.getFullYear().toString() + '/' + (now.getMonth() + 1).toString();
-    return <AccountConstraint> {
-      accountId: accountId,
-      maxDevices: 10,
-      maxUsers: 10,
-      maxLandmarks: 100,
-      maxNotificationSubscriptions: 100,
-      maxNotificationSubscribers: 10,
-      maxMonthlyEvents: 1500,
-      maxMonthlyNotificationEmails: 100,
-      maxMonthlyNotificationTexts: 100,
-      serviceExpiration: expiration,
-      comment: ''
-    };
   }
 
   getAccountConstraint(accountId: string) {

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -43,6 +43,7 @@ import { ActDevicesComponent } from './act-devices/act-devices.component';
 import { ActDeviceComponent } from './act-device/act-device.component';
 import { ActLandmarksComponent } from './act-landmarks/act-landmarks.component';
 import { ActLandmarkComponent } from './act-landmark/act-landmark.component';
+import { ActServiceStatusComponent } from './act-service-status/act-service-status.component';
 import { ActSubscriptionsComponent } from './act-subscriptions/act-subscriptions.component';
 import { ActSubscriptionComponent } from './act-subscription/act-subscription.component';
 import { ActSubscribersComponent } from './act-subscribers/act-subscribers.component';
@@ -78,6 +79,7 @@ import { PrincipalAccountConstraintsComponent } from './principal-account-constr
     ActDeviceComponent,
     ActLandmarksComponent,
     ActLandmarkComponent,
+    ActServiceStatusComponent,
     ActSubscriptionsComponent,
     ActSubscriptionComponent,
     ActSubscribersComponent,
@@ -85,7 +87,8 @@ import { PrincipalAccountConstraintsComponent } from './principal-account-constr
     ActivityReportComponent,
     SimulatorEventsComponent,
     SimulatorMoveEventComponent,
-    PrincipalAccountConstraintsComponent
+    PrincipalAccountConstraintsComponent,
+    ActServiceStatusComponent
   ],
   imports: [
     CommonModule
@@ -115,6 +118,7 @@ import { PrincipalAccountConstraintsComponent } from './principal-account-constr
     ActDeviceComponent,
     ActLandmarksComponent,
     ActLandmarkComponent,
+    ActServiceStatusComponent,
     ActSubscriptionsComponent,
     ActSubscriptionComponent,
     ActSubscribersComponent,

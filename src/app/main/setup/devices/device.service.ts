@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -58,8 +58,8 @@ export interface AccountDeviceDoc {
   createdAt?: any;
 }
 
-export const DEVICES_COLL = 'devices';
-export const ACCOUNT_DEVICES_COLL = 'account-devices';
+export const DEVICES = 'devices';
+export const ACCOUNT_DEVICES = 'account-devices';
 
 @Injectable()
 export class DeviceService {
@@ -121,13 +121,11 @@ export class DeviceService {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
     private dialog: MatDialog
   ) {
     this.db = firebase.firestore();
-    this.devicesRef = this.db.collection(DEVICES_COLL);
-    this.accountDevicesRef = this.db.collection(ACCOUNT_DEVICES_COLL);
+    this.devicesRef = this.db.collection(DEVICES);
+    this.accountDevicesRef = this.db.collection(ACCOUNT_DEVICES);
 
     this.accountDevices$ = this.devicesSubject.asObservable();
     this.allDevices$ = this.allDevicesSubject.asObservable();
@@ -262,7 +260,7 @@ export class DeviceService {
       });
     }).catch((error) => {
       this.msg$.next(error);
-      const dlg = this.dialog.open(ErrorDlgComponent, {
+      this.dialog.open(ErrorDlgComponent, {
         data: {msg: `Error saving account device document for ${accountId}, ${deviceId}`}
       });
     });

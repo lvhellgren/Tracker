@@ -8,6 +8,7 @@ import { GlobalService } from '../../../../sevices/global';
 import { FormControl } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { HelpService, LOC_UNIT } from '../../../../drawers/help/help.service';
+import { DEFAULT_PAGE_SIZE, UserPreferences, UserPreferencesService } from '../../../../sevices/user-preferences.service';
 
 @Component({
   selector: 'app-unit',
@@ -31,9 +32,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   // Page attributes:
   public pageIndex = 0;
   public previousPageIndex = 0;
-  public startPageSize = 20;
-  public pageSize = this.startPageSize;
-  public pageSizeOptions = [this.startPageSize, 50, 100];
+  public pageSize = DEFAULT_PAGE_SIZE;
+  public pageSizeOptions = [this.pageSize, 25, 50, 100];
   public length = (this.pageIndex + 1) * this.pageSize + this.pageSize;
   private bottomPageRows = [];
 
@@ -45,11 +45,13 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   private accountSubscription: Subscription;
   private routeSubscription: Subscription;
   private historySubscription: Subscription;
+  private userPreferencesSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private unitService: UnitService,
               private mapService: UnitsMapService,
               private global: GlobalService,
+              private userPreferencesService: UserPreferencesService,
               private router: Router,
               private route: ActivatedRoute,
               private helpService: HelpService) {
@@ -64,6 +66,17 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
         this.router.navigate([`/locations/${this.global.currentWidth}/units`]);
         this.unitService.clear();
       }
+    });
+
+    this.userPreferencesSubscription = this.userPreferencesService.userPreferences$.subscribe((preferences: UserPreferences) => {
+      this.pageSize = !!preferences.pageSize ? preferences.pageSize : DEFAULT_PAGE_SIZE;
+      const newOptions = [this.pageSize];
+      for (const option of this.pageSizeOptions) {
+        if (option !== this.pageSize) {
+          newOptions.push(option);
+        }
+      }
+      this.pageSizeOptions = newOptions;
     });
 
     if (!this.unitService.historyStartDate) {
@@ -98,10 +111,19 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (this.accountSubscription) {
       this.accountSubscription.unsubscribe();
     }
+    if (this.historySubscription) {
+      this.historySubscription.unsubscribe();
+    }
+    if (this.userPreferencesSubscription) {
+      this.userPreferencesSubscription.unsubscribe();
+    }
   }
 
   fetchPage(deviceId: String) {
     if (deviceId) {
+      if (this.historySubscription) {
+        this.historySubscription.unsubscribe();
+      }
       this.historySubscription = this.unitService.deviceEventHistory$(this.accountId, deviceId, this.startDate.value, this.endDate.value,
         this.bottomPageRows[this.bottomPageRows.length - 1], this.pageSize)
         .subscribe((deviceEvents: DeviceEvent[]) => {
@@ -175,6 +197,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   onPageEvent(event) {
     if (this.pageSize !== event.pageSize) {
       this.pageSize = event.pageSize;
+      this.userPreferencesService.saveUserPreference('pageSize', this.pageSize);
       this.resetPagination();
     } else {
       this.pageIndex = event.pageIndex;
@@ -198,7 +221,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (endDate < startDate) {
       endDate = startDate;
     }
-    this.resetQuery(startDate, endDate);
+    this.applyDateRangeChange(startDate, endDate);
     this.fetchPage(this.deviceId);
   }
 
@@ -208,11 +231,11 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (endDate < startDate) {
       startDate = endDate;
     }
-    this.resetQuery(startDate, endDate);
+    this.applyDateRangeChange(startDate, endDate);
     this.fetchPage(this.deviceId);
   }
 
-  resetQuery(startDate: Date, endDate: Date) {
+  applyDateRangeChange(startDate: Date, endDate: Date) {
     this.startDate = new FormControl(startDate);
     this.endDate = new FormControl(endDate);
     this.unitService.historyStartDate = startDate;

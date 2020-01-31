@@ -66,11 +66,17 @@ export class UnitDetailsComponent implements OnInit, OnDestroy {
             this.addRow('Account', deviceEvent.accountId);
             this.addRow('Accuracy', deviceEvent.accuracy);
             this.addRow('Address', '');
-            this.addRow('Street', deviceEvent.address.subThoroughfare, 1, true);
-            this.addRow('Locality', deviceEvent.address.thoroughfare, 1, true);
-            this.addRow('Postal Code', deviceEvent.address.postalCode, 1, true);
-            this.addRow('County', deviceEvent.address.subAdminArea, 1, true);
-            this.addRow('Country', deviceEvent.address.countryName, 1, true);
+            if (!!deviceEvent.address) {
+              let streetNum = '';
+              if (deviceEvent.address.subThoroughfare) {
+                streetNum = deviceEvent.address.subThoroughfare + ' ';
+              }
+              this.addRow('Street', streetNum + deviceEvent.address.thoroughfare, 1, true);
+              this.addRow('Locality (City)', deviceEvent.address.locality, 1, true);
+              this.addRow('Postal Code', deviceEvent.address.postalCode, 1, true);
+              this.addRow('County', deviceEvent.address.subAdminArea, 1, true);
+              this.addRow('Country', deviceEvent.address.countryName, 1, true);
+            }
             this.addRow('Altitude', deviceEvent.altitude);
             this.addRow('Altitude Given', deviceEvent.hasAltitude);
             this.addRow('Bearing', deviceEvent.bearing);

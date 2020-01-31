@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -21,16 +21,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { ACCOUNT_LANDMARKS, AccountLandmarkDoc } from '../../setup/landmarks/landmark.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import * as firebase from 'firebase';
-import { ACCOUNT_DEVICES_COLL } from '../../setup/devices/device.service';
+import { ACCOUNT_DEVICES } from '../../setup/devices/device.service';
 
-export const LANDMARK_ACTIVITY_COLL = 'landmark-activity';
+export const LANDMARK_ACTIVITY = 'landmark-activity';
 
 export interface PlaceDoc extends AccountLandmarkDoc {
   unitsPresent?: UnitInfo[];
@@ -46,7 +46,7 @@ export interface UnitInfo {
 @Injectable({
   providedIn: 'root'
 })
-export class PlaceService {
+export class PlaceService implements OnDestroy {
 
   landmarkDoc: PlaceDoc;
 
@@ -62,6 +62,8 @@ export class PlaceService {
   private selectedLandmarkSubject = new Subject<string>();
   public selectedLandmark$ = this.selectedLandmarkSubject.asObservable();
 
+  public landmarksSubscription: Subscription;
+
   static makeAccountLandmarkKey(accountId: string, landmarkId: string): string {
     return `${accountId}:${landmarkId}`;
   }
@@ -70,9 +72,18 @@ export class PlaceService {
               private dialog: MatDialog) {
   }
 
+  ngOnDestroy() {
+    if (!!this.landmarksSubscription) {
+      this.landmarksSubscription.unsubscribe();
+    }
+  }
+
   fetchLandmarks(accountId: string) {
     const landmarks$ = this.afs.collection(ACCOUNT_LANDMARKS, ref => ref.where('accountId', '==', accountId));
-    landmarks$.valueChanges().subscribe((docs: any) => {
+    if (!!this.landmarksSubscription) {
+      this.landmarksSubscription.unsubscribe();
+    }
+    this.landmarksSubscription = landmarks$.valueChanges().subscribe((docs: any) => {
       const placeDocs: PlaceDoc[] = [];
       docs.map((placeDoc: PlaceDoc) => {
         placeDoc.unitsPresent = [];
@@ -85,7 +96,7 @@ export class PlaceService {
   }
 
   fetchLandmarkActivity(placeDoc: PlaceDoc, getName = false) {
-    return firebase.firestore().collection(LANDMARK_ACTIVITY_COLL)
+    return firebase.firestore().collection(LANDMARK_ACTIVITY)
       .where('account', '==', placeDoc.accountId)
       .where('landmarkId', '==', placeDoc.landmarkId)
       .get()
@@ -131,7 +142,7 @@ export class PlaceService {
   }
 
   private fetchDeviceName(accountId: string, unitInfo: UnitInfo) {
-    return firebase.firestore().collection(ACCOUNT_DEVICES_COLL)
+    return firebase.firestore().collection(ACCOUNT_DEVICES)
       .where('accountId', '==', accountId)
       .where('deviceId', '==', unitInfo.deviceId)
       .get()

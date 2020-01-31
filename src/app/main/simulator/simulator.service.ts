@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import { Injectable } from '@angular/core';
-import { DEVICE_EVENTS_COLL, DeviceEvent } from '../locations/unit.service';
+import { DEVICE_EVENTS, DeviceEvent } from '../locations/unit.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,7 +33,7 @@ import { GeoAddress, GeoLocation, GeoService } from '../core/geo-service/geo.ser
 import { MsgDlgComponent } from '../core/msg-dlg/msg-dlg.component';
 
 
-const SIMULATOR_EVENTS_COLL = 'simulator-events';
+const SIMULATOR_EVENTS = 'simulator-events';
 
 @Injectable({
   providedIn: 'root'
@@ -58,13 +58,13 @@ export class SimulatorService {
 
   events$(startAfter: string, limit: number) {
     if (startAfter !== '') {
-      return this.afs.collection(SIMULATOR_EVENTS_COLL, ref => ref
+      return this.afs.collection(SIMULATOR_EVENTS, ref => ref
         .orderBy('eventType', 'asc')
         .startAfter(startAfter)
         .limit(limit)
       ).valueChanges();
     } else {
-      return this.afs.collection(SIMULATOR_EVENTS_COLL, ref => ref
+      return this.afs.collection(SIMULATOR_EVENTS, ref => ref
         .orderBy('eventType', 'asc')
         .limit(limit)
       ).valueChanges();
@@ -81,9 +81,9 @@ export class SimulatorService {
         })
         .then(() => {
           if (!!!deviceEvent.documentId) {
-            deviceEvent.documentId = firebase.firestore().collection(SIMULATOR_EVENTS_COLL).doc().id;
+            deviceEvent.documentId = firebase.firestore().collection(SIMULATOR_EVENTS).doc().id;
           }
-          firebase.firestore().collection(SIMULATOR_EVENTS_COLL).doc(deviceEvent.documentId).set(deviceEvent)
+          firebase.firestore().collection(SIMULATOR_EVENTS).doc(deviceEvent.documentId).set(deviceEvent)
             .then(() => {
               this.router.navigate([`./simulator/${returnPath}`], {relativeTo: this.route});
             });
@@ -98,8 +98,8 @@ export class SimulatorService {
 
   triggerEvent(deviceEvent: DeviceEvent) {
     this.triggeredEvent = deviceEvent;
-    deviceEvent.documentId = firebase.firestore().collection(DEVICE_EVENTS_COLL).doc().id;
-    firebase.firestore().collection(DEVICE_EVENTS_COLL).doc(deviceEvent.documentId).set(deviceEvent)
+    deviceEvent.documentId = firebase.firestore().collection(DEVICE_EVENTS).doc().id;
+    firebase.firestore().collection(DEVICE_EVENTS).doc(deviceEvent.documentId).set(deviceEvent)
       .then(() => {
         this.dialog.open(MsgDlgComponent, {
           data: {title: 'Success', msg: `Event triggered`, ok: 'OK'}
@@ -131,7 +131,7 @@ export class SimulatorService {
 
   fetchEventDoc(id: string) {
     try {
-      firebase.firestore().collection(SIMULATOR_EVENTS_COLL).doc(id).get().then((doc) => {
+      firebase.firestore().collection(SIMULATOR_EVENTS).doc(id).get().then((doc) => {
         if (doc.exists) {
           this.currentEvent = doc.data();
           this.fetchedEventSubject.next(doc.data());

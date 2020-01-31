@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren.
+// Copyright (c) 2020 Lars Hellgren.
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -41,6 +41,7 @@ import { SubscriptionComponent } from './subscriptions/subscription/subscription
 import { SubscriberComponent } from './subscribers/subscriber/subscriber.component';
 import { SubscribersComponent } from './subscribers/subscribers.component';
 import { AccountConstraintsComponent } from './accounts/account-constraints/account-constraints.component';
+import { ServiceStatusComponent } from './service-status/service-status.component';
 
 const routes: Routes = [
   {
@@ -223,6 +224,11 @@ const routes: Routes = [
         component: SubscribersComponent,
         canActivate: [AuthGuard]
       },
+      {
+        path: 'account-service-status',
+        component: ServiceStatusComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   },
 ];

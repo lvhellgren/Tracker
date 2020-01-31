@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren (lars@exelor.com).
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
 // All rights reserved.
 //
 // This code is licensed under the MIT License.
@@ -28,6 +28,7 @@ import { ErrorDlgComponent } from '../core/error-dlg/error-dlg.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Subject } from 'rxjs';
+import Timestamp = firebase.firestore.Timestamp;
 
 
 export interface NotificationDoc {
@@ -44,7 +45,7 @@ export interface NotificationDoc {
   checked?: boolean;
 }
 
-const NOTIFICATIONS_COLL = 'notifications';
+const NOTIFICATIONS = 'notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -60,16 +61,16 @@ export class NotificationService {
               private dialog: MatDialog) {
   }
 
-  notifications$(accountId: string, startAfter: number, limit: number) {
-    if (startAfter !== 0) {
-      return this.afs.collection(NOTIFICATIONS_COLL, ref => ref
+  notifications$(accountId: string, startAfter: Timestamp, limit: number) {
+    if (!!startAfter) {
+      return this.afs.collection(NOTIFICATIONS, ref => ref
         .where('accountId', '==', accountId)
         .orderBy('deviceTime', 'desc')
         .startAfter(startAfter)
         .limit(limit)
       ).valueChanges();
     } else {
-      return this.afs.collection(NOTIFICATIONS_COLL, ref => ref
+      return this.afs.collection(NOTIFICATIONS, ref => ref
         .where('accountId', '==', accountId)
         .orderBy('deviceTime', 'desc')
         .limit(limit)
@@ -83,7 +84,7 @@ export class NotificationService {
 
   loadNotificationDoc(id: string) {
     try {
-      firebase.firestore().collection(NOTIFICATIONS_COLL).doc(id).get().then((doc) => {
+      firebase.firestore().collection(NOTIFICATIONS).doc(id).get().then((doc) => {
         if (doc.exists) {
           this.currentNotification = doc.data();
         } else {
@@ -102,7 +103,7 @@ export class NotificationService {
 
   deleteNotification(notificationDoc: NotificationDoc, returnPath: string) {
     const id = notificationDoc.documentId;
-    firebase.firestore().collection(NOTIFICATIONS_COLL).doc(id).delete()
+    firebase.firestore().collection(NOTIFICATIONS).doc(id).delete()
       .then(() => {
         this.currentNotification = null;
         this.router.navigate([`./${returnPath}`], {relativeTo: this.route});
@@ -118,7 +119,7 @@ export class NotificationService {
   deleteNotifications(selectedIds: Set<string>, returnPath: string) {
     let success = true;
     selectedIds.forEach(id => {
-      firebase.firestore().collection(NOTIFICATIONS_COLL).doc(id).delete()
+      firebase.firestore().collection(NOTIFICATIONS).doc(id).delete()
         .catch((error) => {
           success = false;
           this.msg$.next(error);

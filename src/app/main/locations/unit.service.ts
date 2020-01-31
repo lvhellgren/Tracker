@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
@@ -54,16 +54,14 @@ export interface Landmark {
   color?: string;
 }
 
-export const DEVICE_EVENTS_COLL = 'device-events';
-export const LAST_MOVES_COLL = 'last-moves';
+export const DEVICE_EVENTS = 'device-events';
+export const LAST_MOVES = 'last-moves';
 
 @Injectable()
-export class UnitService {
+export class UnitService implements OnDestroy {
   historyStartDate: Date;
   historyEndDate: Date;
 
-  private db;
-  movesRef;
   currentDeviceEvent: DeviceEvent;
 
   // Last moves fetched from DB.
@@ -74,14 +72,23 @@ export class UnitService {
   private deviceEventsSubject = new BehaviorSubject<DeviceEvent[]>([]);
   public deviceEvents$ = this.deviceEventsSubject.asObservable();
 
+  private lastMovesSubscription: Subscription;
+
   constructor(
     private afs: AngularFirestore) {
-    this.db = firebase.firestore();
-    this.movesRef = this.db.collection(DEVICE_EVENTS_COLL);
+  }
+
+  ngOnDestroy() {
+    if (!!this.lastMovesSubscription) {
+      this.lastMovesSubscription.unsubscribe();
+    }
   }
 
   fetchLastMoves(accountId: string) {
-    this.afs.collection(LAST_MOVES_COLL, ref => ref.where('accountId', '==', accountId))
+    if (!!this.lastMovesSubscription) {
+      this.lastMovesSubscription.unsubscribe();
+    }
+    this.lastMovesSubscription = this.afs.collection(LAST_MOVES, ref => ref.where('accountId', '==', accountId))
       .valueChanges()
       .subscribe((deviceEvents: DeviceEvent[]) => {
         this.lastMovesSubject.next(deviceEvents);
@@ -89,12 +96,12 @@ export class UnitService {
   }
 
   deviceEventHistory$(accountId: string, deviceId: String, startDate: Date, endDate: Date, startAfter: Timestamp, limit: number):
-      Observable<DeviceEvent[]> {
+    Observable<DeviceEvent[]> {
     const startTs = Timestamp.fromDate(new Date(startDate.setHours(0, 0, 0, 0).valueOf()));
     const endTs = Timestamp.fromDate(new Date(endDate.setHours(23, 59, 59, 999).valueOf()));
 
     if (!!startAfter) {
-      return this.afs.collection(DEVICE_EVENTS_COLL, ref => ref
+      return this.afs.collection(DEVICE_EVENTS, ref => ref
         .where('accountId', '==', accountId)
         .where('deviceId', '==', deviceId)
         .where('deviceTime', '>', startTs)
@@ -104,7 +111,7 @@ export class UnitService {
         .limit(limit)
       ).valueChanges();
     } else {
-      return this.afs.collection(DEVICE_EVENTS_COLL, ref => ref
+      return this.afs.collection(DEVICE_EVENTS, ref => ref
         .where('accountId', '==', accountId)
         .where('deviceId', '==', deviceId)
         .where('deviceTime', '>', startTs)
@@ -124,7 +131,7 @@ export class UnitService {
   }
 
   fetchHistoryDoc(documentId: string): Observable<DeviceEvent> {
-    return this.afs.collection(DEVICE_EVENTS_COLL).doc(documentId).valueChanges();
+    return this.afs.collection(DEVICE_EVENTS).doc(documentId).valueChanges();
   }
 }
 

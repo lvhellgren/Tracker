@@ -4,81 +4,81 @@
         [formGroup]="accountForm"
         (ngSubmit)="onSubmit()">
     <div class="account-name">
-      {{accountId}} Account
+      {{accountId}} Account Resource Limits
     </div>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Devices"
+             placeholder="{{constraintNames.get('devices')}}"
              formControlName="maxDevices">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Users"
+             placeholder="{{constraintNames.get('users')}}"
              formControlName="maxUsers">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Landmarks"
+             placeholder="{{constraintNames.get('landmarks')}}"
              formControlName="maxLandmarks">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Notification Subscriptions"
+             placeholder="{{constraintNames.get('notificationSubscriptions')}}"
              formControlName="maxNotificationSubscriptions">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Notification Subscribers"
+             placeholder="{{constraintNames.get('notificationSubscribers')}}"
              formControlName="maxNotificationSubscribers">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Monthly Events"
+             placeholder="{{constraintNames.get('monthlyEvents')}}"
              formControlName="maxMonthlyEvents">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Monthly Notification Emails"
+             placeholder="{{constraintNames.get('monthlyNotificationEmails')}}"
              formControlName="maxMonthlyNotificationEmails">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="number"
              matInput
              required
-             placeholder="Max Monthly Notification Texts"
+             placeholder="{{constraintNames.get('monthlyNotificationTexts')}}"
              formControlName="maxMonthlyNotificationTexts">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="text"
              matInput
              required
-             placeholder="Service Expiration (MM/YYYY)"
+             placeholder="{{constraintNames.get('serviceExpiration')}}"
              formControlName="serviceExpiration">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="text"
              matInput
-             placeholder="Time Last Modified"
+             placeholder="{{constraintNames.get('modifiedAt')}}"
              formControlName="modifiedAt">
     </mat-form-field>
     <mat-form-field floatLabel="always">
       <input type="text"
              matInput
-             placeholder="Notes"
+             placeholder="{{constraintNames.get('comment')}}"
              formControlName="comment">
     </mat-form-field>
 
@@ -94,8 +94,7 @@
               (click)="onCancel()">
         Cancel
       </button>
-      <button class="submit-button"
-              type="submit"
+      <button type="submit"
               mat-raised-button color="primary"
               [disabled]="accountForm.invalid || accountForm.pristine">
         Save

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Lars Hellgren.
+// Copyright (c) 2020 Lars Hellgren.
 // All rights reserved.
 //
 // This code is licensed under the MIT License.

@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { ACCOUNT_RESOURCES_COLL } from './AccountResources';
 
 export const SUBSCRIBERS = 'subscribers';
-export const SUBSCRIBERS_COLL = admin.firestore().collection(SUBSCRIBERS);
+export const SUBSCRIBERS = admin.firestore().collection(SUBSCRIBERS);
 
 export const onCreateSubscriber = functions.firestore
   .document(SUBSCRIBERS + '/{subscriber}')
