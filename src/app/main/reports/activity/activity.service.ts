@@ -45,12 +45,13 @@ export class ActivityService {
         if (accountTrafficSnap.exists) {
           activityReport.accountTraffic = accountTrafficSnap.data();
         } else {
-          if (accountId !== PRINCIPAL_ACCOUNT_ID) {
-            this.dialog.open(ErrorDlgComponent, {
-              data: {msg: `Missing account traffic document for ${accountId}`}
-            });
-          }
-          return null; // Breaks the promise chain
+          const accountTraffic: AccountTraffic = {
+            events: 0,
+            notifications: 0,
+            emails: 0,
+            texts: 0
+          };
+          activityReport.accountTraffic = accountTraffic;
         }
       })
       .then(() => {
