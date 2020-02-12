@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { MapsAPILoader } from '@agm/core';
 import GeocoderResult = google.maps.GeocoderResult;
 

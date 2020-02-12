@@ -28,7 +28,7 @@ import { AngularFirestore, AngularFirestoreDocument, QuerySnapshot } from '@angu
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { ACCOUNT_USERS, ACCOUNTS, AccountUserDoc, AuthService, PRINCIPAL_ACCOUNT_ID } from '../../core/auth/auth.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
 export interface Account {

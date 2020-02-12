@@ -34,7 +34,8 @@ interface MarkerDoc extends AccountLandmarkDoc {
 
 @Component({
   selector: 'app-landmarks-map',
-  templateUrl: './landmarks-map.component.html'
+  templateUrl: './landmarks-map.component.html',
+  styleUrls: ['./landmarks-map.component.css']
 })
 export class LandmarksMapComponent implements OnInit, OnDestroy {
   markerIcon = '/assets/landmark_flag_red.png';

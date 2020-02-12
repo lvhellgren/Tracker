@@ -29,7 +29,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { ACCOUNT_USERS, AccountUserDoc, AuthService, USERS } from '../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../core/confirmation-dlg/confirmation-dlg-component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
 export interface UserDto {

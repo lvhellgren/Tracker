@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountConstraint, AccountService, constraintNames } from '../account.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';

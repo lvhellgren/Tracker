@@ -26,7 +26,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import { ErrorDlgComponent } from '../core/error-dlg/error-dlg.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import Timestamp = firebase.firestore.Timestamp;
 

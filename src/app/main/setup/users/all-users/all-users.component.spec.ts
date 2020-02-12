@@ -15,7 +15,6 @@ import { TimestampToDatePipe } from '../../../core/timestamp-to-date.pipe';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDoc, UserService } from '../user.service';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { LocationsComponent } from '../../../locations/locations.component';
 

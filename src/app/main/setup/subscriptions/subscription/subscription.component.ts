@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs';
 import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { LANDMARK_ACTIVITIES, SubscriptionDoc, SubscriptionService } from '../subscription.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
 import { ACT_NOTIFICATION_SUBSCRIPTION, HelpService } from '../../../../drawers/help/help.service';

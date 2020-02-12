@@ -22,14 +22,15 @@
 // THE SOFTWARE.
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitsMapService } from '../units-map/units-map.service';
 import { GlobalService } from '../../../sevices/global';
 import { DeviceEvent, UnitService } from '../unit.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { CenterComponent } from '../../help-content/center/center.component';
 import { HelpService, LOC_UNITS } from '../../../drawers/help/help.service';
 
 @Component({
@@ -43,8 +44,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public displayedColumns = ['deviceName', 'deviceTime', 'street', 'city', 'landmarks'];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   private tapCount = 0;
 

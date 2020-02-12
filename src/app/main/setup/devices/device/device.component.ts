@@ -24,14 +24,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeviceDto, DeviceService } from '../device.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
-import { ACT_DEVICE, HelpService, SETUP } from '../../../../drawers/help/help.service';
+import { ACT_DEVICE, HelpService } from '../../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-device',

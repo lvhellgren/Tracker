@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ConfirmationDlgComponent } from '../../../../core/confirmation-dlg/confirmation-dlg-component';
 import { google } from '@agm/core/services/google-maps-types';
@@ -34,6 +34,7 @@ const CLOSE_UP_ZOOM = 16;
 @Component({
   selector: 'app-landmark-map',
   templateUrl: './landmark-map.component.html',
+  styleUrls: ['./landmark-map.component.css']
 })
 export class LandmarkMapComponent implements OnInit, OnDestroy {
   landmarkIcon = '/assets/landmark_flag_blue.png';

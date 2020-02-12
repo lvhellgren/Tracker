@@ -18,7 +18,9 @@ import { UserPreferencesComponent } from './drawers/user-preferences/user-prefer
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AuthService } from './main/core/auth/auth.service';
 import { UserService } from './main/setup/users/user.service';
-import { MatDialog, MatMenuModule, MatTableModule } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { SetupModule } from './main/setup/setup.module';
 
 const routes: Routes = [
@@ -33,11 +35,11 @@ const routes: Routes = [
   },
   {
     path: 'setup',
-    loadChildren: './main/setup/setup.module#SetupModule'
+    loadChildren: () => import('./main/setup/setup.module').then(m => m.SetupModule)
   },
   {
     path: 'locations',
-    loadChildren: './main/setup/setup.module#LocationsModule'
+    // loadChildren: () => import('./main/setup/setup.module').then(m => m.LocationsModule)
   },
   {
     path: 'notifications',

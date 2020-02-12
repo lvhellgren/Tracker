@@ -27,7 +27,7 @@ import { NotificationDoc, NotificationService } from '../notification.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConfirmationDlgComponent } from '../../core/confirmation-dlg/confirmation-dlg-component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { LANDMARK_ACTIVITIES } from '../../setup/subscriptions/subscription.service';
 import { HelpService, NOTIFICATION } from '../../../drawers/help/help.service';
 

@@ -1,15 +1,10 @@
 
+mat-card {
+  padding: 0;
+  margin-left: 4px;
+}
+
 agm-map {
   height: calc(100vh - 160px);
-  width: 100%;
-}
-
-.mat-card {
-  padding: 0;
-  margin: 0 0 0 5px;
-  width: inherit;
-}
-
-.landmarks-map {
-  cursor: pointer;
+  width: 100%; margin: 0
 }

@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { SubscriberDoc, SubscriberService } from './subscriber.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,8 +33,8 @@ export class SubscribersComponent implements OnInit, OnDestroy {
   public length = (this.pageIndex + 1) * this.pageSize + this.pageSize;
   private bottomPageRows = [0];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private subscriberService: SubscriberService,

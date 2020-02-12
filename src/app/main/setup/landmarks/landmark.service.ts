@@ -29,7 +29,7 @@ import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import * as firebase from 'firebase';
 import FieldValue = firebase.firestore.FieldValue;
 

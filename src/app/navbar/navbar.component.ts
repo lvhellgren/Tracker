@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output, isDevMode } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../main/core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../main/core/confirmation-dlg/confirmation-dlg-component';

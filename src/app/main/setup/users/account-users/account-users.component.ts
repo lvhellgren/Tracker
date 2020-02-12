@@ -24,7 +24,10 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { UserDto, UserService } from '../user.service';
 import { ACCOUNT_USER_ROLES, AuthService, PRINCIPAL_USER_ROLES } from '../../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,8 +49,8 @@ export class AccountUsersComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['email', 'name', 'phone', 'roles', 'activeUser', 'signedInAt'];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private authService: AuthService,

@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,7 +43,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppKendoModule } from './app-kendo.module';
 import { LocationsModule } from './main/locations/locations.module';
 import { GlobalService } from './sevices/global';
-import { MatNativeDateModule } from '@angular/material';
+import { MatNativeDateModule } from '@angular/material/core';
 import { SimulatorModule } from './main/simulator/simulator.module';
 import { ReportsModule } from './main/reports/reports.module';
 import { HelpContentModule } from './main/help-content/help-content.module';
@@ -76,7 +76,8 @@ import { CenterComponent } from './main/help-content/center/center.component';
     AppAngularFireModule,
     AppAngularMaterialModule,
     AppKendoModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    HammerModule
   ],
   providers: [
     DatePipe,

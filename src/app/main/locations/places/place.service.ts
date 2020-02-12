@@ -25,7 +25,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { ACCOUNT_LANDMARKS, AccountLandmarkDoc } from '../../setup/landmarks/landmark.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import * as firebase from 'firebase';
 import { ACCOUNT_DEVICES } from '../../setup/devices/device.service';

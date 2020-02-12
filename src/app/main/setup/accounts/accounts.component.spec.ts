@@ -11,11 +11,10 @@ import { UnitsComponent } from '../../locations/units/units.component';
 import { PlacesComponent } from '../../locations/places/places.component';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 import { UnknownComponent } from '../../core/unknown/unknown.component';
-import { FormBuilder } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AccountService } from './account.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { LocationsComponent } from '../../locations/locations.component';
 

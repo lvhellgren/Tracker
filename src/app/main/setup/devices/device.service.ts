@@ -23,11 +23,10 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { QuerySnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 

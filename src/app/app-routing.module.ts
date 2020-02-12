@@ -52,17 +52,17 @@ export const routes: Routes = [
   },
   {
     path: 'reports',
-    loadChildren: './main/reports/reports.module#ReportsModule',
+    loadChildren: () => import('./main/reports/reports.module').then(m => m.ReportsModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'setup',
-    loadChildren: './main/setup/setup.module#SetupModule',
+    loadChildren: () => import('./main/setup/setup.module').then(m => m.SetupModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'simulator',
-    loadChildren: './main/simulator/simulator.module#SimulatorModule',
+    loadChildren: () => import('./main/simulator/simulator.module').then(m => m.SimulatorModule),
     canActivate: [AuthGuard],
     canLoad: [DevEnvGuard]
   },

@@ -33,7 +33,7 @@ import { UiService } from '../ui-service/ui.service';
 import { Account } from '../../setup/accounts/account.service';
 import { UserDoc } from '../../setup/users/user.service';
 import { ErrorDlgComponent } from '../error-dlg/error-dlg.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 export const SIGN_IN_PAGE = '/sign-in';
 export const HOME_PAGE = '/locations';
@@ -47,14 +47,16 @@ export const ACCOUNT_USERS = 'account-users';
 export const PRINCIPAL_USER_ROLES: Map<string, string> = new Map([
   ['CREATOR', 'Creator'],
   ['EDITOR', 'Editor'],
-  ['VIEWER', 'Viewer']
+  ['VIEWER', 'Viewer'],
+  ['DEVELOPER', 'Developer']
 ]);
 
 export const ACCOUNT_USER_ROLES: Map<string, string> = new Map([
   ['CREATOR', 'Creator'],
   ['EDITOR', 'Editor'],
   ['OPERATOR', 'Operator'],
-  ['VIEWER', 'Viewer']
+  ['VIEWER', 'Viewer'],
+  ['DEVELOPER', 'Developer']
 ]);
 
 export interface AccountUserDoc {

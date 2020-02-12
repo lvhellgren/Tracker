@@ -7,7 +7,7 @@ import { UserService } from '../user.service';
 import { DatePipe, Location } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { routes } from '../../../../app-routing.module';
 import { SignInComponent } from '../../../core/sign-in/sign-in.component';
 import { AppAngularMaterialModule } from '../../../../app-angular-material.module';

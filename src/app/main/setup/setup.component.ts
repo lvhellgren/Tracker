@@ -69,7 +69,7 @@ export class SetupComponent implements OnInit, OnDestroy {
   principalView: boolean;
   principalForm: boolean;
 
-  @ViewChild('setupDrawer', {static: false}) setupDrawer;
+  @ViewChild('setupDrawer') setupDrawer;
 
   userAccountSelectSubscription: Subscription;
 

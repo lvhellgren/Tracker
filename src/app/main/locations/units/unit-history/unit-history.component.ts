@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UnitsMapService } from '../../units-map/units-map.service';
 import { Subscription } from 'rxjs';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DeviceEvent, UnitService } from '../../unit.service';
 import { GlobalService } from '../../../../sevices/global';
 import { FormControl } from '@angular/forms';
@@ -37,8 +39,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   public length = (this.pageIndex + 1) * this.pageSize + this.pageSize;
   private bottomPageRows = [];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   private tapCount = 0;
 

@@ -22,8 +22,11 @@
 // THE SOFTWARE.
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { AccountLandmarkDoc, LandmarkService } from '../../setup/landmarks/landmark.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { AccountLandmarkDoc } from '../../setup/landmarks/landmark.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { PlaceService, UnitInfo } from './place.service';
@@ -45,8 +48,8 @@ export class PlacesComponent implements OnInit, OnDestroy {
   accountSubscription: Subscription;
   landmarksSubscription: Subscription;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   private tapCount = 0;
 
@@ -102,7 +105,7 @@ export class PlacesComponent implements OnInit, OnDestroy {
 
   onRowDblClick(row: AccountLandmarkDoc) {
     if (row.landmarkId) {
-      const landmarkKey = LandmarkService.makeAccountLandmarkKey(row.accountId, row.landmarkId);
+      // const landmarkKey = LandmarkService.makeAccountLandmarkKey(row.accountId, row.landmarkId);
 
       // TODO: Needs fix
 

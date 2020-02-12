@@ -24,7 +24,7 @@
 import { Injectable } from '@angular/core';
 import { DEVICE_EVENTS, DeviceEvent } from '../locations/unit.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { ErrorDlgComponent } from '../core/error-dlg/error-dlg.component';

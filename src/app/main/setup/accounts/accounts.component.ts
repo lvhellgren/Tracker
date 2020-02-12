@@ -22,13 +22,16 @@
 // THE SOFTWARE.
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Account, AccountService } from './account.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 import { AuthService } from '../../core/auth/auth.service';
-import { ACT_DEVICES, ACT_USER_ACCOUNTS, HelpService, PRINC_ACCOUNTS } from '../../../drawers/help/help.service';
+import { ACT_USER_ACCOUNTS, HelpService, PRINC_ACCOUNTS } from '../../../drawers/help/help.service';
 
 @Component({
   selector: 'app-accounts',
@@ -46,8 +49,8 @@ export class AccountsComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['accountId', 'active'];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private authService: AuthService,

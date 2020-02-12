@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/Tracker",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -37,6 +38,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -137,5 +144,8 @@
       }
     }
   },
-  "defaultProject": "Tracker"
+  "defaultProject": "Tracker",
+  "cli": {
+    "analytics": "69378dfa-e7f1-474c-b4c0-eacf6fcaf922"
+  }
 }

@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { AccountUserDoc, AuthService } from '../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SubscriptionDoc } from '../subscriptions/subscription.service';
 
 export interface SubscriberDoc {

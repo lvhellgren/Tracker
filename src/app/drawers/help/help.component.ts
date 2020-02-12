@@ -97,7 +97,7 @@ import { ActServiceStatusComponent } from '../../main/help-content/act-service-s
 export class HelpComponent implements OnInit, OnDestroy {
   @Input() appdrawer;
 
-  @ViewChild('entry', {static: false, read: ViewContainerRef})
+  @ViewChild('entry', { read: ViewContainerRef })
   entry: ViewContainerRef;
 
   componentRef: ComponentRef<any>;

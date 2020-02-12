@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { DeviceEvent } from '../../locations/unit.service';
 import { NotificationDoc } from '../../notifications/notification.service';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,8 @@ import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 import { AuthService } from '../../core/auth/auth.service';
 import { HelpService, SIMULATOR_EVENTS } from '../../../drawers/help/help.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
 
 
 export interface SimulatorEvent extends DeviceEvent {
@@ -49,6 +51,7 @@ export class EventsComponent implements OnInit, OnDestroy {
               private simulatorService: SimulatorService,
               private route: ActivatedRoute,
               private router: Router,
+              private dialog: MatDialog,
               private geoService: GeoService,
               private helpService: HelpService) {
   }
@@ -96,6 +99,11 @@ export class EventsComponent implements OnInit, OnDestroy {
           } else {
             this.length = this.pageIndex * this.pageSize + fetchCount;
           }
+        },
+          (error) => {
+            this.dialog.open(ErrorDlgComponent, {
+              data: {msg: error}
+            });
         });
   }
 

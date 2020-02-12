@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../../main/core/auth/auth.service';
 import { UserService } from '../../main/setup/users/user.service';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatMenuModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
 
 class MockAuthService {
   getUserId() {

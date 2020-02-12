@@ -1,18 +1,13 @@
-.sebm-google-map-container {
-  height:calc(100vh - 170px);
-  width: 100%;
+
+mat-card {
+  padding: 0;
+  margin-left: 4px;
 }
 
-.mat-card {
-  padding: 0 !important;
-  margin: 0 0 0 5px;
-  width: inherit;
+agm-map {
+  height: calc(100vh - 160px);
+  width: 100%; margin: 0
 }
-
-.landmark-map {
-  cursor: pointer;
-}
-
 .spinner {
   display: block;
   position: fixed;
