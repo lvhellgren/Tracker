@@ -17,3 +17,36 @@ form {
   font-size: 12px;
   margin-bottom: 20px;
 }
+
+.icon {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-width: 1px;
+}
+
+legend {
+  font-size: smaller;
+  color: gray;
+}
+
+#map {
+  height: 100px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.mat-form-field {
+  height: 50px;
+}
+
+.default-icon {
+  margin-top: 5px;
+  font-size: small;
+  color: grey;
+}
+
+.make-default-button {
+  font-size: small;
+  margin-bottom: 5px;
+}

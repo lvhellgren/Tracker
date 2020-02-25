@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -32,24 +32,59 @@ import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirm
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import { ACT_DEVICE, HelpService } from '../../../../drawers/help/help.service';
+import { BASE_MARKER_ICON, GlobalService } from '../../../../sevices/global';
+
 
 @Component({
   selector: 'app-device',
   templateUrl: './device.component.html',
   styleUrls: ['./device.component.css']
 })
-export class DeviceComponent implements OnInit, OnDestroy {
+export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
+  static markerLat = 33.7;
+  static markerLng = -117.7;
+  static coordinates = new google.maps.LatLng(DeviceComponent.markerLat, DeviceComponent.markerLng);
+
+  // For handling string representation of enums in UI mat-select component
+  static iconMap = new Map([
+    [google.maps.SymbolPath.FORWARD_CLOSED_ARROW, 'google.maps.SymbolPath.FORWARD_CLOSED_ARROW'],
+    [google.maps.SymbolPath.FORWARD_OPEN_ARROW, 'google.maps.SymbolPath.FORWARD_OPEN_ARROW'],
+    [google.maps.SymbolPath.CIRCLE, 'google.maps.SymbolPath.CIRCLE']
+  ]);
+
+  static mapOptions: google.maps.MapOptions = {
+    center: new google.maps.LatLng(DeviceComponent.markerLat, DeviceComponent.markerLng),
+    clickableIcons: false,
+    draggable: false,
+    controlSize: 1,
+    disableDoubleClickZoom: true,
+    keyboardShortcuts: false,
+    mapTypeControl: false,
+    panControl: false,
+    rotateControl: false,
+    scaleControl: false,
+    scrollwheel: false,
+    streetViewControl: false,
+    zoom: 10
+  };
+
+  @ViewChild('mapContainer') gmap: ElementRef;
+
   createDevice = false;
   msg: string;
   returnPath: string;
+
+  deviceFormGroup: FormGroup;
+  active = new FormControl();
+  useDefaultIcon = new FormControl();
 
   nameValidators = [
     Validators.required
   ];
 
-  active = new FormControl();
-
-  deviceFormGroup: FormGroup;
+  map: google.maps.Map;
+  selectedShape: string;
+  icon;
 
   routeSubscription: Subscription;
   deviceSubscription: Subscription;
@@ -71,6 +106,7 @@ export class DeviceComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private location: Location,
               private authService: AuthService,
+              private globalService: GlobalService,
               private dialog: MatDialog,
               private helpService: HelpService) {
   }
@@ -96,6 +132,13 @@ export class DeviceComponent implements OnInit, OnDestroy {
       deviceId: [''],
       modifiedAt: [''],
       createdAt: [''],
+      scale: [''],
+      fillColor: [''],
+      fillOpacity: [''],
+      strokeColor: [''],
+      strokeWeight: [''],
+      strokeOpacity: [''],
+      useDefaultIcon: [''],
       comment: ['']
     });
 
@@ -107,14 +150,25 @@ export class DeviceComponent implements OnInit, OnDestroy {
           this.deviceService.fetchAccountDevice(accountId, deviceId)
             .then((deviceDto: DeviceDto) => {
               if (!!deviceDto) {
+                if (!!!deviceDto.markerIcon) {
+                  deviceDto.markerIcon = this.getDefaultMarkerIcon();
+                }
+                this.icon = deviceDto.markerIcon;
                 this.deviceFormGroup.setValue(
                   {
                     name: deviceDto.name,
                     deviceId: deviceDto.deviceId,
+                    scale: deviceDto.markerIcon.scale,
+                    fillColor: deviceDto.markerIcon.fillColor,
+                    fillOpacity: deviceDto.markerIcon.fillOpacity,
+                    strokeColor: deviceDto.markerIcon.strokeColor,
+                    strokeWeight: deviceDto.markerIcon.strokeWeight,
+                    strokeOpacity: deviceDto.markerIcon.strokeOpacity,
                     modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
                     createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
                     comment: deviceDto.comment ? deviceDto.comment : '',
-                    active: deviceDto.active
+                    active: deviceDto.active,
+                    useDefaultIcon: true // TODO: fix
                   });
 
                 this.active.setValue(deviceDto.active);
@@ -129,6 +183,25 @@ export class DeviceComponent implements OnInit, OnDestroy {
             });
         } else {
           this.active.setValue(true);
+          this.icon = this.getDefaultMarkerIcon();
+          this.selectedShape = DeviceComponent.iconMap.get(this.icon.path);
+          console.log(this.selectedShape);
+          this.deviceFormGroup.setValue(
+            {
+              name: '',
+              deviceId: '',
+              scale: this.icon.scale,
+              fillColor: this.icon.fillColor,
+              fillOpacity: this.icon.fillOpacity,
+              strokeColor: this.icon.strokeColor,
+              strokeWeight: this.icon.strokeWeight,
+              strokeOpacity: this.icon.strokeOpacity,
+              useDefaultIcon: true, // TODO fix
+              active: true,
+              modifiedAt: null,
+              createdAt: null,
+              comment: ''
+            });
         }
       });
 
@@ -140,6 +213,10 @@ export class DeviceComponent implements OnInit, OnDestroy {
     });
 
     this.helpService.component$.next(ACT_DEVICE);
+  }
+
+  ngAfterViewInit() {
+    this.applyIconSettings();
   }
 
   ngOnDestroy(): void {
@@ -159,6 +236,61 @@ export class DeviceComponent implements OnInit, OnDestroy {
     if (this.msgSubscription) {
       this.msgSubscription.unsubscribe();
     }
+  }
+
+  applyIconSettings() {
+    this.map = new google.maps.Map(this.gmap.nativeElement, DeviceComponent.mapOptions);
+    const marker = new google.maps.Marker({
+      position: DeviceComponent.coordinates,
+      icon: this.icon,
+      draggable: true
+    });
+    marker.setMap(this.map);
+  }
+
+  onShapeChange(source) {
+    const splits = source.value.split('.');
+    const shape: string = splits[splits.length - 1];
+    this.icon.path = google.maps.SymbolPath[shape];
+    this.applyIconSettings();
+  }
+
+  onScaleChange(value: string) {
+    this.icon.scale = Number(value);
+    this.applyIconSettings();
+  }
+
+  onFillColorChange(value: string) {
+    this.icon.fillColor = value;
+    this.applyIconSettings();
+  }
+
+  onFillOpacityChange(value: string) {
+    this.icon.fillOpacity = Number(value);
+    this.applyIconSettings();
+  }
+
+  onStrokeColorChange(value: string) {
+    this.icon.strokeColor = value;
+    this.applyIconSettings();
+  }
+
+  onStrokeOpacityChange(value: string) {
+    this.icon.strokeOpacity = Number(value);
+    this.applyIconSettings();
+  }
+
+  onStrokeWeightChange(value: string) {
+    this.icon.strokeWeight = Number(value);
+    this.applyIconSettings();
+  }
+
+  getDefaultMarkerIcon() {
+    return BASE_MARKER_ICON;  // TODO: Use default icon when available
+  }
+
+  onDefaultMarkerIcon() {
+    console.log('onDefaultMarkerIcon');
   }
 
   public onSubmit() {

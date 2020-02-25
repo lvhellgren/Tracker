@@ -29,6 +29,7 @@ import * as firebase from 'firebase';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
+import { MarkerIcon } from '../../../sevices/global';
 
 export interface DeviceDto {
   name?: string;
@@ -36,15 +37,8 @@ export interface DeviceDto {
   comment?: string;
   active?: boolean;
   accountId?: String;
+  markerIcon?: any;
   modifiedAt?: any;
-  createdAt?: any;
-}
-
-export interface DeviceDoc {
-  name: string;
-  deviceId: string;
-  comment?: string;
-  modifiedAt: any;
   createdAt?: any;
 }
 
@@ -53,12 +47,21 @@ export interface AccountDeviceDoc {
   name: string;
   deviceId: string;
   active: boolean;
+  markerIcon?: MarkerIcon;
   modifiedAt: any;
   createdAt?: any;
 }
 
 export const DEVICES = 'devices';
 export const ACCOUNT_DEVICES = 'account-devices';
+
+interface DeviceDoc {
+  name: string;
+  deviceId: string;
+  comment?: string;
+  modifiedAt: any;
+  createdAt?: any;
+}
 
 @Injectable()
 export class DeviceService {
@@ -184,7 +187,8 @@ export class DeviceService {
                   this.devicesSubject.next(deviceDtos);
                 });
             });
-          } else {this.devicesSubject.next(deviceDtos);
+          } else {
+            this.devicesSubject.next(deviceDtos);
           }
         })
         .catch((error) => {
