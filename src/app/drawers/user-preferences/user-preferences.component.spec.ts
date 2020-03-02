@@ -32,7 +32,7 @@ describe('UserPreferencesComponent', () => {
   it('should call close() when clicked', async(() => {
     spyOn(component, 'close');
 
-    const button = fixture.debugElement.nativeElement.querySelector('.close-icon');
+    const button = fixture.debugElement.nativeElement.querySelector('.close-markerIconForm');
     button.click();
 
     fixture.whenStable().then(() => {

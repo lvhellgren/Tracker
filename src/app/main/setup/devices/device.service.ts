@@ -29,7 +29,8 @@ import * as firebase from 'firebase';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
-import { MarkerIcon } from '../../../sevices/global';
+import { DEVICE_DEFAULTS_KEY, MarkerIcon } from '../../../sevices/device-access.service';
+import { MsgDlgComponent } from '../../core/msg-dlg/msg-dlg.component';
 
 export interface DeviceDto {
   name?: string;
@@ -75,6 +76,9 @@ export class DeviceService {
   accountDevices$: Observable<DeviceDto[]>;
   allDevices$: Observable<DeviceDto[]>;
   msg$ = new Subject<string>();
+
+  private deviceDefaultSaved = new Subject<boolean>();
+  deviceDefaultSaved$ = this.deviceDefaultSaved.asObservable();
 
   static makeAccountDeviceKey(accountId: String, deviceId: String): String {
     return `${accountId}:${deviceId}`;
@@ -267,6 +271,23 @@ export class DeviceService {
         data: {msg: `Error saving account device document for ${accountId}, ${deviceId}`}
       });
     });
+  }
+
+  saveDeviceDefaultMarkerIcon(markerIcon: Object) {
+    console.dir(markerIcon);
+    markerIcon['path'] = google.maps.SymbolPath.FORWARD_CLOSED_ARROW; // TODO: remove
+    const accountId = this.authService.currentUserAccountId;
+    const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, DEVICE_DEFAULTS_KEY);
+    this.accountDevicesRef.doc(accountDeviceKey).set({markerIcon: markerIcon}, {merge: true})
+      .then(() => {
+        this.deviceDefaultSaved.next(true);
+        this.msg$.next(`Default marker icon saved`);
+      })
+      .catch((error) => {
+        this.dialog.open(ErrorDlgComponent, {
+          data: {msg: error}
+        });
+      });
   }
 
   getDeviceId() {

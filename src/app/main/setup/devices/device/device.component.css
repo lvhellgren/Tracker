@@ -40,13 +40,20 @@ legend {
   height: 50px;
 }
 
-.default-icon {
-  margin-top: 5px;
+.default-button {
   font-size: small;
-  color: grey;
+  width: 170px;
+  margin-bottom: 5px;
 }
 
-.make-default-button {
-  font-size: small;
-  margin-bottom: 5px;
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance:textfield;
 }

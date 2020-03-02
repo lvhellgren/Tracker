@@ -1,7 +1,7 @@
 <div class="device" fxLayoutAlign="center">
   <form fxFlex.gt-xs="400px"
         fxLayout="column"
-        [formGroup]="deviceFormGroup"
+        [formGroup]="deviceForm"
         (ngSubmit)="onSubmit()">
     <div class="active" fxLayout="row"
          fxLayoutAlign="end center">
@@ -38,71 +38,78 @@
                formControlName="createdAt">
       </mat-form-field>
     </div>
-    <fieldset class="icon" fxLayout="column">
-      <legend>Map Marker Icon</legend>
-      <div #mapContainer id="map"></div>
-      <mat-form-field>
-        <mat-label>Shape</mat-label>
-        <mat-select [(value)]="selectedShape"
-                    (selectionChange)="onShapeChange($event)">
-          <mat-option value="google.maps.SymbolPath.FORWARD_CLOSED_ARROW">Closed Arrow</mat-option>
-          <mat-option value="google.maps.SymbolPath.FORWARD_OPEN_ARROW">Open Arrow</mat-option>
-          <mat-option value="google.maps.SymbolPath.CIRCLE">Circle</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Scale"
-               formControlName="scale"
-               (ngModelChange)="onScaleChange($event)">
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Fill Color (CSS3)"
-               formControlName="fillColor"
-               (ngModelChange)="onFillColorChange($event)">
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Fill Opacity (0.0 - 1)"
-               formControlName="fillOpacity"
-               (ngModelChange)="onFillOpacityChange($event)">
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Outline Color (CSS3)"
-               formControlName="strokeColor"
-               (ngModelChange)="onStrokeColorChange($event)">
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Outline Opacity (0.0 - 1)"
-               formControlName="strokeOpacity"
-               (ngModelChange)="onStrokeOpacityChange($event)">
-      </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <input type="text"
-               matInput
-               placeholder="Outline Weight"
-               formControlName="strokeWeight"
-               (ngModelChange)="onStrokeWeightChange($event)">
-      </mat-form-field>
-      <div fxLayout="row" fxLayoutAlign="space-between start">
-        <mat-checkbox class="default-icon" [formControl]="useDefaultIcon">Use Default Icon</mat-checkbox>
-        <button [ngClass]="'make-default-button'"
-                type="button"
-                color="primary"
-                mat-stroked-button
-                (click)="onDefaultMarkerIcon()">
-          Make This the Default Icon
-        </button>
-      </div>
-    </fieldset>
+    <div formGroupName="markerIconForm">
+      <fieldset class="icon" fxLayout="column">
+        <legend>Map Marker Icon</legend>
+        <div #mapContainer id="map"></div>
+        <mat-form-field>
+          <mat-label>Shape</mat-label>
+          <mat-select formControlName="path">
+            <mat-option *ngFor="let shape of shapeNames" [value]="shape.id">
+              {{shape.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Scale"
+                 formControlName="scale">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="Fill Color (CSS3)"
+                 formControlName="fillColor">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Fill Opacity (0.0 - 1)"
+                 formControlName="fillOpacity">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="Outline Color (CSS3)"
+                 formControlName="strokeColor">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Outline Opacity (0.0 - 1)"
+                 formControlName="strokeOpacity">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Outline Weight"
+                 formControlName="strokeWeight">
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <button [ngClass]="'default-button'"
+                  type="button"
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onUseDefaultMarkerIconClick()"
+                  [disabled]="disableIconButtons">
+            Use Icon Default
+          </button>
+          <button [ngClass]="'default-button'"
+                  type="button"
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onMakeDefaultMarkerIconClick()"
+                  [disabled]="disableIconButtons">
+            Make this Icon Default
+          </button>
+        </div>
+      </fieldset>
+    </div>
     <mat-form-field floatLabel="always">
          <textarea type="text"
                    rows="1"
@@ -130,8 +137,8 @@
       <button type="submit"
               mat-raised-button
               color="primary"
-              [disabled]="deviceFormGroup.invalid || (
-              deviceFormGroup.pristine &&
+              [disabled]="deviceForm.invalid || (
+              deviceForm.pristine &&
               active.pristine)">
         Save
       </button>

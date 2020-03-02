@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UnitsMapService } from './units-map.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { GlobalService } from '../../../sevices/global';
 import { DeviceEvent, UnitService } from '../unit.service';
 
