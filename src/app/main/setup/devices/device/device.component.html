@@ -137,9 +137,7 @@
       <button type="submit"
               mat-raised-button
               color="primary"
-              [disabled]="deviceForm.invalid || (
-              deviceForm.pristine &&
-              active.pristine)">
+              [disabled]="deviceForm.invalid || (deviceForm.pristine && active.pristine && !iconUpdated)">
         Save
       </button>
     </div>

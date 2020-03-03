@@ -25,7 +25,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DeviceDto, DeviceService } from '../device.service';
+import { AccountDeviceDoc, DeviceService } from '../device.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ConfirmationDlgComponent } from '../../../core/confirmation-dlg/confirmation-dlg-component';
@@ -33,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import { ACT_DEVICE, HelpService } from '../../../../drawers/help/help.service';
 import { GlobalService } from '../../../../sevices/global';
-import { BASE_MARKER_ICON } from '../../../../sevices/device-access.service';
+import { MarkerIcon, SHAPE_NAMES } from '../../../../sevices/device-access.service';
 
 
 @Component({
@@ -42,6 +42,8 @@ import { BASE_MARKER_ICON } from '../../../../sevices/device-access.service';
   styleUrls: ['./device.component.css']
 })
 export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  // Marker position on sample map:
   static markerLat = 33.7;
   static markerLng = -117.7;
   static coordinates = new google.maps.LatLng(DeviceComponent.markerLat, DeviceComponent.markerLng);
@@ -62,18 +64,6 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     zoom: 10
   };
 
-  shapeNames = [
-    {id: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, name: 'Closed Arrow'},
-    {id: google.maps.SymbolPath.FORWARD_OPEN_ARROW, name: 'Open Arrow'},
-    {id: google.maps.SymbolPath.CIRCLE, name: 'Circle'}
-  ];
-
-  iconMap = new Map([
-    [google.maps.SymbolPath.FORWARD_CLOSED_ARROW.valueOf(), google.maps.SymbolPath.FORWARD_CLOSED_ARROW],
-    [google.maps.SymbolPath.FORWARD_OPEN_ARROW.valueOf(), google.maps.SymbolPath.FORWARD_OPEN_ARROW],
-    [google.maps.SymbolPath.CIRCLE.valueOf(), google.maps.SymbolPath.CIRCLE]
-  ]);
-
   @ViewChild('mapContainer') gmap: ElementRef;
 
   createDevice = false;
@@ -87,11 +77,13 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     Validators.required
   ];
 
+  shapeNames = SHAPE_NAMES;
   map: google.maps.Map;
-  icon;
+  defaultIcon;
   deviceId: string;
   accountId: string;
   disableIconButtons = true;
+  iconUpdated = false;
 
   routeSubscription: Subscription;
   deviceSubscription: Subscription;
@@ -167,13 +159,12 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.defaultDeviceMarkerIcon = this.deviceService.defaultDeviceMarkerIcon$.subscribe(icon => {
-      this.icon = icon;
+      this.defaultIcon = icon;
       if (this.deviceId) {
         this.buildDeviceForm(this.deviceId, this.accountId);
       } else {
         this.buildEmptyForm();
       }
-      this.displayMapMarker();
     });
 
     this.msgSubscription = this.deviceService.msg$.subscribe(msg => {
@@ -185,14 +176,9 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.deviceForm.get('markerIconForm').valueChanges.subscribe(icon => {
-      this.icon = icon;
-      this.displayMapMarker();
+      this.displayMapMarker(icon);
       this.disableIconButtons = false;
     });
-
-    if (!!this.icon) {
-      this.displayMapMarker();
-    }
   }
 
   ngOnDestroy(): void {
@@ -215,36 +201,39 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   buildDeviceForm(deviceId: string, accountId: string) {
     this.deviceService.fetchAccountDevice(accountId, deviceId)
-      .then((deviceDto: DeviceDto) => {
-        if (!!deviceDto) {
-          if (!!!deviceDto.markerIcon) {
-            deviceDto.markerIcon = this.getDefaultMarkerIcon();
+      .then((snap) => {
+        if (snap.exists) {
+          const deviceDoc: AccountDeviceDoc = snap.data();
+          if (!!!deviceDoc.markerIcon) {
+            deviceDoc.markerIcon = this.defaultIcon;
+          } else {
+            this.disableIconButtons = false;
           }
-          this.icon = deviceDto.markerIcon;
           this.deviceForm.setValue(
             {
-              active: deviceDto.active,
-              name: deviceDto.name,
-              deviceId: deviceDto.deviceId,
+              active: deviceDoc.active,
+              name: deviceDoc.name,
+              deviceId: deviceDoc.deviceId,
               markerIconForm: {
-                path: this.iconMap.get(deviceDto.markerIcon.path),
-                scale: deviceDto.markerIcon.scale,
-                fillColor: deviceDto.markerIcon.fillColor,
-                fillOpacity: deviceDto.markerIcon.fillOpacity,
-                strokeColor: deviceDto.markerIcon.strokeColor,
-                strokeWeight: deviceDto.markerIcon.strokeWeight,
-                strokeOpacity: deviceDto.markerIcon.strokeOpacity,
+                path: deviceDoc.markerIcon.path,
+                scale: deviceDoc.markerIcon.scale,
+                fillColor: deviceDoc.markerIcon.fillColor,
+                fillOpacity: deviceDoc.markerIcon.fillOpacity,
+                strokeColor: deviceDoc.markerIcon.strokeColor,
+                strokeWeight: deviceDoc.markerIcon.strokeWeight,
+                strokeOpacity: deviceDoc.markerIcon.strokeOpacity,
                 rotation: 0
               },
-              modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
-              createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
-              comment: deviceDto.comment ? deviceDto.comment : '',
+              modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDoc.modifiedAt), 'long'),
+              createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDoc.createdAt), 'long'),
+              comment: deviceDoc.comment ? deviceDoc.comment : '',
             },
             {
               emitEvent: false
             });
 
-          this.active.setValue(deviceDto.active);
+          this.active.setValue(deviceDoc.active);
+          this.displayMapMarker(deviceDoc.markerIcon);
         } else {
           this.router.navigate([`./setup/${this.returnPath}`]);
         }
@@ -263,7 +252,7 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
         active: true,
         name: '',
         deviceId: '',
-        markerIconForm: this.icon,
+        markerIconForm: this.defaultIcon,
         modifiedAt: null,
         createdAt: null,
         comment: ''
@@ -271,6 +260,7 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         emitEvent: false
       });
+    this.displayMapMarker(this.defaultIcon);
   }
 
   getByValue(map, searchValue) {
@@ -281,42 +271,46 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  displayMapMarker() {
+  displayMapMarker(icon) {
     this.map = new google.maps.Map(this.gmap.nativeElement, DeviceComponent.mapOptions);
     const marker = new google.maps.Marker({
       position: DeviceComponent.coordinates,
-      icon: this.icon,
+      icon: icon,
       draggable: true
     });
     marker.setMap(this.map);
   }
 
-  getDefaultMarkerIcon() {
-    this.icon = Object.assign({}, BASE_MARKER_ICON);  // TODO: Use default markerIconForm when available
-    return this.icon;
-  }
-
   onUseDefaultMarkerIconClick() {
     this.msg = '';
     const obj = this.deviceForm.getRawValue();
-    obj.markerIconForm = this.getDefaultMarkerIcon();
+    obj.markerIconForm = this.defaultIcon;
     this.deviceForm.setValue(obj, {emitEvent: false});
-    this.displayMapMarker();
+    this.displayMapMarker(this.defaultIcon);
     this.disableIconButtons = true;
+    this.iconUpdated = true;
   }
 
   onMakeDefaultMarkerIconClick() {
     this.msg = '';
-    this.deviceService.saveDeviceDefaultMarkerIcon(this.icon);
+    this.defaultIcon = this.deviceForm.getRawValue().markerIconForm;
+    this.deviceService.saveDeviceDefaultMarkerIcon(this.defaultIcon);
     this.disableIconButtons = true;
+    this.iconUpdated = true;
   }
 
   public onSubmit() {
     this.msg = '';
     const formGroup = this.deviceForm;
-    const deviceDto = <DeviceDto>{
+    let markerIcon: MarkerIcon = null;
+    if (!this.disableIconButtons) {
+      markerIcon = formGroup.get('markerIconForm').value;  // Using device-custom icon
+    }
+    const deviceDto = <AccountDeviceDoc>{
+      accountId: this.accountId,
       name: formGroup.get('name').value,
       deviceId: formGroup.get('deviceId').value,
+      markerIcon: markerIcon,
       comment: formGroup.get('comment').value,
       active: this.active.value
     };
@@ -340,7 +334,7 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     this.location.back();
   }
 
-  confirmAddDevice(deviceDto: DeviceDto) {
+  confirmAddDevice(deviceDto: AccountDeviceDoc) {
     const dlg = this.dialog.open(ConfirmationDlgComponent, {
       data: {
         title: 'Confirm Add Device',

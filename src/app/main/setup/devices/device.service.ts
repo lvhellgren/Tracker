@@ -34,10 +34,10 @@ import { BASE_MARKER_ICON, DEVICE_DEFAULTS_KEY, MarkerIcon } from '../../../sevi
 export interface DeviceDto {
   name?: string;
   deviceId?: string;
+  markerIcon?: MarkerIcon;
   comment?: string;
   active?: boolean;
-  accountId?: String;
-  markerIcon?: any;
+  accountId?: string;
   modifiedAt?: any;
   createdAt?: any;
 }
@@ -48,6 +48,7 @@ export interface AccountDeviceDoc {
   deviceId: string;
   active: boolean;
   markerIcon?: MarkerIcon;
+  comment?: string;
   modifiedAt: any;
   createdAt?: any;
 }
@@ -56,8 +57,11 @@ export const DEVICES = 'devices';
 export const ACCOUNT_DEVICES = 'account-devices';
 
 interface DeviceDoc {
+  accountId: string;
   name: string;
   deviceId: string;
+  active: boolean;
+  markerIcon?: MarkerIcon;
   comment?: string;
   modifiedAt: any;
   createdAt?: any;
@@ -108,14 +112,19 @@ export class DeviceService {
       name: deviceDto.name,
       deviceId: deviceDto.deviceId,
       active: deviceDto.active,
+      markerIcon: deviceDto.markerIcon,
+      comment: deviceDto.comment,
       modifiedAt: this.timestamp
     };
   }
 
   static buildDeviceDoc(deviceDto: DeviceDto): DeviceDoc {
     return {
+      active: deviceDto.active,
+      accountId: deviceDto.accountId,
       name: deviceDto.name,
       deviceId: deviceDto.deviceId,
+      markerIcon: deviceDto.markerIcon,
       comment: deviceDto.comment,
       modifiedAt: this.timestamp,
       createdAt: deviceDto.createdAt
@@ -207,19 +216,25 @@ export class DeviceService {
    * @param accountId
    * @param deviceId
    */
-  async fetchAccountDevice(accountId: string, deviceId: string) {
+  // async fetchAccountDeviceX(accountId: string, deviceId: string) {
+  //   this.deviceId = deviceId;
+  //   const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, deviceId);
+  //
+  //   const snaps = await Promise.all([
+  //     this.devicesRef.doc(deviceId).get(),
+  //     this.accountDevicesRef.doc(accountDeviceKey).get()
+  //   ]);
+  //
+  //   return DeviceService.buildDeviceDto(snaps[0].data(), snaps[1].data());
+  // }
+
+  fetchAccountDevice(accountId: string, deviceId: string) {
     this.deviceId = deviceId;
     const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, deviceId);
-
-    const snaps = await Promise.all([
-      this.devicesRef.doc(deviceId).get(),
-      this.accountDevicesRef.doc(accountDeviceKey).get()
-    ]);
-
-    return DeviceService.buildDeviceDto(snaps[0].data(), snaps[1].data());
+    return this.accountDevicesRef.doc(accountDeviceKey).get();
   }
 
-  saveDevice(deviceDto: DeviceDto, returnPath: string) {
+  saveDevice(deviceDto: AccountDeviceDoc, returnPath: string) {
     const accountId = this.authService.currentUserAccountId;
     const deviceId = this.deviceId = deviceDto.deviceId;
     const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, deviceId);

@@ -25,6 +25,18 @@ export const BASE_MARKER_ICON = {
 
 export const DEVICE_DEFAULTS_KEY = 'device_defaults';
 
+export const SHAPE_NAMES = [
+  {id: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, name: 'Closed Arrow'},
+  {id: google.maps.SymbolPath.FORWARD_OPEN_ARROW, name: 'Open Arrow'},
+  {id: google.maps.SymbolPath.CIRCLE, name: 'Circle'}
+];
+
+// iconMap = new Map([
+//   [google.maps.SymbolPath.FORWARD_CLOSED_ARROW.valueOf(), google.maps.SymbolPath.FORWARD_CLOSED_ARROW],
+//   [google.maps.SymbolPath.FORWARD_OPEN_ARROW.valueOf(), google.maps.SymbolPath.FORWARD_OPEN_ARROW],
+//   [google.maps.SymbolPath.CIRCLE.valueOf(), google.maps.SymbolPath.CIRCLE]
+// ]);
+
 @Injectable({
   providedIn: 'root'
 })
