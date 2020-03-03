@@ -89,13 +89,15 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   map: google.maps.Map;
   icon;
+  deviceId: string;
+  accountId: string;
   disableIconButtons = true;
 
   routeSubscription: Subscription;
   deviceSubscription: Subscription;
   msgSubscription: Subscription;
   deviceAccountSubscription: Subscription;
-  deviceDefaultSavedSubscription: Subscription;
+  defaultDeviceMarkerIcon: Subscription;
 
   static toDate(ts: any) {
     let date: Date;
@@ -147,83 +149,35 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWeight: [0],
         strokeOpacity: [0],
         rotation: [0]
-        }),
+      }),
       comment: ['']
     });
 
     this.route.params.subscribe((params: Params) => {
-      const deviceId = params['id'] ? params['id'] : this.deviceService.getDeviceId();
+      this.deviceId = params['id'] ? params['id'] : this.deviceService.getDeviceId();
 
       this.deviceAccountSubscription = this.authService.userAccountSelect.subscribe((accountId: string) => {
-        if (deviceId) {
-          this.deviceService.fetchAccountDevice(accountId, deviceId)
-            .then((deviceDto: DeviceDto) => {
-              if (!!deviceDto) {
-                if (!!!deviceDto.markerIcon) {
-                  deviceDto.markerIcon = this.getDefaultMarkerIcon();
-                }
-                this.icon = deviceDto.markerIcon;
-                this.deviceForm.setValue(
-                  {
-                    active: deviceDto.active,
-                    name: deviceDto.name,
-                    deviceId: deviceDto.deviceId,
-                    markerIconForm: {
-                      path: this.iconMap.get(deviceDto.markerIcon.path),
-                      scale: deviceDto.markerIcon.scale,
-                      fillColor: deviceDto.markerIcon.fillColor,
-                      fillOpacity: deviceDto.markerIcon.fillOpacity,
-                      strokeColor: deviceDto.markerIcon.strokeColor,
-                      strokeWeight: deviceDto.markerIcon.strokeWeight,
-                      strokeOpacity: deviceDto.markerIcon.strokeOpacity,
-                      rotation: 0
-                    },
-                    modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
-                    createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
-                    comment: deviceDto.comment ? deviceDto.comment : '',
-                  },
-                  {
-                    emitEvent: false
-                  });
-
-                this.active.setValue(deviceDto.active);
-              } else {
-                this.router.navigate([`./setup/${this.returnPath}`]);
-              }
-            })
-            .catch(error => {
-              this.dialog.open(ErrorDlgComponent, {
-                data: {msg: error}
-              });
-            });
-        } else {
-          this.active.setValue(true);
-          this.icon = this.getDefaultMarkerIcon();
-          this.deviceForm.setValue(
-            {
-              active: true,
-              name: '',
-              deviceId: '',
-              markerIconForm: this.icon,
-              modifiedAt: null,
-              createdAt: null,
-              comment: ''
-            },
-            {
-              emitEvent: false
-            });
+        if (!!accountId) {
+          this.accountId = accountId;
+          this.deviceService.fetchDefaultMapMarkerIcon(accountId);
         }
-;      });
+      });
 
-      this.createDevice = !deviceId;
+      this.createDevice = !!!this.deviceId;
+    });
+
+    this.defaultDeviceMarkerIcon = this.deviceService.defaultDeviceMarkerIcon$.subscribe(icon => {
+      this.icon = icon;
+      if (this.deviceId) {
+        this.buildDeviceForm(this.deviceId, this.accountId);
+      } else {
+        this.buildEmptyForm();
+      }
+      this.displayMapMarker();
     });
 
     this.msgSubscription = this.deviceService.msg$.subscribe(msg => {
       this.msg = msg;
-    });
-
-    this.deviceDefaultSavedSubscription = this.deviceService.deviceDefaultSaved$.subscribe(success => {
-      console.log(success);
     });
 
     this.helpService.component$.next(ACT_DEVICE);
@@ -231,7 +185,6 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.deviceForm.get('markerIconForm').valueChanges.subscribe(icon => {
-      console.dir(icon);
       this.icon = icon;
       this.displayMapMarker();
       this.disableIconButtons = false;
@@ -239,24 +192,6 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!!this.icon) {
       this.displayMapMarker();
-    }
-
-    // this.useDefaultIcon.valueChanges.subscribe( isChecked => {
-    //   console.log(`useDefaultIcon.valueChanges - isAfterViewInit: ${this.isAfterViewInit}, isChecked: ${isChecked} `);
-    //   if (this.isAfterViewInit && isChecked) {
-    //     const deviceObj = this.deviceForm.getRawValue();
-    //     deviceObj.markerIconForm = this.getDefaultMarkerIcon();
-    //     console.dir(deviceObj);
-    //     this.deviceForm.setValue(deviceObj);
-    //   }
-    // });
-  }
-
-  getByValue(map, searchValue) {
-    for (const [key, value] of map.entries()) {
-      if (value === searchValue) {
-        return key;
-      }
     }
   }
 
@@ -273,8 +208,76 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.msgSubscription) {
       this.msgSubscription.unsubscribe();
     }
-    if (this.deviceDefaultSavedSubscription) {
-      this.deviceDefaultSavedSubscription.unsubscribe();
+    if (this.defaultDeviceMarkerIcon) {
+      this.defaultDeviceMarkerIcon.unsubscribe();
+    }
+  }
+
+  buildDeviceForm(deviceId: string, accountId: string) {
+    this.deviceService.fetchAccountDevice(accountId, deviceId)
+      .then((deviceDto: DeviceDto) => {
+        if (!!deviceDto) {
+          if (!!!deviceDto.markerIcon) {
+            deviceDto.markerIcon = this.getDefaultMarkerIcon();
+          }
+          this.icon = deviceDto.markerIcon;
+          this.deviceForm.setValue(
+            {
+              active: deviceDto.active,
+              name: deviceDto.name,
+              deviceId: deviceDto.deviceId,
+              markerIconForm: {
+                path: this.iconMap.get(deviceDto.markerIcon.path),
+                scale: deviceDto.markerIcon.scale,
+                fillColor: deviceDto.markerIcon.fillColor,
+                fillOpacity: deviceDto.markerIcon.fillOpacity,
+                strokeColor: deviceDto.markerIcon.strokeColor,
+                strokeWeight: deviceDto.markerIcon.strokeWeight,
+                strokeOpacity: deviceDto.markerIcon.strokeOpacity,
+                rotation: 0
+              },
+              modifiedAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.modifiedAt), 'long'),
+              createdAt: this.datePipe.transform(DeviceComponent.toDate(deviceDto.createdAt), 'long'),
+              comment: deviceDto.comment ? deviceDto.comment : '',
+            },
+            {
+              emitEvent: false
+            });
+
+          this.active.setValue(deviceDto.active);
+        } else {
+          this.router.navigate([`./setup/${this.returnPath}`]);
+        }
+      })
+      .catch(error => {
+        this.dialog.open(ErrorDlgComponent, {
+          data: {msg: error}
+        });
+      });
+  }
+
+  buildEmptyForm() {
+    this.active.setValue(true);
+    this.deviceForm.setValue(
+      {
+        active: true,
+        name: '',
+        deviceId: '',
+        markerIconForm: this.icon,
+        modifiedAt: null,
+        createdAt: null,
+        comment: ''
+      },
+      {
+        emitEvent: false
+      });
+  }
+
+  getByValue(map, searchValue) {
+    for (const [key, value] of map.entries()) {
+      if (value === searchValue) {
+        return key;
+      }
     }
   }
 
