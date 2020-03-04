@@ -29,7 +29,6 @@ import * as Accounts from './db/Accounts';
 import * as AccountSubscriptions from './db/AccountSubscriptions';
 import * as AccountUsers from './db/AccountUsers';
 import * as DeviceEvents from './db/DeviceEvents';
-import * as Devices from './db/Devices';
 import * as Notifications from './db/Notifications';
 import * as Subscribers from './db/Subscribers';
 
@@ -46,8 +45,6 @@ export const onCreateSubscriber = Subscribers.onCreateSubscriber;
 export const onDeleteAccountLandmark = AccountLandmarks.onDeleteAccountLandmark;
 export const onDeleteAccountSubscription = AccountSubscriptions.onDeleteAccountSubscription;
 export const onDeleteSubscriber = Subscribers.onDeleteSubscriber;
-
-export const onWriteDevice = Devices.onWriteDevice;
 
 //
 // Schedule functions

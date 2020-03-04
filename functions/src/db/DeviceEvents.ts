@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { DEVICES_COLL } from './Devices';
 import { LAST_MOVES_COLL } from './LastMoves';
 import { Landmark, ACCOUNT_LANDMARKS_COLL } from './AccountLandmarks';
 import * as Log from './Log';
@@ -12,6 +11,7 @@ import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 import FieldValue = admin.firestore.FieldValue;
 import { updateAccountTraffic } from './AccountTraffic';
+import { ACCOUNT_DEVICES_COLL } from './AccountDevices';
 
 export interface DeviceEvent {
   accountId?: string;
@@ -45,7 +45,7 @@ export const onCreateDeviceEvent = functions.firestore
   });
 
 function handleNewDeviceEvent(deviceEventSnap: DocumentSnapshot, deviceEvent: DeviceEvent) {
-  return DEVICES_COLL.where('deviceId', '==', deviceEvent.deviceId).get()
+  return ACCOUNT_DEVICES_COLL.where('deviceId', '==', deviceEvent.deviceId).get()
     .then((deviceSnapshot) => {
       // Insert the device name into tha data object
       if (deviceSnapshot) {

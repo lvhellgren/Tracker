@@ -306,7 +306,7 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.disableIconButtons) {
       markerIcon = formGroup.get('markerIconForm').value;  // Using device-custom icon
     }
-    const deviceDto = <AccountDeviceDoc>{
+    const deviceDoc = <AccountDeviceDoc>{
       accountId: this.accountId,
       name: formGroup.get('name').value,
       deviceId: formGroup.get('deviceId').value,
@@ -316,9 +316,9 @@ export class DeviceComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.createDevice) {
-      this.confirmAddDevice(deviceDto);
+      this.confirmAddDevice(deviceDoc);
     } else {
-      this.deviceService.saveDevice(deviceDto, this.returnPath);
+      this.deviceService.saveDevice(deviceDoc, this.returnPath);
     }
   }
 

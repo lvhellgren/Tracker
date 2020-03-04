@@ -27,7 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DeviceDto, DeviceService } from '../device.service';
+import { AccountDeviceDoc, DeviceService } from '../device.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
@@ -41,7 +41,7 @@ import { HelpService, PRINC_DEVICES } from '../../../../drawers/help/help.servic
 export class AllDevicesComponent implements OnInit, OnDestroy {
 
   deviceSubscription: Subscription;
-  dataSource = new MatTableDataSource<DeviceDto>();
+  dataSource = new MatTableDataSource<AccountDeviceDoc>();
 
   displayedColumns = ['name', 'deviceId', 'accountId', 'active'];
 
@@ -61,7 +61,7 @@ export class AllDevicesComponent implements OnInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.deviceSubscription = this.deviceService.fetchAllDevices$().subscribe((devices: DeviceDto[]) => {
+    this.deviceSubscription = this.deviceService.allDevices$().subscribe((devices: AccountDeviceDoc[]) => {
       this.dataSource.data = devices;
     });
 

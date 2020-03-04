@@ -29,7 +29,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
-import { DeviceDto, DeviceService } from '../device.service';
+import { AccountDeviceDoc, DeviceService } from '../device.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ACT_DEVICES, HelpService } from '../../../../drawers/help/help.service';
 
@@ -42,7 +42,7 @@ export class AccountDevicesComponent implements OnInit, OnDestroy {
 
   deviceSubscription: Subscription;
   accountSubscription: Subscription;
-  dataSource = new MatTableDataSource<DeviceDto>();
+  dataSource = new MatTableDataSource<AccountDeviceDoc>();
 
   displayedColumns = ['name', 'deviceId', 'active'];
 
@@ -63,11 +63,9 @@ export class AccountDevicesComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
 
     this.accountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
-      this.deviceService.fetchAccountDevices(accountId);
-    });
-
-    this.deviceSubscription = this.deviceService.accountDevices$.subscribe(devices => {
-      this.dataSource.data = devices;
+      this.deviceSubscription = this.deviceService.accountDevices$(accountId).subscribe((devices: AccountDeviceDoc[]) => {
+        this.dataSource.data = devices;
+      });
     });
 
     this.helpService.component$.next(ACT_DEVICES);
