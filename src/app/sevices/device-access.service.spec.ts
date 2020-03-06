@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DeviceAccessService } from './device-access.service';
+import { MapmarkerService } from './mapmarker.service';
 
 describe('DeviceAccessService', () => {
-  let service: DeviceAccessService;
+  let service: MapmarkerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DeviceAccessService);
+    service = TestBed.inject(MapmarkerService);
   });
 
   it('should be created', () => {

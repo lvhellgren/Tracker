@@ -1,28 +1,5 @@
 <mat-card>
   <mat-card-content mat-elevation-z4>
-    <agm-map #sebMap
-             [fitBounds]="true"
-             [zoom]="zoom"
-             (mapClick)="onMapClick($event)">
-      <div *ngFor="let item of items">
-        <agm-marker
-          [latitude]="item.latitude"
-          [longitude]="item.longitude"
-          [iconUrl]="item.iconUrl"
-          [animation]="item.animation"
-          [agmFitBounds]="true"
-          (mouseOver)="onMouseOver(infoWindow)"
-          (mouseOut)="onMouseOut(infoWindow)"
-          (markerClick)="onMarkerClick(item)"
-          (markerDblClick)="onMarkerDblClick(item)">
-          <agm-info-window [disableAutoPan]="false" #infoWindow>
-            <div>
-              {{item.deviceName}}<br/>
-              {{item.deviceTime | timestampToDate | date:'MM-dd-yyyy, HH:mm'}}
-            </div>
-          </agm-info-window>
-        </agm-marker>
-      </div>
-    </agm-map>
+    <div #mapContainer id="map"></div>
   </mat-card-content>
 </mat-card>

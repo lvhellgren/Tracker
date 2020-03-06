@@ -33,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../../core/error-dlg/error-dlg.component';
 import { ACT_DEVICE, HelpService } from '../../../../drawers/help/help.service';
 import { GlobalService } from '../../../../sevices/global';
-import { MarkerIcon, SHAPE_NAMES } from '../../../../sevices/device-access.service';
+import { MarkerIcon, SHAPE_NAMES } from '../../../../sevices/mapmarker.service';
 
 
 @Component({

@@ -6,23 +6,23 @@ import { DeviceEvent } from '../unit.service';
   providedIn: 'root'
 })
 export class UnitsMapService {
-  /**
-   * A Subject acts as both observable and observer (consumer).
-   * @type {Subject<DeviceEvent[]>}
-   */
-  private source = new BehaviorSubject<DeviceEvent[]>([]);
+  private mapUpdates = new BehaviorSubject<DeviceEvent[]>([]);
+  mapUpdates$ = this.mapUpdates.asObservable();
+
+  private tableRowSelect = new Subject<DeviceEvent>();
+  tableRowSelect$ = this.tableRowSelect.asObservable();
 
   /**
-   * Subscribe to mapUpdates$ to process notifications of when to update the map view.
-   * Note that, when a Subject acts as an observer all subscribers get the same data multicast.
-   * @type {Observable<any[]>}
+   * Issues map update notifications to observers of tableRowSelect$.
    */
-  mapUpdates$ = this.source.asObservable();
+  updateMap<T>(deviceEvents: DeviceEvent[]) {
+    this.mapUpdates.next(deviceEvents);
+  }
 
   /**
-   * Makes the subject deliver notifications to the observers.
+   * Issues table row selected notifications to observers of tableRowSelect$.
    */
-  setMarkers<T>(markers: DeviceEvent[]) {
-    this.source.next(markers);
+  tableRowSelected<T>(deviceEvent: DeviceEvent) {
+    this.tableRowSelect.next(deviceEvent);
   }
 }

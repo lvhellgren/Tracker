@@ -29,9 +29,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ACCOUNT_DEVICES, AccountDeviceDoc } from '../devices/device.service';
 import { SubscriberService } from '../subscribers/subscriber.service';
 import { ACCOUNT_LANDMARKS, AccountLandmarkDoc, LandmarkService } from '../landmarks/landmark.service';
+import { ACCOUNT_DEVICES } from '../../../sevices/mapmarker.service';
+import { AccountDeviceDoc } from '../devices/device.service';
 
 export interface SubscriptionDoc {
   active?: string;

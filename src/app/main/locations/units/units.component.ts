@@ -49,7 +49,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private tapCount = 0;
 
-  private accountSubscription: Subscription;
+  private accountChange: Subscription;
   private lastMoveSubscription: Subscription;
 
   constructor(private authService: AuthService,
@@ -63,14 +63,14 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     // Issue last-moves fetch request for the selected account:
-    this.accountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
+    this.accountChange = this.authService.userAccountSelect.subscribe(accountId => {
       this.unitService.fetchLastMoves(accountId);
     });
 
     // Receive response to last-moves fetch request:
     this.lastMoveSubscription = this.unitService.lastMoves$.subscribe((deviceEvents: DeviceEvent[]) => {
       this.dataSource.data = deviceEvents;
-      this.mapService.setMarkers(deviceEvents);
+      this.mapService.updateMap(deviceEvents);
     });
 
     this.helpService.component$.next(LOC_UNITS);
@@ -82,8 +82,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.accountSubscription) {
-      this.accountSubscription.unsubscribe();
+    if (this.accountChange) {
+      this.accountChange.unsubscribe();
     }
     if (this.lastMoveSubscription) {
       this.lastMoveSubscription.unsubscribe();
@@ -111,7 +111,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onRowClick(deviceEvent: DeviceEvent) {
     this.unitService.currentDeviceEvent = <DeviceEvent>deviceEvent;
-    this.mapService.setMarkers(this.dataSource.data);
+    this.mapService.tableRowSelected(deviceEvent);
   }
 
   onRowDblClick(deviceEvent: DeviceEvent) {
@@ -137,7 +137,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rowBackground(row) {
     let bg = '';
-    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.deviceId === row.deviceId) {
+    if (row && this.unitService.currentDeviceEvent?.deviceId === row.deviceId) {
       bg = '#3f51b5';
     }
     return bg;
@@ -145,7 +145,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rowColor(row) {
     let c = '';
-    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.deviceId === row.deviceId) {
+    if (row && this.unitService.currentDeviceEvent?.deviceId === row.deviceId) {
       c = 'white';
     }
     return c;

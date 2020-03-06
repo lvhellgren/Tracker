@@ -29,7 +29,7 @@ import * as firebase from 'firebase';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/auth/auth.service';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
-import { BASE_MARKER_ICON, DEVICE_DEFAULTS_KEY, MarkerIcon } from '../../../sevices/device-access.service';
+import { ACCOUNT_DEVICES, BASE_MARKER_ICON, DEVICE_DEFAULTS_KEY, MapmarkerService, MarkerIcon } from '../../../sevices/mapmarker.service';
 
 
 export interface AccountDeviceDoc {
@@ -43,8 +43,6 @@ export interface AccountDeviceDoc {
   createdAt?: any;
 }
 
-export const ACCOUNT_DEVICES = 'account-devices';
-
 @Injectable()
 export class DeviceService {
   private db;
@@ -55,10 +53,6 @@ export class DeviceService {
 
   private defaultDeviceMarkerIcon = new Subject<any>();
   defaultDeviceMarkerIcon$ = this.defaultDeviceMarkerIcon.asObservable();
-
-  static makeAccountDeviceKey(accountId: String, deviceId: String): String {
-    return `${accountId}:${deviceId}`;
-  }
 
   static get timestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
@@ -91,14 +85,14 @@ export class DeviceService {
 
   fetchAccountDevice(accountId: string, deviceId: string) {
     this.deviceId = deviceId;
-    const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, deviceId);
+    const accountDeviceKey = MapmarkerService.makeAccountDeviceKey(accountId, deviceId);
     return this.accountDevicesRef.doc(accountDeviceKey).get();
   }
 
   saveDevice(deviceDoc: AccountDeviceDoc, returnPath: string) {
     const accountId = this.authService.currentUserAccountId;
     const deviceId = this.deviceId = deviceDoc.deviceId;
-    const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, deviceId);
+    const accountDeviceKey = MapmarkerService.makeAccountDeviceKey(accountId, deviceId);
 
     this.accountDevicesRef.doc(accountDeviceKey).get().then((snap) => {
       if (!snap.exists) {
@@ -118,7 +112,7 @@ export class DeviceService {
   }
 
   fetchDefaultMapMarkerIcon(accountId: string) {
-    const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, DEVICE_DEFAULTS_KEY);
+    const accountDeviceKey = MapmarkerService.makeAccountDeviceKey(accountId, DEVICE_DEFAULTS_KEY);
     this.accountDevicesRef.doc(accountDeviceKey).get()
       .then((snap) => {
         let icon;
@@ -138,7 +132,7 @@ export class DeviceService {
 
   saveDeviceDefaultMarkerIcon(markerIcon: Object) {
     const accountId = this.authService.currentUserAccountId;
-    const accountDeviceKey = DeviceService.makeAccountDeviceKey(accountId, DEVICE_DEFAULTS_KEY);
+    const accountDeviceKey = MapmarkerService.makeAccountDeviceKey(accountId, DEVICE_DEFAULTS_KEY);
     this.accountDevicesRef.doc(accountDeviceKey).set({markerIcon: markerIcon}, {merge: true})
       .then(() => {
         this.msg$.next(`Default marker icon saved`);
