@@ -47,7 +47,6 @@ export class MapmarkerService {
   }
 
   constructor() {
-    console.log('constructor');
   }
 
   getEndpointMarkerIcon(markerIcon: google.maps.Symbol) {
