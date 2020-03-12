@@ -69,8 +69,10 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Receive response to last-moves fetch request:
     this.lastMoveSubscription = this.unitService.lastMoves$.subscribe((deviceEvents: DeviceEvent[]) => {
-      this.dataSource.data = deviceEvents;
-      this.mapService.updateMap(deviceEvents);
+      if (deviceEvents.length > 0) {
+        this.dataSource.data = deviceEvents;
+        this.mapService.updateMap(deviceEvents);
+      }
     });
 
     this.helpService.component$.next(LOC_UNITS);

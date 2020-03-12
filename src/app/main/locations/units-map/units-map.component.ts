@@ -57,7 +57,9 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // Draw the map:
     this.mapUpdate = this.mapService.mapUpdates$.subscribe((deviceEvents: DeviceEvent[]) => {
-      this.createMap(deviceEvents);
+      if (deviceEvents.length > 0) {
+        this.createMap(deviceEvents);
+      }
     });
 
     // Identify the marker for the selected row:
@@ -80,35 +82,33 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   createMap(deviceEvents: DeviceEvent[]) {
-    if (deviceEvents.length > 0) {
-      const mapOptions: google.maps.MapOptions = {
-        center: new google.maps.LatLng(deviceEvents[0].latitude, deviceEvents[0].longitude),
-      };
+    const mapOptions: google.maps.MapOptions = {
+      center: new google.maps.LatLng(deviceEvents[0].latitude, deviceEvents[0].longitude),
+    };
 
-      this.map = new google.maps.Map(this.gMap.nativeElement, mapOptions);
-      this.markers = new Map();
-      this.bounds = {east: -180, north: 0, south: 90, west: 0};
+    this.map = new google.maps.Map(this.gMap.nativeElement, mapOptions);
+    this.markers = new Map();
+    this.bounds = {east: -180, north: 0, south: 90, west: 0};
 
-      deviceEvents.forEach((deviceEvent: DeviceEvent) => {
-        this.createMarker(deviceEvent, this.map);
+    deviceEvents.forEach((deviceEvent: DeviceEvent) => {
+      this.createMarker(deviceEvent, this.map);
 
-        if (deviceEvent.longitude > this.bounds.east) {
-          this.bounds.east = deviceEvent.longitude;
-        }
-        if (deviceEvent.longitude < this.bounds.west) {
-          this.bounds.west = deviceEvent.longitude;
-        }
-        if (deviceEvent.latitude > this.bounds.north) {
-          this.bounds.north = deviceEvent.latitude;
-        }
-        if (deviceEvent.latitude < this.bounds.south) {
-          this.bounds.south = deviceEvent.latitude;
-        }
-      });
-
-      if (deviceEvents.length > 1) {
-        this.map.fitBounds(this.bounds);
+      if (deviceEvent.longitude > this.bounds.east) {
+        this.bounds.east = deviceEvent.longitude;
       }
+      if (deviceEvent.longitude < this.bounds.west) {
+        this.bounds.west = deviceEvent.longitude;
+      }
+      if (deviceEvent.latitude > this.bounds.north) {
+        this.bounds.north = deviceEvent.latitude;
+      }
+      if (deviceEvent.latitude < this.bounds.south) {
+        this.bounds.south = deviceEvent.latitude;
+      }
+    });
+
+    if (deviceEvents.length > 0) {
+      this.map.fitBounds(this.bounds);
     }
   }
 
@@ -146,7 +146,6 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         marker.addListener('click', () => {
-          map.setZoom(14);
           map.setCenter(marker.getPosition());
         });
 

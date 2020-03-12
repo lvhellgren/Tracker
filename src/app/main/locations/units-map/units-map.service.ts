@@ -7,22 +7,22 @@ import { DeviceEvent } from '../unit.service';
 })
 export class UnitsMapService {
   private mapUpdates = new BehaviorSubject<DeviceEvent[]>([]);
-  mapUpdates$ = this.mapUpdates.asObservable();
+  public mapUpdates$ = this.mapUpdates.asObservable();
 
   private tableRowSelect = new Subject<DeviceEvent>();
-  tableRowSelect$ = this.tableRowSelect.asObservable();
+  public tableRowSelect$ = this.tableRowSelect.asObservable();
 
   /**
    * Issues map update notifications to observers of tableRowSelect$.
    */
-  updateMap<T>(deviceEvents: DeviceEvent[]) {
+  public updateMap<T>(deviceEvents: DeviceEvent[]) {
     this.mapUpdates.next(deviceEvents);
   }
 
   /**
    * Issues table row selected notifications to observers of tableRowSelect$.
    */
-  tableRowSelected<T>(deviceEvent: DeviceEvent) {
+  public tableRowSelected<T>(deviceEvent: DeviceEvent) {
     this.tableRowSelect.next(deviceEvent);
   }
 }
