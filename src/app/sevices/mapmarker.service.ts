@@ -62,12 +62,15 @@ export class MapmarkerService {
   }
 
   async getDeviceMarkerIcon(accountId: string, deviceId: string) {
-    if (this.deviceId === deviceId && !!this.markerIcon) {
-      return this.markerIcon;
+    if (this.deviceId === deviceId) {
+      if (!!this.markerIcon) {
+        return this.markerIcon;
+      }
     } else {
       this.deviceId = deviceId;
-      return await this.fetchDeviceMarkerIcon(accountId, deviceId);
+      this.markerIcon = null;
     }
+    return await this.fetchDeviceMarkerIcon(accountId, deviceId);
   }
 
   fetchDeviceMarkerIcon(accountId: string, deviceId: string) {
