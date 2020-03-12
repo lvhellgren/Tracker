@@ -44,7 +44,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   private tapCount = 0;
 
-  private accountChange: Subscription;
+  private accountChangeSubscription: Subscription;
   private routeSubscription: Subscription;
   private historySubscription: Subscription;
   private userPreferencesSubscription: Subscription;
@@ -61,7 +61,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Check for a different account being selected:
-    this.accountChange = this.authService.userAccountSelect.subscribe(accountId => {
+    this.accountChangeSubscription = this.authService.userAccountSelect.subscribe(accountId => {
       if (!!!this.accountId) {
         this.accountId = accountId;
       } else if (this.accountId !== accountId) {
@@ -110,8 +110,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
-    if (this.accountChange) {
-      this.accountChange.unsubscribe();
+    if (this.accountChangeSubscription) {
+      this.accountChangeSubscription.unsubscribe();
     }
     if (this.historySubscription) {
       this.historySubscription.unsubscribe();

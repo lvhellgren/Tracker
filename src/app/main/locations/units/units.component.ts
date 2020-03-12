@@ -49,7 +49,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private tapCount = 0;
 
-  private accountChange: Subscription;
+  private accountChangeSubscription: Subscription;
   private lastMoveSubscription: Subscription;
 
   constructor(private authService: AuthService,
@@ -63,7 +63,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     // Issue last-moves fetch request for the selected account:
-    this.accountChange = this.authService.userAccountSelect.subscribe(accountId => {
+    this.accountChangeSubscription = this.authService.userAccountSelect.subscribe(accountId => {
       this.unitService.fetchLastMoves(accountId);
     });
 
@@ -82,8 +82,8 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.accountChange) {
-      this.accountChange.unsubscribe();
+    if (this.accountChangeSubscription) {
+      this.accountChangeSubscription.unsubscribe();
     }
     if (this.lastMoveSubscription) {
       this.lastMoveSubscription.unsubscribe();
