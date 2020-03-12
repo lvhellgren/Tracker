@@ -1,136 +1,179 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UnitsMapService } from './units-map.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalService } from '../../../sevices/global';
-import { DeviceEvent, UnitService } from '../unit.service';
+import { DeviceEvent } from '../unit.service';
+import { BASE_MARKER_ICON, MapmarkerService } from '../../../sevices/mapmarker.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { DatePipe } from '@angular/common';
+import LatLngBoundsLiteral = google.maps.LatLngBoundsLiteral;
 
-interface MarkerEvent extends DeviceEvent {
-  iconUrl?: {};
-  animation?: string;
-}
 
 @Component({
   templateUrl: './units-map.component.html',
   styleUrls: ['./units-map.component.css']
 })
-export class UnitsMapComponent implements OnInit, OnDestroy {
-  mapSubscription: Subscription;
-  items: MarkerEvent[] = [];
-  latitude = 0;
-  longitude = 0;
-  zoom = 4;
+export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('mapContainer')
+  private gMap: ElementRef;
 
-  colorSelected = 'red';
-  colorUnselected = 'blue';
+  private accountId: string;
+  private defaultMarkerIcon;
 
-  constructor(public unitService: UnitService,
-              private mapService: UnitsMapService,
-              private global: GlobalService,
-              private router: Router) {
+  private accountChange: Subscription;
+  private mapUpdate: Subscription;
+  private markerUpdate: Subscription;
+  private map;
+  private markers: Map<string, any>;
+  private bounds: LatLngBoundsLiteral;
+
+  constructor(private authService: AuthService,
+              private datePipe: DatePipe,
+              private mapmarkerService: MapmarkerService,
+              private mapService: UnitsMapService) {
   }
 
   ngOnInit() {
-    this.mapSubscription = this.mapService.mapUpdates$.subscribe(
-      items => {
-        this.items = items;
-        this.setMarkerIcons(true);
-      });
-  }
-
-  ngOnDestroy(): void {
-    if (this.mapSubscription) {
-      this.mapSubscription.unsubscribe();
-    }
-  }
-
-  setMarkerIcons(bounceSelected: boolean) {
-    this.items.forEach((markerEvent: MarkerEvent) => {
-      let icon = null;
-      let animation = null;
-
-      if ((!!markerEvent.isLastMove && this.unitService.currentDeviceEvent &&
-        this.unitService.currentDeviceEvent.deviceId === markerEvent.deviceId) ||
-        this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.documentId === markerEvent.documentId) {
-        icon = this.getIcon(this.colorSelected, markerEvent.bearingForward);
-        if (bounceSelected) {
-          animation = 'BOUNCE';
-          this.stopAnimation(markerEvent);
-        }
-      } else {
-        icon = this.getIcon(this.colorUnselected, markerEvent.bearingForward);
-      }
-
-      markerEvent.iconUrl = icon;
-      markerEvent.animation = animation;
-
-      if (!markerEvent.deviceName && this.unitService.currentDeviceEvent) {
-        markerEvent.deviceName = this.unitService.currentDeviceEvent.deviceName;
-      }
+    // Get default marker icon for the current account:
+    this.accountChange = this.authService.userAccountSelect.subscribe(accountId => {
+      this.accountId = accountId;
+      this.mapmarkerService.fetchDefaultMapMarkerIcon(accountId)
+        .then((snap) => {
+          if (snap.exists && !!snap.data().markerIcon) {
+            this.defaultMarkerIcon = snap.data().markerIcon;
+          } else {
+            this.defaultMarkerIcon = BASE_MARKER_ICON;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
   }
 
-  stopAnimation(item) {
+  ngAfterViewInit() {
+    // Draw the map:
+    this.mapUpdate = this.mapService.mapUpdates$.subscribe((deviceEvents: DeviceEvent[]) => {
+      if (deviceEvents.length > 0) {
+        this.createMap(deviceEvents);
+      }
+    });
+
+    // Identify the marker for the selected row:
+    this.markerUpdate = this.mapService.tableRowSelect$.subscribe((deviceEvent: DeviceEvent) => {
+      this.map.fitBounds(this.bounds);
+      this.bounce(this.markers.get(deviceEvent.documentId));
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.mapUpdate) {
+      this.mapUpdate.unsubscribe();
+    }
+    if (this.markerUpdate) {
+      this.markerUpdate.unsubscribe();
+    }
+    if (this.accountChange) {
+      this.accountChange.unsubscribe();
+    }
+  }
+
+  createMap(deviceEvents: DeviceEvent[]) {
+    const mapOptions: google.maps.MapOptions = {
+      center: new google.maps.LatLng(deviceEvents[0].latitude, deviceEvents[0].longitude),
+    };
+
+    this.map = new google.maps.Map(this.gMap.nativeElement, mapOptions);
+    this.markers = new Map();
+    this.bounds = {east: -180, north: 0, south: 90, west: 0};
+
+    deviceEvents.forEach((deviceEvent: DeviceEvent) => {
+      this.createMarker(deviceEvent, this.map);
+
+      if (deviceEvent.longitude > this.bounds.east) {
+        this.bounds.east = deviceEvent.longitude;
+      }
+      if (deviceEvent.longitude < this.bounds.west) {
+        this.bounds.west = deviceEvent.longitude;
+      }
+      if (deviceEvent.latitude > this.bounds.north) {
+        this.bounds.north = deviceEvent.latitude;
+      }
+      if (deviceEvent.latitude < this.bounds.south) {
+        this.bounds.south = deviceEvent.latitude;
+      }
+    });
+
+    if (deviceEvents.length > 0) {
+      this.map.fitBounds(this.bounds);
+    }
+  }
+
+  createMarker(deviceEvent: DeviceEvent, map: google.maps.Map) {
+    const coordinates = new google.maps.LatLng(deviceEvent.latitude, deviceEvent.longitude);
+
+    Promise.all([this.mapmarkerService.getDeviceMarkerIcon(this.accountId, deviceEvent.deviceId)])
+      .then(result => {
+        let icon;
+        if (!!result[0]) {
+          icon = result[0];
+        } else {
+          icon = this.defaultMarkerIcon;
+        }
+
+        if (!!deviceEvent.bearingForward) {
+          icon['rotation'] = deviceEvent.bearingForward;
+        } else {
+          icon = this.mapmarkerService.getEndpointMarkerIcon(icon);
+        }
+
+        const marker = new google.maps.Marker({
+          position: coordinates,
+          icon: icon
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+        <div>
+          ${deviceEvent.deviceName}<br/>
+          ${this.datePipe.transform(this.timestampToDate(deviceEvent.deviceTime), 'MM-dd-yyyy, HH:mm')}
+        </div>
+        `,
+          maxWidth: 300
+        });
+
+        marker.addListener('click', () => {
+          map.setCenter(marker.getPosition());
+        });
+
+        marker.addListener('dblclick', () => {
+          console.log('dblclick id: ' + marker.getTitle());
+        });
+
+        marker.addListener('mouseover', () => {
+          infoWindow.open(map, marker);
+        });
+
+        marker.addListener('mouseout', () => {
+          infoWindow.close();
+        });
+
+        this.markers.set(deviceEvent.documentId, marker);
+        marker.setMap(this.map);
+      });
+  }
+
+  bounce(marker) {
+    marker.setAnimation(1);
     setTimeout(() => {
-      item.animation = null;
-    }, 1000);
+      marker.setAnimation(null);
+    }, 2000);
   }
 
-  onMarkerClick(markerEvent: MarkerEvent) {
-    this.unitService.currentDeviceEvent = markerEvent;
-    this.setMarkerIcons(false);
-  }
-
-  // Marker dblclick is currently (v 1.0.0-beta.7) not supported by agm
-  onMarkerDblClick(markerEvent: MarkerEvent) {
-    let page: string;
-    let id: string;
-    if (!!markerEvent.isLastMove) {
-      page = 'unit-history';
-      id = markerEvent.deviceId;
-      this.unitService.currentDeviceEvent = markerEvent;
-    } else {
-      page = 'unit-details';
-      id = markerEvent.documentId;
-      this.unitService.currentDeviceEvent = markerEvent;
+  timestampToDate(ts) {
+    let date: Date;
+    if (ts) {
+      date = ts.toDate();
     }
-    this.setMarkerIcons(false);
-    this.router.navigate([`/locations/${this.global.currentWidth}/${page}`, id]);
-  }
-
-  onMapClick(loc) {
-    console.log('lat: ' + loc.coords.lat + ', lng: ' + loc.coords.lng);
-  }
-
-  onMouseOver(infoWindow) {
-    infoWindow.open();
-  }
-
-  onMouseOut(infoWindow) {
-    infoWindow.close();
-  }
-
-  bearingToIconName(bearing: number): string {
-    let hour = '';
-    let type = 'arrow19_';
-    if (bearing) {
-      let clockValue: number;
-      if (bearing < 0) {
-        bearing = 360 + bearing;
-      }
-      clockValue = Math.floor(bearing / 30);
-      if (bearing % 30 >= 15) {
-        clockValue++;
-      }
-      hour = String(clockValue).padStart(2, '0');
-    } else {
-      type = 'dot19';
-    }
-    return type + hour;
-  }
-
-  getIcon(color: string, bearing: number): any {
-    const url = `/assets/${color}_${this.bearingToIconName(bearing)}.png`;
-    return {url: url};
+    return date;
   }
 }

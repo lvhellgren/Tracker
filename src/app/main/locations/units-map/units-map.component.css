@@ -1,5 +1,6 @@
-.sebm-google-map-container {
-  height:calc(100vh - 105px)
+#map {
+  height:calc(100vh - 105px);
+  width: 100%;
 }
 
 .mat-card {

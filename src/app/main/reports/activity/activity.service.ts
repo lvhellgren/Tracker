@@ -3,10 +3,10 @@ import { ACCOUNT_CONSTRAINTS, AccountConstraint, AccountService } from '../../se
 import * as firebase from 'firebase';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDlgComponent } from '../../core/error-dlg/error-dlg.component';
-import { ACCOUNT_DEVICES } from '../../setup/devices/device.service';
 import { ACCOUNT_LANDMARKS } from '../../setup/landmarks/landmark.service';
 import { ACCOUNT_USERS } from '../../core/auth/auth.service';
 import { SUBSCRIBERS } from '../../setup/subscribers/subscriber.service';
+import { ACCOUNT_DEVICES } from '../../../sevices/mapmarker.service';
 
 export interface AccountTraffic {
   accountId?: string;

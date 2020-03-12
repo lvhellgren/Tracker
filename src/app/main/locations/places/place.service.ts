@@ -28,7 +28,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import * as firebase from 'firebase';
-import { ACCOUNT_DEVICES } from '../../setup/devices/device.service';
+import { ACCOUNT_DEVICES } from '../../../sevices/mapmarker.service';
 
 export const LANDMARK_ACTIVITY = 'landmark-activity';
 

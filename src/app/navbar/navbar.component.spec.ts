@@ -95,10 +95,10 @@ describe('NavbarComponent', () => {
     expect(button.childNodes[0].nativeNode.textContent.trim()).toBe(MockAuthService.prototype.getUserId());
   });
 
-  it('should show help icon', () => {
+  it('should show help markerIconForm', () => {
     const button = fixture.debugElement.query(By.css('#user-dropdown'));
     // console.dir(button.childNodes[1].nativeNode);
-    expect(button.childNodes[1].nativeNode.localName).toBe('mat-icon');
+    expect(button.childNodes[1].nativeNode.localName).toBe('mat-markerIconForm');
   });
 
   it('should contain the drawer button', () => {

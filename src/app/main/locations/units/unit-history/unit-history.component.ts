@@ -44,7 +44,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   private tapCount = 0;
 
-  private accountSubscription: Subscription;
+  private accountChangeSubscription: Subscription;
   private routeSubscription: Subscription;
   private historySubscription: Subscription;
   private userPreferencesSubscription: Subscription;
@@ -61,7 +61,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Check for a different account being selected:
-    this.accountSubscription = this.authService.userAccountSelect.subscribe(accountId => {
+    this.accountChangeSubscription = this.authService.userAccountSelect.subscribe(accountId => {
       if (!!!this.accountId) {
         this.accountId = accountId;
       } else if (this.accountId !== accountId) {
@@ -110,8 +110,8 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
-    if (this.accountSubscription) {
-      this.accountSubscription.unsubscribe();
+    if (this.accountChangeSubscription) {
+      this.accountChangeSubscription.unsubscribe();
     }
     if (this.historySubscription) {
       this.historySubscription.unsubscribe();
@@ -130,7 +130,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
         this.bottomPageRows[this.bottomPageRows.length - 1], this.pageSize)
         .subscribe((deviceEvents: DeviceEvent[]) => {
           this.dataSource.data = deviceEvents;
-          this.mapService.setMarkers(deviceEvents);
+          this.mapService.updateMap(deviceEvents);
           const fetchCount = deviceEvents.length;
           if (fetchCount === this.pageSize) {
             this.bottomPageRows.push(deviceEvents[fetchCount - 1].deviceTime);
@@ -157,7 +157,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   onRowClick(deviceEvent: DeviceEvent) {
     this.unitService.currentDeviceEvent = deviceEvent;
-    this.mapService.setMarkers(this.dataSource.data);
+    this.mapService.tableRowSelected(deviceEvent);
   }
 
   onRowDblClick(deviceEvent: DeviceEvent) {
@@ -182,7 +182,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   rowBackground(row) {
     let bg = '';
-    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.documentId === row.documentId) {
+    if (row && this.unitService.currentDeviceEvent?.documentId === row.documentId) {
       bg = '#3f51b5';
     }
     return bg;
@@ -190,7 +190,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   rowColor(row) {
     let c = '';
-    if (row && this.unitService.currentDeviceEvent && this.unitService.currentDeviceEvent.documentId === row.documentId) {
+    if (row && this.unitService.currentDeviceEvent?.documentId === row.documentId) {
       c = 'white';
     }
     return c;

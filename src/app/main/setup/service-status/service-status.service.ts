@@ -25,9 +25,9 @@ import { Injectable } from '@angular/core';
 import { AccountConstraint, AccountService } from '../accounts/account.service';
 import { ACCOUNT_LANDMARKS } from '../landmarks/landmark.service';
 import { ACCOUNT_SUBSCRIPTIONS, ACCOUNT_USERS, SUBSCRIBERS } from '../subscribers/subscriber.service';
-import { ACCOUNT_DEVICES } from '../devices/device.service';
 import { BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase';
+import { ACCOUNT_DEVICES } from '../../../sevices/mapmarker.service';
 
 export interface ServiceStatusItem {
   constraintId: string;

@@ -47,7 +47,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { SimulatorModule } from './main/simulator/simulator.module';
 import { ReportsModule } from './main/reports/reports.module';
 import { HelpContentModule } from './main/help-content/help-content.module';
-import { CenterComponent } from './main/help-content/center/center.component';
+import { AppMapModule } from './app-map.module';
 
 
 @NgModule({
@@ -59,6 +59,7 @@ import { CenterComponent } from './main/help-content/center/center.component';
     UserPreferencesComponent
   ],
   imports: [
+    AppMapModule,
     CoreModule,
     SetupModule,
     SimulatorModule,

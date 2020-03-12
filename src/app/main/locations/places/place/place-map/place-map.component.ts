@@ -10,9 +10,6 @@ import { PlaceDoc, PlaceService } from '../../place.service';
   styleUrls: ['./place-map.component.css']
 })
 export class PlaceMapComponent implements OnInit, OnDestroy {
-
-  unitIcon = '/assets/red_dot19.png';
-
   map: google.maps.Map;
   placeDoc: PlaceDoc;
 
@@ -23,7 +20,6 @@ export class PlaceMapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.markerSubscription = this.placeService.markers$.subscribe((docs: PlaceDoc[]) => {
-      const selectedLandmarkId = this.placeService.getLandmarkId();
       this.placeDoc = docs[0];
     });
   }

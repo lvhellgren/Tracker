@@ -1,7 +1,7 @@
 <div class="device" fxLayoutAlign="center">
   <form fxFlex.gt-xs="400px"
         fxLayout="column"
-        [formGroup]="deviceFormGroup"
+        [formGroup]="deviceForm"
         (ngSubmit)="onSubmit()">
     <div class="active" fxLayout="row"
          fxLayoutAlign="end center">
@@ -38,6 +38,78 @@
                formControlName="createdAt">
       </mat-form-field>
     </div>
+    <div formGroupName="markerIconForm">
+      <fieldset class="icon" fxLayout="column">
+        <legend>Map Marker Icon</legend>
+        <div #mapContainer id="map"></div>
+        <mat-form-field>
+          <mat-label>Shape</mat-label>
+          <mat-select formControlName="path">
+            <mat-option *ngFor="let shape of shapeNames" [value]="shape.id">
+              {{shape.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Scale"
+                 formControlName="scale">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="Fill Color (CSS3)"
+                 formControlName="fillColor">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Fill Opacity (0.0 - 1)"
+                 formControlName="fillOpacity">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="text"
+                 matInput
+                 placeholder="Outline Color (CSS3)"
+                 formControlName="strokeColor">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Outline Opacity (0.0 - 1)"
+                 formControlName="strokeOpacity">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+          <input type="number"
+                 matInput
+                 number
+                 placeholder="Outline Weight"
+                 formControlName="strokeWeight">
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <button [ngClass]="'default-button'"
+                  type="button"
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onUseDefaultMarkerIconClick()"
+                  [disabled]="disableIconButtons">
+            Use Icon Default
+          </button>
+          <button [ngClass]="'default-button'"
+                  type="button"
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onMakeDefaultMarkerIconClick()"
+                  [disabled]="disableIconButtons">
+            Make this Icon Default
+          </button>
+        </div>
+      </fieldset>
+    </div>
     <mat-form-field floatLabel="always">
          <textarea type="text"
                    rows="1"
@@ -50,24 +122,22 @@
       {{msg}}
     </div>
     <div fxLayout="row" fxLayoutAlign="space-around start">
-      <button class="cancel-button"
-              type="button"
+      <button type="button"
               mat-raised-button
               color="primary"
               (click)="onCancel()">
         Cancel
       </button>
-      <button class="clear-button"
-              type="button"
+      <button type="button"
               mat-raised-button
               color="primary"
               (click)="onClear()">
         Clear
       </button>
-      <button type="submit" mat-raised-button color="primary"
-              [disabled]="deviceFormGroup.invalid || (
-              deviceFormGroup.pristine &&
-              active.pristine)">
+      <button type="submit"
+              mat-raised-button
+              color="primary"
+              [disabled]="deviceForm.invalid || (deviceForm.pristine && active.pristine && !iconUpdated)">
         Save
       </button>
     </div>
