@@ -1,5 +1,28 @@
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
+// All rights reserved.
+//
+// This code is licensed under the MIT License.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files(the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions :
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
@@ -59,18 +82,26 @@ export const LAST_MOVES = 'last-moves';
 
 @Injectable()
 export class UnitService implements OnDestroy {
-  historyStartDate: Date;
-  historyEndDate: Date;
 
-  currentDeviceEvent: DeviceEvent;
+  // Signals that the map should be redrawn
+  private mapUpdates = new BehaviorSubject<DeviceEvent[]>([]);
+  public mapUpdates$ = this.mapUpdates.asObservable();
+
+  // Signals a click on a table row or a map marker
+  private itemSelect = new BehaviorSubject<DeviceEvent>(null);
+  public itemSelect$ = this.itemSelect.asObservable();
+
+  // Signals a double click on a map marker.
+  private markerDblclick = new Subject<DeviceEvent>();
+  public markerDblclick$ = this.markerDblclick.asObservable();
+
+  // Signals availability of unit details info
+  private hasDetails = new BehaviorSubject<string>(null);
+  public hasDetails$ = this.hasDetails.asObservable();
 
   // Last moves fetched from DB.
-  private lastMovesSubject = new BehaviorSubject<DeviceEvent[]>([]);
-  public lastMoves$ = this.lastMovesSubject.asObservable();
-
-  // Device events fetched from DB.
-  private deviceEventsSubject = new BehaviorSubject<DeviceEvent[]>([]);
-  public deviceEvents$ = this.deviceEventsSubject.asObservable();
+  private lastMoves = new BehaviorSubject<DeviceEvent[]>([]);
+  public lastMoves$ = this.lastMoves.asObservable();
 
   private lastMovesSubscription: Subscription;
 
@@ -91,8 +122,15 @@ export class UnitService implements OnDestroy {
     this.lastMovesSubscription = this.afs.collection(LAST_MOVES, ref => ref.where('accountId', '==', accountId))
       .valueChanges()
       .subscribe((deviceEvents: DeviceEvent[]) => {
-        this.lastMovesSubject.next(deviceEvents);
+        this.lastMoves.next(deviceEvents);
       });
+  }
+
+  lastMove$(accountId: string, deviceId: string) {
+    return this.afs.collection(LAST_MOVES, ref => ref
+      .where('accountId', '==', accountId)
+      .where('deviceId', '==', deviceId))
+      .valueChanges();
   }
 
   deviceEventHistory$(accountId: string, deviceId: String, startDate: Date, endDate: Date, startAfter: Timestamp, limit: number):
@@ -122,16 +160,36 @@ export class UnitService implements OnDestroy {
     }
   }
 
-  getDeviceName() {
-    return this.currentDeviceEvent ? this.currentDeviceEvent.deviceName : '[No unit selected]';
-  }
-
-  clear() {
-    this.currentDeviceEvent = null;
-  }
-
   fetchHistoryDoc(documentId: string): Observable<DeviceEvent> {
     return this.afs.collection(DEVICE_EVENTS).doc(documentId).valueChanges();
+  }
+
+  /**
+   * Issues map update notifications to observers of tableRowSelect$.
+   */
+  public updateMap<T>(deviceEvents: DeviceEvent[]) {
+    this.mapUpdates.next(deviceEvents);
+  }
+
+  /**
+   * Issues device select notifications to observers of itemSelect$.
+   */
+  public onItemSelect<T>(deviceEvent: DeviceEvent) {
+    this.itemSelect.next(deviceEvent);
+  }
+
+  /**
+   * Issues event select notifications to observers of markerDblclick$.
+   */
+  public onMarkerDblclick<T>(deviceEvent: DeviceEvent) {
+    this.markerDblclick.next(deviceEvent);
+  }
+
+  /**
+   * Issues notifications to observers of hasDetails$.
+   */
+  public enableDetails<T>(documentId: string) {
+    this.hasDetails.next(documentId);
   }
 }
 

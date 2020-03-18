@@ -27,7 +27,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnitsMapService } from '../units-map/units-map.service';
 import { GlobalService } from '../../../sevices/global';
 import { DeviceEvent, UnitService } from '../unit.service';
 import { AuthService } from '../../core/auth/auth.service';
@@ -40,6 +39,7 @@ import { HelpService, LOC_UNITS } from '../../../drawers/help/help.service';
 })
 
 export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
+  private deviceId: string;
   public dataSource = new MatTableDataSource<DeviceEvent>();
 
   public displayedColumns = ['deviceName', 'deviceTime', 'street', 'city', 'landmarks'];
@@ -51,9 +51,10 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private accountChangeSubscription: Subscription;
   private lastMoveSubscription: Subscription;
+  private deviceSelectSubscription: Subscription;
+  private markerDblclickSubscription: Subscription;
 
   constructor(private authService: AuthService,
-              private mapService: UnitsMapService,
               private unitService: UnitService,
               private route: ActivatedRoute,
               private router: Router,
@@ -71,10 +72,25 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lastMoveSubscription = this.unitService.lastMoves$.subscribe((deviceEvents: DeviceEvent[]) => {
       if (deviceEvents.length > 0) {
         this.dataSource.data = deviceEvents;
-        this.mapService.updateMap(deviceEvents);
+        this.unitService.updateMap(deviceEvents);
       }
     });
 
+    // Handle to table row and map marker clicks:
+    this.deviceSelectSubscription = this.unitService.itemSelect$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.deviceId = deviceEvent.deviceId;
+      }
+    });
+
+    // Handle map marker double clicks:
+    this.markerDblclickSubscription = this.unitService.markerDblclick$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.router.navigate([`/locations/${this.global.currentWidth}/unit-history`, deviceEvent.deviceId]);
+      }
+    });
+
+    // Set up help context:
     this.helpService.component$.next(LOC_UNITS);
   }
 
@@ -89,6 +105,12 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.lastMoveSubscription) {
       this.lastMoveSubscription.unsubscribe();
+    }
+    if (this.deviceSelectSubscription) {
+      this.deviceSelectSubscription.unsubscribe();
+    }
+    if (this.markerDblclickSubscription) {
+      this.markerDblclickSubscription.unsubscribe();
     }
   }
 
@@ -112,13 +134,11 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onRowClick(deviceEvent: DeviceEvent) {
-    this.unitService.currentDeviceEvent = <DeviceEvent>deviceEvent;
-    this.mapService.tableRowSelected(deviceEvent);
+    this.deviceId = deviceEvent.deviceId;
+    this.unitService.onItemSelect(deviceEvent);
   }
 
   onRowDblClick(deviceEvent: DeviceEvent) {
-    this.unitService.historyEndDate = this.unitService.historyStartDate = new Date(deviceEvent.deviceTime.toDate());
-    this.unitService.currentDeviceEvent = <DeviceEvent>deviceEvent;
     this.router.navigate([`/locations/${this.global.currentWidth}/unit-history`, deviceEvent.deviceId]);
   }
 
@@ -139,7 +159,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rowBackground(row) {
     let bg = '';
-    if (row && this.unitService.currentDeviceEvent?.deviceId === row.deviceId) {
+    if (row && this.deviceId === row.deviceId) {
       bg = '#3f51b5';
     }
     return bg;
@@ -147,7 +167,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rowColor(row) {
     let c = '';
-    if (row && this.unitService.currentDeviceEvent?.deviceId === row.deviceId) {
+    if (row && this.deviceId === row.deviceId) {
       c = 'white';
     }
     return c;

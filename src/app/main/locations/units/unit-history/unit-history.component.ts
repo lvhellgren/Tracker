@@ -1,6 +1,28 @@
+// Copyright (c) 2020 Lars Hellgren (lars@exelor.com).
+// All rights reserved.
+//
+// This code is licensed under the MIT License.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files(the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions :
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { UnitsMapService } from '../../units-map/units-map.service';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -18,7 +40,6 @@ import { DEFAULT_PAGE_SIZE, UserPreferences, UserPreferencesService } from '../.
   styleUrls: ['./unit-history.component.css'],
 })
 export class UnitHistoryComponent implements OnInit, OnDestroy {
-
   public dataSource = new MatTableDataSource<DeviceEvent>();
   public displayedColumns = ['time', 'street', 'city', 'landmarks'];
 
@@ -30,6 +51,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   private accountId: string;
   private deviceId: string;
   public deviceName: String;
+  public documentId: String;
 
   // Page attributes:
   public pageIndex = 0;
@@ -48,10 +70,12 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   private routeSubscription: Subscription;
   private historySubscription: Subscription;
   private userPreferencesSubscription: Subscription;
+  private itemSelectSubscription: Subscription;
+  private lastMoveSubscription: Subscription;
+  private markerDblclickSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private unitService: UnitService,
-              private mapService: UnitsMapService,
               private global: GlobalService,
               private userPreferencesService: UserPreferencesService,
               private router: Router,
@@ -60,16 +84,19 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.startDate = new FormControl(new Date());
+    this.endDate = new FormControl(new Date());
+
     // Check for a different account being selected:
     this.accountChangeSubscription = this.authService.userAccountSelect.subscribe(accountId => {
       if (!!!this.accountId) {
         this.accountId = accountId;
       } else if (this.accountId !== accountId) {
         this.router.navigate([`/locations/${this.global.currentWidth}/units`]);
-        this.unitService.clear();
       }
     });
 
+    // Get user preferences:
     this.userPreferencesSubscription = this.userPreferencesService.userPreferences$.subscribe((preferences: UserPreferences) => {
       this.pageSize = !!preferences.pageSize ? preferences.pageSize : DEFAULT_PAGE_SIZE;
       const newOptions = [this.pageSize];
@@ -81,28 +108,29 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
       this.pageSizeOptions = newOptions;
     });
 
-    if (!this.unitService.historyStartDate) {
-      this.unitService.historyStartDate = new Date();
-    }
-    if (!this.unitService.historyEndDate) {
-      this.unitService.historyEndDate = new Date();
-    }
-    this.startDate = new FormControl(this.unitService.historyStartDate);
-    this.endDate = new FormControl(this.unitService.historyEndDate);
-
+    // Handle URL with device ID parameter:
     this.routeSubscription = this.route.params.subscribe((params: Params) => {
-      this.deviceId = params['id'] ? params['id'] : this.unitService.currentDeviceEvent;
-      if (params['id']) {
-        this.deviceId = params['id'];
-      } else if (this.unitService.currentDeviceEvent) {
-        this.deviceId = this.unitService.currentDeviceEvent.deviceId;
-      }
+      this.deviceId = params['id'];
       if (this.deviceId) {
-        this.deviceName = this.unitService.getDeviceName();
-        this.fetchPage(this.deviceId);
+        this.showMostRecentEvents(this.deviceId);
       }
     });
 
+    // Handle map marker clicks:
+    this.itemSelectSubscription = this.unitService.itemSelect$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.documentId = deviceEvent.documentId;
+      }
+    });
+
+    // Handle map marker double clicks:
+    this.markerDblclickSubscription = this.unitService.markerDblclick$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.onRowDblClick(deviceEvent);
+      }
+    });
+
+    // Set up help context:
     this.helpService.component$.next(LOC_UNIT);
   }
 
@@ -119,6 +147,15 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     if (this.userPreferencesSubscription) {
       this.userPreferencesSubscription.unsubscribe();
     }
+    if (this.itemSelectSubscription) {
+      this.itemSelectSubscription.unsubscribe();
+    }
+    if (this.lastMoveSubscription) {
+      this.lastMoveSubscription.unsubscribe();
+    }
+    if (this.markerDblclickSubscription) {
+      this.markerDblclickSubscription.unsubscribe();
+    }
   }
 
   fetchPage(deviceId: String) {
@@ -129,17 +166,36 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
       this.historySubscription = this.unitService.deviceEventHistory$(this.accountId, deviceId, this.startDate.value, this.endDate.value,
         this.bottomPageRows[this.bottomPageRows.length - 1], this.pageSize)
         .subscribe((deviceEvents: DeviceEvent[]) => {
-          this.dataSource.data = deviceEvents;
-          this.mapService.updateMap(deviceEvents);
           const fetchCount = deviceEvents.length;
-          if (fetchCount === this.pageSize) {
-            this.bottomPageRows.push(deviceEvents[fetchCount - 1].deviceTime);
-            this.length = (this.pageIndex + 2) * this.pageSize;
-          } else {
-            this.length = this.pageIndex * this.pageSize + fetchCount;
+          if (fetchCount > 0) {
+            this.deviceName = deviceEvents[0].deviceName;
+            this.dataSource.data = deviceEvents;
+            this.unitService.updateMap(deviceEvents);
+            if (fetchCount === this.pageSize) {
+              this.bottomPageRows.push(deviceEvents[fetchCount - 1].deviceTime);
+              this.length = (this.pageIndex + 2) * this.pageSize;
+            } else {
+              this.length = this.pageIndex * this.pageSize + fetchCount;
+            }
           }
         });
     }
+  }
+
+  showMostRecentEvents(deviceId: string) {
+    this.lastMoveSubscription = this.unitService.lastMove$(this.accountId, this.deviceId).subscribe((event: any[]) => {
+        if (event.length > 0) {
+          const lastDay = new Date(event[0].deviceTime.toDate());
+          this.startDate = new FormControl(lastDay);
+          this.endDate = new FormControl(lastDay);
+          this.fetchPage(deviceId);
+        } else {
+          console.error('Failed reading device: ' + deviceId);
+        }
+      }, (error) => {
+        console.error(error);
+      }
+    );
   }
 
   getLandmarkIds(landmarks: any[]) {
@@ -156,12 +212,14 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   }
 
   onRowClick(deviceEvent: DeviceEvent) {
-    this.unitService.currentDeviceEvent = deviceEvent;
-    this.mapService.tableRowSelected(deviceEvent);
+    this.documentId = deviceEvent.documentId;
+    this.unitService.onItemSelect(deviceEvent);
+    this.unitService.enableDetails(deviceEvent.documentId);
   }
 
   onRowDblClick(deviceEvent: DeviceEvent) {
-    this.unitService.currentDeviceEvent = deviceEvent;
+    this.unitService.onItemSelect(deviceEvent);
+    this.unitService.enableDetails(deviceEvent.documentId);
     this.router.navigate([`/locations/${this.global.currentWidth}/unit-details`, deviceEvent.documentId]);
   }
 
@@ -182,7 +240,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   rowBackground(row) {
     let bg = '';
-    if (row && this.unitService.currentDeviceEvent?.documentId === row.documentId) {
+    if (row && this.documentId === row.documentId) {
       bg = '#3f51b5';
     }
     return bg;
@@ -190,7 +248,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
 
   rowColor(row) {
     let c = '';
-    if (row && this.unitService.currentDeviceEvent?.documentId === row.documentId) {
+    if (row && this.documentId === row.documentId) {
       c = 'white';
     }
     return c;
@@ -240,8 +298,6 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   applyDateRangeChange(startDate: Date, endDate: Date) {
     this.startDate = new FormControl(startDate);
     this.endDate = new FormControl(endDate);
-    this.unitService.historyStartDate = startDate;
-    this.unitService.historyEndDate = endDate;
     this.resetPagination();
   }
 
