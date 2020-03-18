@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UnitsMapService } from './units-map/units-map.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
@@ -8,14 +7,14 @@ import { UnitService } from './unit.service';
 
 // const sm = '600px';
 const md = '960px';
+
 // const lg = '1280px';
 
 @Component({
   selector: 'app-locations',
   template: '<router-outlet></router-outlet>',
   providers: [
-    UnitService,
-    UnitsMapService
+    UnitService
   ]
 })
 

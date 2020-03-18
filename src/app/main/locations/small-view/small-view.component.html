@@ -13,26 +13,26 @@
             UNITS
           </a>
         </div>
-        <div [ngClass]="{'disabled': unitHistoryDisabled()}">
+        <div [ngClass]="{'disabled': unitHistoryDisabled}">
           <a href="#" class="top-button" mat-button
-             [disabled]="unitHistoryDisabled()"
-             [routerLink]="[{outlets:{primary: ['unit-history'], map: ['units-map']}}]"
+             [disabled]="unitHistoryDisabled"
+             [routerLink]="[{outlets:{primary: ['unit-history', deviceId], map: ['units-map']}}]"
              [routerLinkActive]="['unit-history']">
             UNIT
           </a>
         </div>
-        <div [ngClass]="{'disabled': unitInfoDisabled()}">
+        <div [ngClass]="{'disabled': unitInfoDisabled}">
           <a href="#" class="top-button" mat-button
-             [disabled]="unitInfoDisabled()"
-             [routerLink]="[{outlets:{primary: ['unit-details'], map: ['units-map']}}]"
+             [disabled]="unitInfoDisabled"
+             [routerLink]="[{outlets:{primary: ['unit-details', documentId], map: ['units-map']}}]"
              [routerLinkActive]="['unit-history']">
             DETAILS
           </a>
         </div>
         <div class="separator">|</div>
-        <div [ngClass]="{'disabled': placesDisabled()}">
+        <div [ngClass]="{'disabled': placeDisabled()}">
           <a href="#" class="top-button" mat-button
-             [disabled]="placesDisabled()"
+             [disabled]="placeDisabled()"
              [routerLink]="[{outlets:{primary: ['places'], map: ['places-map']}}]"
              [routerLinkActive]="['active-locations']">
             LANDMARKS

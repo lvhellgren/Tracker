@@ -17,32 +17,32 @@
                 UNITS
               </a>
             </div>
-            <div [ngClass]="{'disabled': unitHistoryDisabled()}">
+            <div [ngClass]="{'disabled': unitHistoryDisabled}">
               <a href="#" class="top-button" mat-button
-                 [disabled]="unitHistoryDisabled()"
-                 [routerLink]="[{outlets:{primary: ['unit-history'], map: ['units-map']}}]"
+                 [disabled]="unitHistoryDisabled"
+                 [routerLink]="[{outlets:{primary: ['unit-history', deviceId], map: ['units-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 UNIT
               </a>
             </div>
-            <div [ngClass]="{'disabled': unitInfoDisabled()}">
+            <div [ngClass]="{'disabled': unitInfoDisabled}">
               <a href="#" class="top-button" mat-button
-                 [disabled]="unitInfoDisabled()"
-                 [routerLink]="[{outlets:{primary: ['unit-details'], map: ['units-map']}}]"
+                 [disabled]="unitInfoDisabled"
+                 [routerLink]="[{outlets:{primary: ['unit-details', documentId], map: ['units-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 DETAILS
               </a>
             </div>
             <hr class="separator">
-            <div [ngClass]="{'disabled': placesDisabled()}">
+            <div [ngClass]="{'disabled': placesDisabled}">
               <a href="#" class="top-button" mat-button
-                 [disabled]="placesDisabled()"
+                 [disabled]="placesDisabled"
                  [routerLink]="[{outlets:{primary: ['places'], map: ['places-map']}}]"
                  [routerLinkActive]="['active-locations']">
                 LANDMARKS
               </a>
             </div>
-            <div [ngClass]="{'disabled': placeDisabled()}">
+            <div [ngClass]="{'disabled': placeDisabled}">
               <a href="#" mat-button
                  [disabled]="placeDisabled()"
                  [routerLink]="[{outlets:{primary: ['place'], map: ['place-map']}}]"

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { UnitsMapService } from './units-map.service';
-import { DeviceEvent } from '../unit.service';
+import { DeviceEvent, UnitService } from '../unit.service';
 import { BASE_MARKER_ICON, MapmarkerService } from '../../../sevices/mapmarker.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { DatePipe } from '@angular/common';
@@ -18,23 +17,24 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private accountId: string;
   private defaultMarkerIcon;
+  private deviceEvents: DeviceEvent[];
 
-  private accountChange: Subscription;
-  private mapUpdate: Subscription;
-  private markerUpdate: Subscription;
+  private accountChangeSubscription: Subscription;
+  private mapUpdateSubscription: Subscription;
+  private itemSelectSubscription: Subscription;
   private map;
   private markers: Map<string, any>;
   private bounds: LatLngBoundsLiteral;
 
   constructor(private authService: AuthService,
               private datePipe: DatePipe,
-              private mapmarkerService: MapmarkerService,
-              private mapService: UnitsMapService) {
+              private unitService: UnitService,
+              private mapmarkerService: MapmarkerService) {
   }
 
   ngOnInit() {
     // Get default marker icon for the current account:
-    this.accountChange = this.authService.userAccountSelect.subscribe(accountId => {
+    this.accountChangeSubscription = this.authService.userAccountSelect.subscribe(accountId => {
       this.accountId = accountId;
       this.mapmarkerService.fetchDefaultMapMarkerIcon(accountId)
         .then((snap) => {
@@ -52,28 +52,31 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // Draw the map:
-    this.mapUpdate = this.mapService.mapUpdates$.subscribe((deviceEvents: DeviceEvent[]) => {
+    this.mapUpdateSubscription = this.unitService.mapUpdates$.subscribe((deviceEvents: DeviceEvent[]) => {
       if (deviceEvents.length > 0) {
+        this.deviceEvents = deviceEvents;
         this.createMap(deviceEvents);
       }
     });
 
-    // Identify the marker for the selected row:
-    this.markerUpdate = this.mapService.tableRowSelect$.subscribe((deviceEvent: DeviceEvent) => {
-      this.map.fitBounds(this.bounds);
-      this.bounce(this.markers.get(deviceEvent.documentId));
+    // Emphasize selected marker icon:
+    this.itemSelectSubscription = this.unitService.itemSelect$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.map.fitBounds(this.bounds);
+        this.bounce(this.markers.get(deviceEvent.documentId));
+      }
     });
   }
 
   ngOnDestroy(): void {
-    if (this.mapUpdate) {
-      this.mapUpdate.unsubscribe();
+    if (this.mapUpdateSubscription) {
+      this.mapUpdateSubscription.unsubscribe();
     }
-    if (this.markerUpdate) {
-      this.markerUpdate.unsubscribe();
+    if (this.itemSelectSubscription) {
+      this.itemSelectSubscription.unsubscribe();
     }
-    if (this.accountChange) {
-      this.accountChange.unsubscribe();
+    if (this.accountChangeSubscription) {
+      this.accountChangeSubscription.unsubscribe();
     }
   }
 
@@ -128,7 +131,8 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const marker = new google.maps.Marker({
           position: coordinates,
-          icon: icon
+          icon: icon,
+          title: deviceEvent.documentId
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -142,11 +146,11 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         marker.addListener('click', () => {
-          map.setCenter(marker.getPosition());
+          this.unitService.onItemSelect(this.getEventByDocumentId(this.deviceEvents, marker.getTitle()));
         });
 
         marker.addListener('dblclick', () => {
-          console.log('dblclick id: ' + marker.getTitle());
+          console.log('dblclick id: ' + marker.getLabel());
         });
 
         marker.addListener('mouseover', () => {
@@ -163,10 +167,12 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   bounce(marker) {
-    marker.setAnimation(1);
-    setTimeout(() => {
-      marker.setAnimation(null);
-    }, 2000);
+    if (!!marker) {
+      marker.setAnimation(1);
+      setTimeout(() => {
+        marker.setAnimation(null);
+      }, 2000);
+    }
   }
 
   timestampToDate(ts) {
@@ -175,5 +181,11 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
       date = ts.toDate();
     }
     return date;
+  }
+
+  private getEventByDocumentId(deviceEvents: DeviceEvent[], documentId: string) {
+    return deviceEvents.find(event => {
+      return event.documentId === documentId;
+    });
   }
 }
