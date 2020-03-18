@@ -49,6 +49,7 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
   private userPreferencesSubscription: Subscription;
   private itemSelectSubscription: Subscription;
   private lastMoveSubscription: Subscription;
+  private markerDblclickSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private unitService: UnitService,
@@ -99,6 +100,13 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Handle map marker double clicks:
+    this.markerDblclickSubscription = this.unitService.markerDblclick$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.onRowDblClick(deviceEvent);
+      }
+    });
+
     // Set up help context:
     this.helpService.component$.next(LOC_UNIT);
   }
@@ -121,6 +129,9 @@ export class UnitHistoryComponent implements OnInit, OnDestroy {
     }
     if (this.lastMoveSubscription) {
       this.lastMoveSubscription.unsubscribe();
+    }
+    if (this.markerDblclickSubscription) {
+      this.markerDblclickSubscription.unsubscribe();
     }
   }
 

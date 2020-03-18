@@ -60,7 +60,9 @@ export class UnitDetailsComponent implements OnInit, OnDestroy {
 
     // Handle map marker clicks
     this.itemSelectSubscription = this.unitService.itemSelect$.subscribe(deviceEvent => {
-      this.showDetails(deviceEvent.documentId);
+      if (!!deviceEvent) {
+        this.showDetails(deviceEvent.documentId);
+      }
     });
 
     // Set up help context:

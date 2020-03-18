@@ -150,7 +150,7 @@ export class UnitsMapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         marker.addListener('dblclick', () => {
-          console.log('dblclick id: ' + marker.getLabel());
+          this.unitService.onMarkerDblclick(this.getEventByDocumentId(this.deviceEvents, marker.getTitle()));
         });
 
         marker.addListener('mouseover', () => {

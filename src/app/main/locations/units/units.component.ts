@@ -52,6 +52,7 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
   private accountChangeSubscription: Subscription;
   private lastMoveSubscription: Subscription;
   private deviceSelectSubscription: Subscription;
+  private markerDblclickSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private unitService: UnitService,
@@ -75,10 +76,17 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    // React to table row and map marker clicks:
+    // Handle to table row and map marker clicks:
     this.deviceSelectSubscription = this.unitService.itemSelect$.subscribe((deviceEvent: DeviceEvent) => {
       if (!!deviceEvent) {
         this.deviceId = deviceEvent.deviceId;
+      }
+    });
+
+    // Handle map marker double clicks:
+    this.markerDblclickSubscription = this.unitService.markerDblclick$.subscribe((deviceEvent: DeviceEvent) => {
+      if (!!deviceEvent) {
+        this.router.navigate([`/locations/${this.global.currentWidth}/unit-history`, deviceEvent.deviceId]);
       }
     });
 
@@ -100,6 +108,9 @@ export class UnitsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.deviceSelectSubscription) {
       this.deviceSelectSubscription.unsubscribe();
+    }
+    if (this.markerDblclickSubscription) {
+      this.markerDblclickSubscription.unsubscribe();
     }
   }
 

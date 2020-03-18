@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
@@ -68,13 +68,17 @@ export class UnitService implements OnDestroy {
   private itemSelect = new BehaviorSubject<DeviceEvent>(null);
   public itemSelect$ = this.itemSelect.asObservable();
 
+  // Signals a double click on a map marker.
+  private markerDblclick = new Subject<DeviceEvent>();
+  public markerDblclick$ = this.markerDblclick.asObservable();
+
   // Signals availability of unit details info
   private hasDetails = new BehaviorSubject<string>(null);
   public hasDetails$ = this.hasDetails.asObservable();
 
   // Last moves fetched from DB.
-  private lastMovesSubject = new BehaviorSubject<DeviceEvent[]>([]);
-  public lastMoves$ = this.lastMovesSubject.asObservable();
+  private lastMoves = new BehaviorSubject<DeviceEvent[]>([]);
+  public lastMoves$ = this.lastMoves.asObservable();
 
   private lastMovesSubscription: Subscription;
 
@@ -95,7 +99,7 @@ export class UnitService implements OnDestroy {
     this.lastMovesSubscription = this.afs.collection(LAST_MOVES, ref => ref.where('accountId', '==', accountId))
       .valueChanges()
       .subscribe((deviceEvents: DeviceEvent[]) => {
-        this.lastMovesSubject.next(deviceEvents);
+        this.lastMoves.next(deviceEvents);
       });
   }
 
@@ -149,6 +153,13 @@ export class UnitService implements OnDestroy {
    */
   public onItemSelect<T>(deviceEvent: DeviceEvent) {
     this.itemSelect.next(deviceEvent);
+  }
+
+  /**
+   * Issues event select notifications to observers of markerDblclick$.
+   */
+  public onMarkerDblclick<T>(deviceEvent: DeviceEvent) {
+    this.markerDblclick.next(deviceEvent);
   }
 
   /**
