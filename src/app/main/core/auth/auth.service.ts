@@ -76,7 +76,7 @@ export class AuthService {
   // Used in AuthGuard to check user being signed in
   user$: Observable<User>;
 
-  authChange = new Subject<any>();
+  authChange = new BehaviorSubject<boolean>(false);
   authMsg = new Subject<string>();
   userAccountSelect = new BehaviorSubject<string>('');
   userSubscription: Subscription;
@@ -159,7 +159,7 @@ export class AuthService {
         .catch(error => {
           console.error(`signOut: ${error}`);
         });
-      }
+    }
 
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();

@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // Register the 'Sign In with Google' markerIconForm with MathIconRegistry
     this.matIconRegistry.addSvgIcon(
       'google_sign_in',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('/devices/btn_google_dark_normal_ios.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('/assets/btn_google_dark_normal_ios.svg')
     );
   }
 
